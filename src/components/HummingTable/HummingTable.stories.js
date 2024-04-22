@@ -22,27 +22,21 @@ export default {
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Primary = {
   args: {
-    primary: true,
-    label: 'HummingTable',
+    backgroundColor: "black",
+    label: 'PrimaryHummingTable',
   },
 };
 
 export const Secondary = {
   args: {
-    label: 'HummingTable',
+    backgroundColor: "red",
+    label: 'SecondaryHummingTable',
   },
 };
 
-export const Large = {
-  args: {
-    size: 'large',
-    label: 'HummingTable',
-  },
-};
-
-export const Small = {
-  args: {
-    size: 'small',
-    label: 'HummingTable',
-  },
-};
+export const Third = {
+    args: {
+      backgroundColor: "blue",
+      label: 'ThirdHummingTable',
+    },
+  };

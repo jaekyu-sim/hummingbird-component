@@ -1,63 +1,128 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 //import './button.css';
 
 /**
  * Primary UI component for user interaction
  */
-export const HummingTable = ({ primary, backgroundColor, size, label, ...props }) => {
+export const HummingTable = ({ dataSource, columns, headerStyle }) => {
+    /* variable */
 
+    /* useState */
+    const [data, setData] = useState(dataSource);
+    const [columnData, setColumnData] = useState([]);
 
       
-      // 데이터를 정렬하기 위한 함수
-      const sortData = (key) => {
-        setData([...data].sort((a, b) => a[key] - b[key]));
+    /* custom function */
+    // const sortData = (key) => {
+    // setData([...data].sort((a, b) => a[key] - b[key]));
+    // };
+
+
+    const iterateColumns = (columns) => {
+      columns.forEach(column => {
+
+        if (!column.dataKey || !column.label) {
+          throw new Error('column 의 dataKey와 label은 필수 속성입니다.');
+        }
+
+        
+
+        if (column.children) {
+          console.log('Children:');
+          iterateColumns(column.children);
+        }
+        else
+        {
+          setColumnData((prev) => {
+            let tmpDataKey = column.dataKey;
+            let tmpLabel = column.label;
+            let tmpWidth = column.width?column.width:"70px";
+            let tmpSortable = column.sortable?column.sortable:false;
+            return [...prev, {dataKey: tmpDataKey, label: tmpLabel, width: tmpWidth, sortable: tmpSortable}]
+          })
+        }
+      });
+    };
+
+
+    const TableHeader = ({ columns }) => {
+      const renderHeader = (columns) => {
+        return (
+          <tr>
+            
+            {columns.map(column => (
+              <th key={column.dataKey} style={{ width: column.width, border: "1px solid #444444" }}>
+                {column.label}
+                {column.children && (
+                  <TableHeader columns={column.children} />
+                )}
+              </th>
+            ))}
+          </tr>
+        );
       };
+    
+      return <thead>{renderHeader(columns)}</thead>;
+    };
+
+    const renderDataCell = (row, column) => {
+      if (column.children) {
+          return column.children.map(childColumn => {
+              return (
+                  <React.Fragment key={childColumn.dataKey}>
+                      {renderDataCell(row, childColumn)}
+                  </React.Fragment>
+              );
+          });
+      } else {
+          return (
+              <td key={column.dataKey} style={{ border: "1px solid #444444" }}>
+                  {row[column.dataKey]}
+              </td>
+          );
+      }
+  };
+    /* useEffect */
+    useEffect(() => {
+
+    }, [])
+
+    useEffect(() => {
+
+    }, [dataSource])
+    
+    useEffect(() => {
+
+      iterateColumns(columns)
+    }, [columns])
+    
+    useEffect(() => {
+      
+    }, [headerStyle])
 
 
-    const headers = [
-        {
-            dataKey:"id",
-            label:"아이디"
-        },
-        {
-            dataKey:"name",
-            label:"이름"
-        },
-        {
-            dataKey:"age",
-            label:"나이"
-        },
-    ]
 
-    const [data, setData] = useState([
-        { id: 1, name: 'John', age: 30 },
-        { id: 2, name: 'Jane', age: 25 },
-        { id: 3, name: 'Doe', age: 40 }
-      ]);
+    
 
   return (
 
-    <table style={{border: "1px solid #444444"}}>
-        <thead>
-          <tr>
-            {headers.map(header => (
-              <th key={header.dataKey}>{header.label}</th>
-            ))}
+    <table style={{ border: "1px solid #444444", width: "100%" }}>
+      
+      <TableHeader columns={columns} />
+      <tbody>
+        {data.map((row, rowIndex) => (
+          <tr key={rowIndex} style={{ border: "1px solid #444444" }}>
+              {columns.map(column => renderDataCell(row, column))}
           </tr>
-        </thead>
-        <tbody >
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex} style={{border: "1px solid #444444"}}>
-                <td key={row.id} style={{border: "1px solid #444444"}}>{row.id}</td>
-                <td key={row.name} style={{border: "1px solid #444444"}}>{row.name}</td>
-                <td key={row.age} style={{border: "1px solid #444444"}}>{row.age}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        ))}
+      </tbody>
+    </table>
+
   );
 };
+
+export default HummingTable
 
 HummingTable.propTypes = {
   /**
