@@ -8,7 +8,8 @@ import React, {useState, useEffect} from "react";
 
 function App() {
   const headerStyle = {
-    backgroundColor: "#ACC"
+    backgroundColor: "#ACC",
+    
   }
 
   const columnConfig1 = [
@@ -172,7 +173,9 @@ const columnConfig2 = [
 ]
 
 
-const data = [
+
+
+const [data, setData] = useState([
   {
     id: "1",
     name: "sim1",
@@ -193,8 +196,60 @@ const data = [
     companyAddress: "suwon-si",
     companyName: "SK2"
   },
-]
+])
 
+const clickButton1 = () => {
+  setData(
+    [
+      {
+        id: "111",
+        name: "sim111",
+        age: "111",
+        street: "yeongtong-ro",
+        building: "824",
+        doorNo: "1503",
+        companyAddress: "suwon-si",
+        companyName: "SK1"
+      },
+      {
+        id: "222",
+        name: "sim222",
+        age: "222",
+        street: "yeongtong-ro",
+        building: "1824",
+        doorNo: "11503",
+        companyAddress: "suwon-si",
+        companyName: "SK2"
+      },
+    ]
+  )
+}
+const clickButton2 = () => {
+  setData(
+    [
+      {
+        id: "1",
+        name: "sim1",
+        age: "1",
+        street: "yeongtong-ro",
+        building: "824",
+        doorNo: "1503",
+        companyAddress: "suwon-si",
+        companyName: "SK1"
+      },
+      {
+        id: "2",
+        name: "sim2",
+        age: "2",
+        street: "yeongtong-ro",
+        building: "1824",
+        doorNo: "11503",
+        companyAddress: "suwon-si",
+        companyName: "SK2"
+      },
+    ]
+  )
+}
 
   return (
     <div className="App">
@@ -203,7 +258,11 @@ const data = [
         columns={columnConfig1}
         dataSource={data}
         headerStyle={headerStyle}
+        title={"table title test"}
       ></HummingTable>
+
+      <button onClick={clickButton1}>click1</button>
+      <button onClick={clickButton2}>click2</button>
     </div>
   );
 }

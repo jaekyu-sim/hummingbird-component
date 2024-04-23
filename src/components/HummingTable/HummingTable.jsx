@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
+import "./HummingTable.css"
 //import './button.css';
 
 /**
  * Primary UI component for user interaction
  */
-export const HummingTable = ({ dataSource, columns, headerStyle }) => {
+export const HummingTable = ({ dataSource, columns, headerStyle, title }) => {
     /* variable */
 
     /* useState */
     const [data, setData] = useState(dataSource);
-    const [columnData, setColumnData] = useState([]);
+    const [columnData, setColumnData] = useState(columns);
+    const [headerStyleData, setHeaderStyleData] = useState(headerStyle);
+    const [tableTitle, setTableTitle] = useState();
 
       
     /* custom function */
@@ -19,103 +22,89 @@ export const HummingTable = ({ dataSource, columns, headerStyle }) => {
     // };
 
 
-    const iterateColumns = (columns) => {
-      columns.forEach(column => {
-
-        if (!column.dataKey || !column.label) {
-          throw new Error('column 의 dataKey와 label은 필수 속성입니다.');
-        }
-
-        
-
+    const renderHeaders = (columns) => {
+      return columns.map(column => {
         if (column.children) {
-          console.log('Children:');
-          iterateColumns(column.children);
-        }
-        else
-        {
-          setColumnData((prev) => {
-            let tmpDataKey = column.dataKey;
-            let tmpLabel = column.label;
-            let tmpWidth = column.width?column.width:"70px";
-            let tmpSortable = column.sortable?column.sortable:false;
-            return [...prev, {dataKey: tmpDataKey, label: tmpLabel, width: tmpWidth, sortable: tmpSortable}]
-          })
+          return (
+            <th colSpan={getColSpan(column)} style={{width:column.width}} key={column.label}>
+              {column.label}
+              {renderHeaders(column.children)}
+            </th>
+            );
+        } else {
+          return <th style={{ width: column.width, borderBottom:"1px solid black" }} key={column.label}>{column.label}</th>;
         }
       });
     };
-
-
-    const TableHeader = ({ columns }) => {
-      const renderHeader = (columns) => {
-        return (
-          <tr>
-            
-            {columns.map(column => (
-              <th key={column.dataKey} style={{ width: column.width, border: "1px solid #444444" }}>
-                {column.label}
-                {column.children && (
-                  <TableHeader columns={column.children} />
-                )}
-              </th>
-            ))}
-          </tr>
-        );
-      };
     
-      return <thead>{renderHeader(columns)}</thead>;
+    const getColSpan = (column) => {
+        if (!column.children) return 1;
+        let colSpan = 0;
+        column.children.forEach(child => {
+          colSpan += getColSpan(child);
+        });
+        return colSpan;
     };
+    
+    const renderData = (data, columns) => {
+      return data.map((row, rowIndex) => (
+          <tr key={rowIndex} style={{borderBottom:"1px solid black", backgroundColor:"#D6EEEE"}}>
+              {renderRowData(row, columns)}
+          </tr>
+      ));
+    };
+    
+    const renderRowData = (row, columns) => {
+        return columns.map((column, index) => {
+            if (column.children) {
+                return renderRowData(row, column.children);
+            } else {
+                return <td key={index} style={{width:column.width}}>{row[column.dataKey]}</td>;
+            }
+        });
+    };
+    
 
-    const renderDataCell = (row, column) => {
-      if (column.children) {
-          return column.children.map(childColumn => {
-              return (
-                  <React.Fragment key={childColumn.dataKey}>
-                      {renderDataCell(row, childColumn)}
-                  </React.Fragment>
-              );
-          });
-      } else {
-          return (
-              <td key={column.dataKey} style={{ border: "1px solid #444444" }}>
-                  {row[column.dataKey]}
-              </td>
-          );
-      }
-  };
+  
     /* useEffect */
     useEffect(() => {
 
     }, [])
 
     useEffect(() => {
+      setData(dataSource)
+      //console.log("data : ", dataSource);
+      let depthCount = 0;
 
     }, [dataSource])
     
     useEffect(() => {
-
-      iterateColumns(columns)
+      //console.log("column : ", columns)
+      setColumnData(columns)
     }, [columns])
     
     useEffect(() => {
-      
+      setHeaderStyleData(headerStyle)
     }, [headerStyle])
 
+    useEffect(() => {
+      setTableTitle(title)
+    }, [title])
 
 
     
 
   return (
 
-    <table style={{ border: "1px solid #444444", width: "100%" }}>
-      
-      <TableHeader columns={columns} />
+    <table >
+      {tableTitle?<caption>{tableTitle}</caption>:null}
+      <thead style={headerStyleData}>
+        <tr>
+          {renderHeaders(columnData)}
+        </tr>
+      </thead>
       <tbody>
-        {data.map((row, rowIndex) => (
-          <tr key={rowIndex} style={{ border: "1px solid #444444" }}>
-              {columns.map(column => renderDataCell(row, column))}
-          </tr>
-        ))}
+        {renderData(data, columnData)}
       </tbody>
     </table>
 

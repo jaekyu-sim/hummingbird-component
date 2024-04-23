@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = exports.HummingTable = void 0;
 var _react = _interopRequireWildcard(require("react"));
 var _propTypes = _interopRequireDefault(require("prop-types"));
+require("./HummingTable.css");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
@@ -18,96 +19,95 @@ const HummingTable = _ref => {
   let {
     dataSource,
     columns,
-    headerStyle
+    headerStyle,
+    title
   } = _ref;
   /* variable */
 
   /* useState */
   const [data, setData] = (0, _react.useState)(dataSource);
-  const [columnData, setColumnData] = (0, _react.useState)([]);
+  const [columnData, setColumnData] = (0, _react.useState)(columns);
+  const [headerStyleData, setHeaderStyleData] = (0, _react.useState)(headerStyle);
+  const [tableTitle, setTableTitle] = (0, _react.useState)();
 
   /* custom function */
   // const sortData = (key) => {
   // setData([...data].sort((a, b) => a[key] - b[key]));
   // };
 
-  const iterateColumns = columns => {
-    columns.forEach(column => {
-      if (!column.dataKey || !column.label) {
-        throw new Error('column 의 dataKey와 label은 필수 속성입니다.');
-      }
+  const renderHeaders = columns => {
+    return columns.map(column => {
       if (column.children) {
-        console.log('Children:');
-        iterateColumns(column.children);
+        return /*#__PURE__*/_react.default.createElement("th", {
+          colSpan: getColSpan(column),
+          style: {
+            width: column.width
+          },
+          key: column.label
+        }, column.label, renderHeaders(column.children));
       } else {
-        setColumnData(prev => {
-          let tmpDataKey = column.dataKey;
-          let tmpLabel = column.label;
-          let tmpWidth = column.width ? column.width : "70px";
-          let tmpSortable = column.sortable ? column.sortable : false;
-          return [...prev, {
-            dataKey: tmpDataKey,
-            label: tmpLabel,
-            width: tmpWidth,
-            sortable: tmpSortable
-          }];
-        });
+        return /*#__PURE__*/_react.default.createElement("th", {
+          style: {
+            width: column.width,
+            borderBottom: "1px solid black"
+          },
+          key: column.label
+        }, column.label);
       }
     });
   };
-  const TableHeader = _ref2 => {
-    let {
-      columns
-    } = _ref2;
-    const renderHeader = columns => {
-      return /*#__PURE__*/_react.default.createElement("tr", null, columns.map(column => /*#__PURE__*/_react.default.createElement("th", {
-        key: column.dataKey,
-        style: {
-          width: column.width,
-          border: "1px solid #444444"
-        }
-      }, column.label, column.children && /*#__PURE__*/_react.default.createElement(TableHeader, {
-        columns: column.children
-      }))));
-    };
-    return /*#__PURE__*/_react.default.createElement("thead", null, renderHeader(columns));
+  const getColSpan = column => {
+    if (!column.children) return 1;
+    let colSpan = 0;
+    column.children.forEach(child => {
+      colSpan += getColSpan(child);
+    });
+    return colSpan;
   };
-  const renderDataCell = (row, column) => {
-    if (column.children) {
-      return column.children.map(childColumn => {
-        return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, {
-          key: childColumn.dataKey
-        }, renderDataCell(row, childColumn));
-      });
-    } else {
-      return /*#__PURE__*/_react.default.createElement("td", {
-        key: column.dataKey,
-        style: {
-          border: "1px solid #444444"
-        }
-      }, row[column.dataKey]);
-    }
+  const renderData = (data, columns) => {
+    return data.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
+      key: rowIndex,
+      style: {
+        borderBottom: "1px solid black",
+        backgroundColor: "#D6EEEE"
+      }
+    }, renderRowData(row, columns)));
   };
+  const renderRowData = (row, columns) => {
+    return columns.map((column, index) => {
+      if (column.children) {
+        return renderRowData(row, column.children);
+      } else {
+        return /*#__PURE__*/_react.default.createElement("td", {
+          key: index,
+          style: {
+            width: column.width
+          }
+        }, row[column.dataKey]);
+      }
+    });
+  };
+
   /* useEffect */
   (0, _react.useEffect)(() => {}, []);
-  (0, _react.useEffect)(() => {}, [dataSource]);
   (0, _react.useEffect)(() => {
-    iterateColumns(columns);
+    setData(dataSource);
+    //console.log("data : ", dataSource);
+    let depthCount = 0;
+  }, [dataSource]);
+  (0, _react.useEffect)(() => {
+    //console.log("column : ", columns)
+    setColumnData(columns);
   }, [columns]);
-  (0, _react.useEffect)(() => {}, [headerStyle]);
-  return /*#__PURE__*/_react.default.createElement("table", {
-    style: {
-      border: "1px solid #444444",
-      width: "100%"
-    }
-  }, /*#__PURE__*/_react.default.createElement(TableHeader, {
-    columns: columns
-  }), /*#__PURE__*/_react.default.createElement("tbody", null, data.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
-    key: rowIndex,
-    style: {
-      border: "1px solid #444444"
-    }
-  }, columns.map(column => renderDataCell(row, column))))));
+  (0, _react.useEffect)(() => {
+    setHeaderStyleData(headerStyle);
+  }, [headerStyle]);
+  (0, _react.useEffect)(() => {
+    setTableTitle(title);
+  }, [title]);
+  return /*#__PURE__*/_react.default.createElement("table", null, tableTitle ? /*#__PURE__*/_react.default.createElement("caption", null, tableTitle) : null, /*#__PURE__*/_react.default.createElement("thead", {
+    style: headerStyleData
+  }, /*#__PURE__*/_react.default.createElement("tr", null, renderHeaders(columnData))), /*#__PURE__*/_react.default.createElement("tbody", null, renderData(data, columnData)));
 };
 exports.HummingTable = HummingTable;
 var _default = exports.default = HummingTable;
