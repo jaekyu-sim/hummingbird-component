@@ -17,10 +17,10 @@ function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; 
  */
 const HummingTable = _ref => {
   let {
-    dataSource,
-    columns,
-    headerStyle,
-    title
+    dataSource = [],
+    columns = [],
+    headerStyle = [],
+    title = undefined
   } = _ref;
   /* variable */
 
@@ -81,7 +81,10 @@ const HummingTable = _ref => {
         return /*#__PURE__*/_react.default.createElement("td", {
           key: index,
           style: {
-            width: column.width
+            width: column.width,
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis"
           }
         }, row[column.dataKey]);
       }
@@ -105,7 +108,13 @@ const HummingTable = _ref => {
   (0, _react.useEffect)(() => {
     setTableTitle(title);
   }, [title]);
-  return /*#__PURE__*/_react.default.createElement("table", null, tableTitle ? /*#__PURE__*/_react.default.createElement("caption", null, tableTitle) : null, /*#__PURE__*/_react.default.createElement("thead", {
+  return /*#__PURE__*/_react.default.createElement("table", {
+    style: {
+      width: "100%",
+      tableLayout: "fixed",
+      padding: "20px"
+    }
+  }, tableTitle ? /*#__PURE__*/_react.default.createElement("caption", null, tableTitle) : null, /*#__PURE__*/_react.default.createElement("thead", {
     style: headerStyleData
   }, /*#__PURE__*/_react.default.createElement("tr", null, renderHeaders(columnData))), /*#__PURE__*/_react.default.createElement("tbody", null, renderData(data, columnData)));
 };
@@ -115,27 +124,9 @@ HummingTable.propTypes = {
   /**
    * Is this the principal call to action on the page?
    */
-  primary: _propTypes.default.bool,
-  /**
-   * What background color to use
-   */
-  backgroundColor: _propTypes.default.string,
-  /**
-   * How large should the button be?
-   */
-  size: _propTypes.default.oneOf(['small', 'medium', 'large']),
-  /**
-   * Button contents
-   */
-  label: _propTypes.default.string.isRequired,
+
   /**
    * Optional click handler
    */
   onClick: _propTypes.default.func
-};
-HummingTable.defaultProps = {
-  backgroundColor: null,
-  primary: false,
-  size: 'medium',
-  onClick: undefined
 };

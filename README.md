@@ -1,70 +1,123 @@
-# Getting Started with Create React App
+# Hummingbird component
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This component library object is react quickly like as most compact library to act fast compare to other library.
 
-## Available Scripts
+## How to start
 
-In the project directory, you can run:
+run below command
 
-### `npm start`
+```
+npm i hummingbird-component
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Using like that
+```javascript
+import {HummingTable} from "hummingbird-component"
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+...
 
-### `npm test`
+const headerStyle = {
+    backgroundColor: "#ACC"
+  }
+  const columnConfig1 = [
+    {
+        dataKey:"id",
+        label:"아이디",
+        width:"150px",
+        sortable: true,
+    },
+    {
+      dataKey:"name",
+      label:"이름",
+      width:"100px",
+      sortable: true,
+    },
+    {
+        dataKey:"other",
+        label:"그외 정보",
+        width:"400px",
+        sortable: true,
+        children: [
+          {
+            dataKey:"age",
+            label:"나이",
+            width:"100px",
+            sortable: true,
+          },
+          {
+            dataKey:"address",
+            label:"주소",
+            width:"300px",
+            sortable: true,
+            children: [
+              {
+                dataKey:"street",
+                label:"세부 주소1",
+                width:"100px",
+                sortable: true,
+              },
+              {
+                dataKey:"block",
+                label:"세부 주소2",
+                width:"200px",
+                sortable: true,
+                children: [
+                  {
+                    dataKey:"building",
+                    label:"동",
+                    width:"100px",
+                    sortable: true,
+                  },
+                  {
+                    dataKey:"doorNo",
+                    label:"호수",
+                    width:"100px",
+                    sortable: true,
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+    },
+    {
+        dataKey:"company",
+        label:"회사 정보",
+        width:"300px",
+        sortable: false,
+        children:[
+          {
+            dataKey:"companyAddress",
+            label:"회사 주소",
+            width:"150px",
+            sortable: true,
+          },
+          {
+            dataKey:"companyName",
+            label:"회사 명",
+            width:"150px",
+            sortable: true,
+          }
+        ]
+    }
+]
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+...
 
-### `npm run build`
+return (
+    <div className="App">
+      test
+      <HummingTable 
+        columns={columnConfig1}
+        dataSource={data}
+        headerStyle={headerStyle}
+      ></HummingTable>
+      <button onClick={cliskButton}>click</button>
+    </div>
+  );
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

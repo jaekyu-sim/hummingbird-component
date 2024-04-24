@@ -16,55 +16,55 @@ function App() {
     {
         dataKey:"id",
         label:"아이디",
-        width:"150px",
+        width:"8%",
         sortable: true,
     },
     {
       dataKey:"name",
       label:"이름",
-      width:"100px",
+      width:"8%",
       sortable: true,
     },
     {
         dataKey:"other",
         label:"그외 정보",
-        width:"400px",
+        width:"50%",
         sortable: true,
         children: [
           {
             dataKey:"age",
             label:"나이",
-            width:"100px",
+            width:"30%",
             sortable: true,
           },
           {
             dataKey:"address",
             label:"주소",
-            width:"300px",
+            width:"20%",
             sortable: true,
             children: [
               {
                 dataKey:"street",
                 label:"세부 주소1",
-                width:"100px",
+                width:"10%",
                 sortable: true,
               },
               {
                 dataKey:"block",
                 label:"세부 주소2",
-                width:"200px",
+                width:"7%",
                 sortable: true,
                 children: [
                   {
                     dataKey:"building",
                     label:"동",
-                    width:"100px",
+                    width:"3%",
                     sortable: true,
                   },
                   {
                     dataKey:"doorNo",
                     label:"호수",
-                    width:"100px",
+                    width:"3%",
                     sortable: true,
                   }
                 ]
@@ -76,19 +76,19 @@ function App() {
     {
         dataKey:"company",
         label:"회사 정보",
-        width:"300px",
+        width:"24%",
         sortable: false,
         children:[
           {
             dataKey:"companyAddress",
             label:"회사 주소",
-            width:"150px",
+            width:"12%",
             sortable: true,
           },
           {
             dataKey:"companyName",
             label:"회사 명",
-            width:"150px",
+            width:"12%",
             sortable: true,
           }
         ]
@@ -99,73 +99,49 @@ const columnConfig2 = [
   {
       dataKey:"id",
       label:"아이디",
-      width:"100px",
+      width:"12%",
       sortable: true,
   },
   {
     dataKey:"name",
     label:"이름",
-    width:"100px",
-    sortable: true,
-  },
-  {
-    dataKey:"other",
-    label:"그외 정보",
-    width:"200px",
+    width:"12%",
     sortable: true,
   },
   {
     dataKey:"age",
     label:"나이",
-    width:"100px",
-    sortable: true,
-  },
-  {
-    dataKey:"address",
-    label:"주소",
-    width:"200px",
+    width:"12%",
     sortable: true,
   },
   {
     dataKey:"street",
     label:"세부 주소1",
-    width:"100px",
-    sortable: true,
-  },
-  {
-    dataKey:"block",
-    label:"세부 주소2",
-    width:"100px",
+    width:"12%",
     sortable: true,
   },
   {
     dataKey:"building",
     label:"동",
-    width:"100px",
+    width:"12%",
     sortable: true,
   },
   {
     dataKey:"doorNo",
     label:"호수",
-    width:"100px",
+    width:"12%",
     sortable: true,
-  },
-  {
-    dataKey:"company",
-    label:"회사 정보",
-    width:"300px",
-    sortable: false,
   },
   {
     dataKey:"companyAddress",
     label:"회사 주소",
-    width:"150px",
+    width:"18%",
     sortable: true,
   },
   {
     dataKey:"companyName",
     label:"회사 명",
-    width:"150px",
+    width:"12%",
     sortable: true,
   }
 
@@ -180,7 +156,7 @@ const [data, setData] = useState([
     id: "1",
     name: "sim1",
     age: "1",
-    street: "yeongtong-ro",
+    street: "yeongtong-r333333333333333333333333333333333333333333333333333333333333333333333333333333o",
     building: "824",
     doorNo: "1503",
     companyAddress: "suwon-si",

@@ -6,7 +6,7 @@ import "./HummingTable.css"
 /**
  * Primary UI component for user interaction
  */
-export const HummingTable = ({ dataSource, columns, headerStyle, title }) => {
+export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], title = undefined }) => {
     /* variable */
 
     /* useState */
@@ -59,7 +59,7 @@ export const HummingTable = ({ dataSource, columns, headerStyle, title }) => {
             if (column.children) {
                 return renderRowData(row, column.children);
             } else {
-                return <td key={index} style={{width:column.width}}>{row[column.dataKey]}</td>;
+                return <td key={index} style={{width:column.width, overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}>{row[column.dataKey]}</td>;
             }
         });
     };
@@ -96,7 +96,7 @@ export const HummingTable = ({ dataSource, columns, headerStyle, title }) => {
 
   return (
 
-    <table >
+    <table style={{width:"100%", tableLayout:"fixed", padding:"20px"}}>
       {tableTitle?<caption>{tableTitle}</caption>:null}
       <thead style={headerStyleData}>
         <tr>
@@ -117,28 +117,9 @@ HummingTable.propTypes = {
   /**
    * Is this the principal call to action on the page?
    */
-  primary: PropTypes.bool,
-  /**
-   * What background color to use
-   */
-  backgroundColor: PropTypes.string,
-  /**
-   * How large should the button be?
-   */
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  /**
-   * Button contents
-   */
-  label: PropTypes.string.isRequired,
+  
   /**
    * Optional click handler
    */
   onClick: PropTypes.func,
-};
-
-HummingTable.defaultProps = {
-  backgroundColor: null,
-  primary: false,
-  size: 'medium',
-  onClick: undefined,
 };
