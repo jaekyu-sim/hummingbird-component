@@ -1,6 +1,6 @@
 {
   "name": "hummingbird-component",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "main": "dist/index.js",
   "private": false,
   "files": [ "dist", "README.md" ],
@@ -8,6 +8,7 @@
       "type": "git",
       "url": "URL_OF_YOUR_REPOSITORY"
   },
+  "license": "MIT",
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "@testing-library/jest-dom": "^5.17.0",
