@@ -25,14 +25,16 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
     const renderHeaders = (columns) => {
       return columns.map(column => {
         if (column.children) {
+          console.log("!! has children width : ", column.label, ", ", column.width)
           return (
-            <th colSpan={getColSpan(column)} style={{width:column.width}} key={column.label}>
+            <th colSpan={getColSpan(column)} style={{width:column.width}} key={column.dataKey}>
               {column.label}
               {renderHeaders(column.children)}
             </th>
             );
         } else {
-          return <th style={{ width: column.width, borderBottom:"1px solid black" }} key={column.label}>{column.label}</th>;
+          console.log("!! no children width : ", column.label, ", ", column.width)
+          return <th style={{ width: column.width }} key={column.dataKey}>{column.label}</th>;
         }
       });
     };
@@ -59,6 +61,7 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
             if (column.children) {
                 return renderRowData(row, column.children);
             } else {
+              console.log("## row width : ", column, ", ", column.width)
                 return <td key={index} style={{width:column.width, overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}>{row[column.dataKey]}</td>;
             }
         });
@@ -98,9 +101,31 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
 
     <table style={{width:"100%", tableLayout:"fixed", padding:"20px"}}>
       {tableTitle?<caption>{tableTitle}</caption>:null}
-      <thead style={headerStyleData}>
+      {/* <thead style={headerStyleData}>
         <tr>
           {renderHeaders(columnData)}
+        </tr>
+      </thead> */}
+      <thead>
+        <tr>
+          <th rowspan="4"             width="8%">아이디</th>
+          <th rowspan="4"             width="8%">이름</th>
+          <th rowspan="1" colspan="4" width="8%">그외 정보</th>
+          <th rowspan="1" colspan="2" width="8%">회사 정보</th>
+        </tr>
+        <tr>
+          <th rowspan="3"             width="8%">나이</th>
+          <th rowspan="1" colspan="3" width="8%">주소</th>
+          <th rowSpan="3" width="8%">회사 주소</th>
+          <th rowSpan="3" width="8%">회사 명</th>
+        </tr>
+        <tr>
+          <th rowSpan="2"             width="8%">세부 주소1</th>
+          <th rowSpan="1" colSpan="2" width="8%">세부 주소2</th>
+        </tr>
+        <tr>
+          <th width="8%">동</th>
+          <th width="8%">호수</th>
         </tr>
       </thead>
       <tbody>

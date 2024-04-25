@@ -14,10 +14,10 @@ function App() {
 
   const columnConfig1 = [
     {
-        dataKey:"id",
-        label:"아이디",
-        width:"8%",
-        sortable: true,
+      dataKey:"id",
+      label:"아이디",
+      width:"8%",
+      sortable: true,
     },
     {
       dataKey:"name",
@@ -26,72 +26,72 @@ function App() {
       sortable: true,
     },
     {
-        dataKey:"other",
-        label:"그외 정보",
-        width:"50%",
-        sortable: true,
-        children: [
-          {
-            dataKey:"age",
-            label:"나이",
-            width:"30%",
-            sortable: true,
-          },
-          {
-            dataKey:"address",
-            label:"주소",
-            width:"20%",
-            sortable: true,
-            children: [
-              {
-                dataKey:"street",
-                label:"세부 주소1",
-                width:"10%",
-                sortable: true,
-              },
-              {
-                dataKey:"block",
-                label:"세부 주소2",
-                width:"7%",
-                sortable: true,
-                children: [
-                  {
-                    dataKey:"building",
-                    label:"동",
-                    width:"3%",
-                    sortable: true,
-                  },
-                  {
-                    dataKey:"doorNo",
-                    label:"호수",
-                    width:"3%",
-                    sortable: true,
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+      dataKey:"other",
+      label:"그외 정보",
+      width:"50%",
+      sortable: true,
+      children: [
+        {
+          dataKey:"age",
+          label:"나이",
+          width:"20%",
+          sortable: true,
+        },
+        {
+          dataKey:"address",
+          label:"주소",
+          width:"80%",
+          sortable: true,
+          children: [
+            {
+              dataKey:"street",
+              label:"세부 주소1",
+              width:"60%",
+              sortable: true,
+            },
+            {
+              dataKey:"block",
+              label:"세부 주소2",
+              width:"20%",
+              sortable: true,
+              children: [
+                {
+                  dataKey:"building",
+                  label:"동",
+                  width:"10%",
+                  sortable: true,
+                },
+                {
+                  dataKey:"doorNo",
+                  label:"호수",
+                  width:"10%",
+                  sortable: true,
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
-        dataKey:"company",
-        label:"회사 정보",
-        width:"24%",
-        sortable: false,
-        children:[
-          {
-            dataKey:"companyAddress",
-            label:"회사 주소",
-            width:"12%",
-            sortable: true,
-          },
-          {
-            dataKey:"companyName",
-            label:"회사 명",
-            width:"12%",
-            sortable: true,
-          }
-        ]
+      dataKey:"company",
+      label:"회사 정보",
+      width:"34%",
+      sortable: false,
+      children:[
+        {
+          dataKey:"companyAddress",
+          label:"회사 주소",
+          width:"17%",
+          sortable: true,
+        },
+        {
+          dataKey:"companyName",
+          label:"회사 명",
+          width:"17%",
+          sortable: true,
+        }
+      ]
     }
 ]
 
@@ -239,6 +239,36 @@ const clickButton2 = () => {
 
       <button onClick={clickButton1}>click1</button>
       <button onClick={clickButton2}>click2</button>
+
+
+      
+
+<table>
+  <thead>
+    <tr>
+
+      <th rowspan="4"             width="8%">아이디</th>
+      <th rowspan="4"             width="8%">이름</th>
+      <th rowspan="1" colspan="4" width="8%">그외 정보</th>
+      <th rowspan="1" colspan="2" width="8%">회사 정보</th>
+    </tr>
+    <tr>
+      <th rowspan="3"             width="8%">나이</th>
+      <th rowspan="1" colspan="3" width="8%">주소</th>
+      <th rowSpan="3" width="8%">회사 주소</th>
+      <th rowSpan="3" width="8%">회사 명</th>
+    </tr>
+    <tr>
+      <th rowSpan="2"             width="8%">세부 주소1</th>
+      <th rowSpan="1" colSpan="2" width="8%">세부 주소2</th>
+    </tr>
+    <tr>
+      
+      <th width="8%">동</th>
+      <th width="8%">호수</th>
+    </tr>
+  </thead>
+</table>
     </div>
   );
 }

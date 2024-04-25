@@ -1,9 +1,16 @@
 table {
     border-collapse: collapse;
+    border: 1px solid black;
 }
 th{
   border-right: 1px solid black;
   border-top: 1px solid black;
+  border-collapse: collapse;
+  border: 1px solid black;
+}
+td{
+  border-collapse: collapse;
+  border: 1px solid black;
 }
 .group-header {
     border-right: 1px solid black;
