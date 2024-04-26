@@ -35,34 +35,76 @@ const HummingTable = _ref => {
   // setData([...data].sort((a, b) => a[key] - b[key]));
   // };
 
-  const renderHeaders = columns => {
-    return columns.map(column => {
-      if (column.children) {
-        return /*#__PURE__*/_react.default.createElement("th", {
-          colSpan: getColSpan(column),
-          style: {
-            width: column.width
-          },
-          key: column.label
-        }, column.label, renderHeaders(column.children));
-      } else {
-        return /*#__PURE__*/_react.default.createElement("th", {
-          style: {
-            width: column.width,
-            borderBottom: "1px solid black"
-          },
-          key: column.label
-        }, column.label);
+  const makeHeader = () => {
+    function countTotalChildren(node) {
+      if (!node.children) return 1;
+
+      //let count = node.children.length;
+
+      let count = 0;
+      for (let i = 0; i < node.children.length; i++) {
+        if (node.children[i].children) {} else {
+          count = count + 1;
+        }
       }
+      node.children.forEach(child => {
+        count += countTotalChildren(child);
+      });
+      return count;
+    }
+    function generateHeader(tableConfig) {
+      let queue = [...tableConfig];
+      let depthMap = new Map(); // depth별로 요소를 저장할 맵
+
+      while (queue.length > 0) {
+        const node = queue.shift();
+        const depth = node.depth || 0; // depth가 없으면 0으로 설정
+
+        if (!depthMap.has(depth)) {
+          depthMap.set(depth, []); // 해당 depth의 배열이 없으면 초기화
+        }
+
+        // 각 요소의 총 children 개수 계산
+        let tmpVal = countTotalChildren(node);
+        if (tmpVal > 1) {
+          tmpVal = tmpVal / 2;
+        }
+        node.childCount = tmpVal;
+        depthMap.get(depth).push(node); // 해당 depth의 배열에 요소 추가
+
+        // children이 있으면 큐에 추가하고 depth를 증가시켜서 넣음
+        if (node.children) {
+          node.children.forEach(child => {
+            child.depth = depth + 1; // 하위 요소의 depth 증가
+            queue.push(child);
+          });
+        }
+      }
+      for (let i = 0; i < depthMap.size; i++) {
+        depthMap.get(i).forEach((item, idx) => {
+          if (depthMap.get(i)[idx].children) {
+            depthMap.get(i)[idx].rowSpanCount = 1;
+          } else {
+            depthMap.get(i)[idx].rowSpanCount = depthMap.size - i;
+          }
+        });
+      }
+      return depthMap;
+    }
+
+    // Example usage:
+    const depthMap = generateHeader(columnData);
+    const headers = [];
+    depthMap.forEach((columns, depth) => {
+      headers.push( /*#__PURE__*/_react.default.createElement("tr", {
+        key: depth
+      }, columns.map((column, index) => /*#__PURE__*/_react.default.createElement("th", {
+        key: index,
+        rowSpan: column.rowSpanCount,
+        colSpan: column.childCount
+      }, column.label))));
     });
-  };
-  const getColSpan = column => {
-    if (!column.children) return 1;
-    let colSpan = 0;
-    column.children.forEach(child => {
-      colSpan += getColSpan(child);
-    });
-    return colSpan;
+    return headers;
   };
   const renderData = (data, columns) => {
     return data.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
@@ -96,7 +138,6 @@ const HummingTable = _ref => {
   (0, _react.useEffect)(() => {
     setData(dataSource);
     //console.log("data : ", dataSource);
-    let depthCount = 0;
   }, [dataSource]);
   (0, _react.useEffect)(() => {
     //console.log("column : ", columns)
@@ -116,7 +157,7 @@ const HummingTable = _ref => {
     }
   }, tableTitle ? /*#__PURE__*/_react.default.createElement("caption", null, tableTitle) : null, /*#__PURE__*/_react.default.createElement("thead", {
     style: headerStyleData
-  }, /*#__PURE__*/_react.default.createElement("tr", null, renderHeaders(columnData))), /*#__PURE__*/_react.default.createElement("tbody", null, renderData(data, columnData)));
+  }, makeHeader()), /*#__PURE__*/_react.default.createElement("tbody", null, renderData(data, columnData)));
 };
 exports.HummingTable = HummingTable;
 var _default = exports.default = HummingTable;
