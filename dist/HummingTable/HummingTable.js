@@ -29,6 +29,10 @@ const HummingTable = _ref => {
   const [columnData, setColumnData] = (0, _react.useState)(columns);
   const [headerStyleData, setHeaderStyleData] = (0, _react.useState)(headerStyle);
   const [tableTitle, setTableTitle] = (0, _react.useState)();
+  const [hoverCell, setHoverCell] = (0, _react.useState)({
+    row: "",
+    idx: ""
+  });
 
   /* custom function */
   // const sortData = (key) => {
@@ -97,11 +101,22 @@ const HummingTable = _ref => {
     const headers = [];
     depthMap.forEach((columns, depth) => {
       headers.push( /*#__PURE__*/_react.default.createElement("tr", {
-        key: depth
+        key: depth,
+        style: {
+          cursor: "col-resize"
+        }
       }, columns.map((column, index) => /*#__PURE__*/_react.default.createElement("th", {
         key: index,
         rowSpan: column.rowSpanCount,
-        colSpan: column.childCount
+        colSpan: column.childCount,
+        onMouseDown: e => console.log(e, "hello"),
+        onMouseMove: e => mouseOnTh(e, depth, index),
+        style: {
+          cursor: JSON.stringify(hoverCell) === JSON.stringify({
+            row: depth,
+            idx: index
+          }) ? 'col-resize' : 'default'
+        }
       }, column.label))));
     });
     return headers;
@@ -131,6 +146,47 @@ const HummingTable = _ref => {
         }, row[column.dataKey]);
       }
     });
+  };
+  const cell_left = obj => {
+    let eventObject = obj;
+    if (eventObject.nativeEvent.offsetX < 5 && eventObject.nativeEvent.srcElement.cellIndex !== 0) {
+      //Cell 의 왼쪽라인을 오차 픽셀 5 범위 안쪽에서 클릭하고, 가장 왼쪽의 Cell 이 아니라면
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const cell_right = obj => {
+    let eventObject = obj;
+    if (eventObject.nativeEvent.offsetX > eventObject.nativeEvent.srcElement.offsetWidth - 5) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const mouseOnTh = (e, depth, index) => {
+    //console.log(e.nativeEvent.offsetX, e.nativeEvent.offsetY, e.nativeEvent.offsetWidth, e.nativeEvent)
+    console.log(cell_left(e), cell_right(e));
+    console.log(JSON.stringify(hoverCell));
+    console.log(JSON.stringify({
+      row: depth,
+      idx: index
+    }));
+    console.log(JSON.stringify(hoverCell) === JSON.stringify({
+      row: depth,
+      idx: index
+    }));
+    if (cell_left(e) || cell_right(e)) {
+      setHoverCell({
+        row: depth,
+        idx: index
+      });
+    } else {
+      setHoverCell({
+        row: "",
+        idx: ""
+      });
+    }
   };
 
   /* useEffect */

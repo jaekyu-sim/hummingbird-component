@@ -8,6 +8,7 @@ import "./HummingTable.css"
  */
 export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], title = undefined }) => {
     /* variable */
+    //let widthChangeX = 0;
 
     /* useState */
     const [data, setData] = useState(dataSource);
@@ -16,6 +17,12 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
     const [tableTitle, setTableTitle] = useState();
 
     const [hoverCell, setHoverCell] = useState({row: "", idx: ""})
+    const [mouseDownFlag, setMouseDownFlag] = useState(false)
+    const [widthChangeTargetCell1, setWidthChangeTargetCell1] = useState();
+    const [widthChangeTargetCell2, setWidthChangeTargetCell2] = useState();
+    const [widthChangeX, setWidthChangeX] = useState(0);
+    const [source1Width, setSource1Width] = useState(0);
+    const [source2Width, setSource2Width] = useState(0);
 
     
       
@@ -114,11 +121,12 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
           <tr key={depth} style={{cursor:"col-resize"}}>
             {columns.map((column, index) => (
               <th 
-                key={index} 
+                key={depth+"."+index} 
                 rowSpan={column.rowSpanCount} 
                 colSpan={column.childCount} 
-                onMouseDown={(e) => console.log(e, "hello")} 
+                onMouseDown={(e) => mouseDownTh(e, depth, index)} 
                 onMouseMove={(e) => mouseOnTh(e, depth, index)}
+                onMouseUp  ={(e) => mouseUpTh(e, depth, index)}
                 style={{cursor: JSON.stringify(hoverCell) === JSON.stringify({row: depth, idx: index})? 'col-resize': 'default'}}
                 >
                   {column.label}
@@ -179,14 +187,16 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
     }
 
     const mouseOnTh = (e, depth, index) => {
-      //console.log(e.nativeEvent.offsetX, e.nativeEvent.offsetY, e.nativeEvent.offsetWidth, e.nativeEvent)
-      console.log(cell_left(e), cell_right(e))
+      if(cell_left(e))
+      {
+        setHoverCell({
+          row: depth,
+          idx: index
+        })
 
-      console.log(JSON.stringify(hoverCell))
-      console.log(JSON.stringify({row: depth, idx: index}))
-      
-      console.log(JSON.stringify(hoverCell) === JSON.stringify({row: depth, idx: index}))
-      if(cell_left(e) || cell_right(e))
+
+      }
+      else if(cell_right(e))
       {
         setHoverCell({
           row: depth,
@@ -200,7 +210,116 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
           idx: ""
         })
       }
+
+      //setMouseDownFlag
+      if(mouseDownFlag)
+      {
+        console.log(widthChangeTargetCell1, widthChangeTargetCell2)
+        //전체 너비는 바꾸지 않고, 연관된 cell 2 개만 너비를 바꾼다.
+        
+        let changeWidth = widthChangeX - e.clientX ;
+        console.log(changeWidth)
+        
+
+          // 첫 번째 셀의 너비 조정
+          if (widthChangeTargetCell1) {
+            console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX)
+
+            widthChangeTargetCell1.style.width = source1Width - changeWidth+ 'px';
+          }
+
+          // 두 번째 셀의 너비 조정
+          if (widthChangeTargetCell2) {
+            //widthChangeTargetCell2.style.width = widthChangeTargetCell2.offsetWidth - 1 + 'px';
+
+            widthChangeTargetCell2.style.width = source2Width + changeWidth+ 'px';
+          }
+        
+        
+      }
     }
+
+    const mouseDownTh = (e, depth, index) => {
+      console.log(e, "hello")
+      
+      
+
+      
+
+      if(cell_left(e))
+      {
+        setMouseDownFlag(true)
+        setWidthChangeX(e.clientX);
+        console.log("왼")
+
+        let downX = e.clientX;
+        let downY = e.clientY;
+        let newDownX = downX - 5;
+
+        // const newEvent = new MouseEvent('click', {
+        //   clientX: newDownX,
+        //   clientY: downY,
+        //   bubbles: true,
+        //   cancelable: true,
+        //   view: window
+        // });
+        const element1 = document.elementFromPoint(downX, downY);
+        const element2 = document.elementFromPoint(newDownX, downY);
+
+        //console.log("element1 : ", element1)
+        //console.log("element2 : ", element2)
+        
+        
+        setWidthChangeTargetCell1(element2)
+        setWidthChangeTargetCell2(element1)
+        setSource1Width(element2.offsetWidth)
+        setSource2Width(element1.offsetWidth)
+      }
+      else if(cell_right(e))
+      {
+        setMouseDownFlag(true)
+        setWidthChangeX(e.clientX);
+        console.log("오")
+        let downX = e.clientX;
+        let downY = e.clientY;
+        let newDownX = downX + 5;
+
+        // const newEvent = new MouseEvent('click', {
+        //   clientX: newDownX,
+        //   clientY: downY,
+        //   bubbles: true,
+        //   cancelable: true,
+        //   view: window
+        // });
+        const element1 = document.elementFromPoint(downX, downY);
+        const element2 = document.elementFromPoint(newDownX, downY);
+
+        //console.log("element1 : ", element1)
+        //console.log("element2 : ", element2)
+        
+        setWidthChangeTargetCell1(element1)
+        setWidthChangeTargetCell2(element2)
+
+        setSource1Width(element1.offsetWidth)
+        setSource2Width(element2.offsetWidth)
+      }
+      else
+      {
+
+      }
+
+
+    }
+
+    const mouseUpTh = (e, depth, index) => {
+      console.log(e, "hello")
+      setMouseDownFlag(false)
+
+
+
+    }
+
+    
 
   
     /* useEffect */

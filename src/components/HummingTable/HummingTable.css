@@ -12,9 +12,13 @@ td{
   border-collapse: collapse;
   border: 1px solid black;
 }
+td+td {
+  width: auto;
+}
 .group-header {
     border-right: 1px solid black;
 }
 .group-header:last-child {
     border-right: none;
 }
+

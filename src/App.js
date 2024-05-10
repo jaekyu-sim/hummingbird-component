@@ -3,6 +3,7 @@ import './App.css';
 //import {faker} from '@faker-js/faker'
 import { HummingTable } from './components/HummingTable/HummingTable';
 import React, {useState, useEffect} from "react";
+import ResizableTable from './ResizableTable';
 
 //faker.seed(100);
 
@@ -156,7 +157,7 @@ const [data, setData] = useState([
     id: "1",
     name: "sim1",
     age: "1",
-    street: "yeongtong-r333333333333333333333333333333333333333333333333333333333333333333333333333333o",
+    street: "yeongtong-3o",
     building: "824",
     doorNo: "1503",
     companyAddress: "suwon-si",
@@ -181,7 +182,7 @@ const clickButton1 = () => {
         id: "111",
         name: "sim111",
         age: "111",
-        street: "yeongtong-ro",
+        street: "yeongtong-rwidth:column.widthwidth:column.widthwidth:column.widthwidth:column.widthwidth:column.widtho",
         building: "824",
         doorNo: "1503",
         companyAddress: "suwon-si",
@@ -231,7 +232,7 @@ const clickButton2 = () => {
     <div className="App">
       TEST
       <HummingTable 
-        columns={columnConfig1}
+        columns={columnConfig2}
         dataSource={data}
         headerStyle={headerStyle}
         title={"table title test"}
@@ -240,6 +241,33 @@ const clickButton2 = () => {
       <button onClick={clickButton1}>click1</button>
       <button onClick={clickButton2}>click2</button>
     </div>
+    // <div className="App">
+    //   <ResizableTable>
+    //     <thead>
+    //       <tr>
+    //         <th rowspan="4" width="8%">아이디</th>
+    //         <th rowspan="4" width="8%">이름</th>
+    //         <th rowspan="4" colspan="1" width="18%">그외 정보</th>
+    //         <th rowspan="4" colspan="2" width="8%">회사 정보</th>
+    //         <th colspan="3" width="15%">주소</th>
+    //         <th rowspan="4" width="8%">회사 주소</th>
+    //         <th rowspan="4" width="8%">회사 명</th>
+    //       </tr>
+    //       <tr>
+    //         <th rowspan="3" width="8%">나이</th>
+    //         <th rowspan="2" width="8%">세부 주소1</th>
+    //         <th colspan="2" width="15%">세부 주소2</th>
+    //       </tr>
+    //       <tr>
+    //         <th id="resize-dong" width="7.5%">동</th>
+    //         <th id="resize-hosu" width="7.5%">호수</th>
+    //       </tr>
+    //     </thead>
+    //     <tbody>
+    //       {/* 테이블 본문 내용은 여기에 작성합니다 */}
+    //     </tbody>
+    //   </ResizableTable>
+    // </div>
   );
 }
 
