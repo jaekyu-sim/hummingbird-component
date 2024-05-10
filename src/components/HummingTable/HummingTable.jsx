@@ -6,7 +6,7 @@ import "./HummingTable.css"
 /**
  * Primary UI component for user interaction
  */
-export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], title = undefined }) => {
+export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], title = undefined, displayRowNum="20" }) => {
     /* variable */
     //let widthChangeX = 0;
 
@@ -15,6 +15,7 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
     const [columnData, setColumnData] = useState(columns);
     const [headerStyleData, setHeaderStyleData] = useState(headerStyle);
     const [tableTitle, setTableTitle] = useState();
+    const [rowNum, setRowNum] = useState(displayRowNum);
 
     const [hoverCell, setHoverCell] = useState({row: "", idx: ""})
     const [mouseDownFlag, setMouseDownFlag] = useState(false)
@@ -142,8 +143,22 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
     }
     
     const renderData = (data, columns) => {
+      if(data.length < rowNum)
+      {
+         
+        for(let i = 0 ; i < rowNum - data.length + 1; i++)
+        {
+          data.push({
+
+          })
+        }
+      }
+      else
+      {
+        //페이징 로직 필요
+      }
       return data.map((row, rowIndex) => (
-          <tr key={rowIndex} style={{borderBottom:"1px solid black", backgroundColor:"#D6EEEE"}}>
+          <tr key={rowIndex} style={{borderBottom:"1px solid black", backgroundColor:"#D6EEEE", height:"20px"}}>
               {renderRowData(row, columns)}
           </tr>
       ));
@@ -225,14 +240,14 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
           if (widthChangeTargetCell1) {
             console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX)
 
-            widthChangeTargetCell1.style.width = source1Width - changeWidth+ 'px';
+            widthChangeTargetCell1.style.width = source1Width - changeWidth + 'px';
           }
 
           // 두 번째 셀의 너비 조정
           if (widthChangeTargetCell2) {
             //widthChangeTargetCell2.style.width = widthChangeTargetCell2.offsetWidth - 1 + 'px';
 
-            widthChangeTargetCell2.style.width = source2Width + changeWidth+ 'px';
+            widthChangeTargetCell2.style.width = source2Width + changeWidth - 5 + 'px';
           }
         
         
@@ -345,6 +360,11 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
     useEffect(() => {
       setTableTitle(title)
     }, [title])
+
+    useEffect(() => {
+      let tmpNum = Number(displayRowNum);
+      setRowNum(tmpNum);
+    }, [displayRowNum])
 
 
     

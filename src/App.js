@@ -232,10 +232,11 @@ const clickButton2 = () => {
     <div className="App">
       TEST
       <HummingTable 
-        columns={columnConfig2}
+        columns={columnConfig1}
         dataSource={data}
         headerStyle={headerStyle}
         title={"table title test"}
+        displayRowNum="20"
       ></HummingTable>
 
       <button onClick={clickButton1}>click1</button>
