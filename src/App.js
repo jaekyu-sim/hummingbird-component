@@ -8,7 +8,9 @@ import ResizableTable from './ResizableTable';
 //faker.seed(100);
 
 function App() {
+  let dataLength = 125;
   const headerStyle = {
+    //가능한 옵션 : backgroundColor, color
     backgroundColor: "#ACC",
     
   }
@@ -149,37 +151,36 @@ const columnConfig2 = [
 
 ]
 
-
-
-
-const [data, setData] = useState([
-  {
-    id: "1",
-    name: "sim1",
-    age: "1",
+let tmpData = []
+for(let i = 0 ; i < dataLength ; i++)
+{
+  tmpData.push({
+    key: i,
+    id : "n"+i,
+    name : "sim"+i,
+    age: i,
     street: "yeongtong-3o",
-    building: "824",
-    doorNo: "1503",
+    building: i+"824",
+    doorNo: (i+1)+"503",
     companyAddress: "suwon-si",
-    companyName: "SK1"
-  },
-  {
-    id: "2",
-    name: "sim2",
-    age: "2",
-    street: "yeongtong-ro",
-    building: "1824",
-    doorNo: "11503",
-    companyAddress: "suwon-si",
-    companyName: "SK2"
-  },
-])
+    companyName: "SK"+i
+  })
+}
+
+
+const [data, setData] = useState(tmpData)
+const [rowShowFlag, setRowShowFlag] = useState(true)
+
+useEffect(() => {
+  console.log(data)
+}, [])
+
 
 const clickButton1 = () => {
   setData(
     [
       {
-        id: "111",
+        id: "n111",
         name: "sim111",
         age: "111",
         street: "yeongtong-rwidth:column.widthwidth:column.widthwidth:column.widthwidth:column.widthwidth:column.widtho",
@@ -189,7 +190,7 @@ const clickButton1 = () => {
         companyName: "SK1"
       },
       {
-        id: "222",
+        id: "n222",
         name: "sim222",
         age: "222",
         street: "yeongtong-ro",
@@ -205,7 +206,7 @@ const clickButton2 = () => {
   setData(
     [
       {
-        id: "1",
+        id: "n1",
         name: "sim1",
         age: "1",
         street: "yeongtong-ro",
@@ -215,7 +216,7 @@ const clickButton2 = () => {
         companyName: "SK1"
       },
       {
-        id: "2",
+        id: "n2",
         name: "sim2",
         age: "2",
         street: "yeongtong-ro",
@@ -227,20 +228,32 @@ const clickButton2 = () => {
     ]
   )
 }
-
+const clickButton3 = () => {
+  let tmp = !rowShowFlag
+  console.log("tmp1 : ", tmp)
+  setRowShowFlag(tmp)
+}
   return (
-    <div className="App">
+    <div className="App" style={{textAlign:"center"}}>
       TEST
+      <div id="3" style={{paddingLeft:"300px"}}>
       <HummingTable 
-        columns={columnConfig1}
+        width={"80%"}
+        columns={columnConfig2}
         dataSource={data}
-        headerStyle={headerStyle}
+        //headerStyle={headerStyle}
         title={"table title test"}
-        displayRowNum="20"
+        displayedRowNum="10"
+        displayRowNumsYn={rowShowFlag}
+        sizeChanger={[5, 10, 20, 40]}
+        zebra
+        //zebra, ...
       ></HummingTable>
+      </div>
 
-      <button onClick={clickButton1}>click1</button>
-      <button onClick={clickButton2}>click2</button>
+      <button onClick={clickButton1}>data1</button>
+      <button onClick={clickButton2}>data2</button>
+      <button onClick={clickButton3}>show rownum</button>
     </div>
     // <div className="App">
     //   <ResizableTable>
@@ -269,7 +282,7 @@ const clickButton2 = () => {
     //     </tbody>
     //   </ResizableTable>
     // </div>
-  );
+    );
 }
 
 export default App;

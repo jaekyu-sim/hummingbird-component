@@ -6,16 +6,27 @@ import "./HummingTable.css"
 /**
  * Primary UI component for user interaction
  */
-export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], title = undefined, displayRowNum="20" }) => {
+export const HummingTable = (props) => {
     /* variable */
     //let widthChangeX = 0;
+    let defaultDisplayedRowNum = 10;
+    let defaultHeaderColor = "#99CCFF";
+    let defaultRowColor = "white";
 
     /* useState */
-    const [data, setData] = useState(dataSource);
-    const [columnData, setColumnData] = useState(columns);
-    const [headerStyleData, setHeaderStyleData] = useState(headerStyle);
-    const [tableTitle, setTableTitle] = useState();
-    const [rowNum, setRowNum] = useState(displayRowNum);
+    const [data, setData] = useState([]);
+    const [columnData, setColumnData] = useState([]);
+    const [headerStyleData, setHeaderStyleData] = useState({});
+    //const [rowStyleData, setRowStyleData] = useState({})
+    const [tableTitle, setTableTitle] = useState("");
+    const [rowNum, setRowNum] = useState();
+    const [showRowNumYn, setShowRowNumYn] = useState();
+    const [sizeChanger, setSizeChanger] = useState([]);
+    const [paginationYn, setPaginationYn] = useState(true);
+    const [selectedPage, setSelectedPage] = useState(1);
+    const [tableWidth, setTableWidth] = useState("100%")
+    const [rowZebraYn, setRowZebraYn] = useState(false);
+    
 
     const [hoverCell, setHoverCell] = useState({row: "", idx: ""})
     const [mouseDownFlag, setMouseDownFlag] = useState(false)
@@ -63,9 +74,12 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
       }
       
       function generateHeader(tableConfig) {
+
         let queue = [...tableConfig];
         let depthMap = new Map(); // depth별로 요소를 저장할 맵
-      
+        //console.log("queue : ", tableConfig)
+        
+
         while (queue.length > 0) {
             const node = queue.shift();
             const depth = node.depth || 0; // depth가 없으면 0으로 설정
@@ -82,7 +96,6 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
             }
             node.childCount = tmpVal;
     
-      
             depthMap.get(depth).push(node); // 해당 depth의 배열에 요소 추가
       
             // children이 있으면 큐에 추가하고 depth를 증가시켜서 넣음
@@ -114,6 +127,10 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
       }
       
       // Example usage:
+
+      //let tmpColumnData = columnData
+      
+
       const depthMap = generateHeader(columnData);
       const headers = [];
       
@@ -128,7 +145,11 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
                 onMouseDown={(e) => mouseDownTh(e, depth, index)} 
                 onMouseMove={(e) => mouseOnTh(e, depth, index)}
                 onMouseUp  ={(e) => mouseUpTh(e, depth, index)}
-                style={{cursor: JSON.stringify(hoverCell) === JSON.stringify({row: depth, idx: index})? 'col-resize': 'default'}}
+                style={{
+                  cursor: JSON.stringify(hoverCell) === JSON.stringify({row: depth, idx: index})? 'col-resize': 'default',
+                  width:column.width,
+                  height:"30px"
+                }}
                 >
                   {column.label}
               </th>
@@ -142,23 +163,31 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
       )
     }
     
-    const renderData = (data, columns) => {
-      if(data.length < rowNum)
+    const renderData = (data, columns, pageNum) => {
+      
+      let pageVal = Number(pageNum);
+      let displayedData = []
+      let idx = 0;
+      for(let i = (pageVal-1)*rowNum ; i < (pageVal)*rowNum ; i++)
       {
-         
-        for(let i = 0 ; i < rowNum - data.length + 1; i++)
+        //console.log("i: ", i);
+        if(data[i] !== undefined)
         {
-          data.push({
-
-          })
+          displayedData.push(data[i])
+          if(showRowNumYn === true)
+          {
+            //console.log("i: ",i)
+            displayedData[idx]["_hummingRowNums"] = i+1
+          }
         }
+        else
+        {
+          displayedData.push({})
+        }
+        idx++;
       }
-      else
-      {
-        //페이징 로직 필요
-      }
-      return data.map((row, rowIndex) => (
-          <tr key={rowIndex} style={{borderBottom:"1px solid black", backgroundColor:"#D6EEEE", height:"20px"}}>
+      return displayedData.map((row, rowIndex) => (
+          <tr key={rowIndex} style={{borderBottom:"1px solid black", backgroundColor:rowZebraYn&&rowIndex%2===0?"#eee":"", height:"30px"}}>
               {renderRowData(row, columns)}
           </tr>
       ));
@@ -229,16 +258,16 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
       //setMouseDownFlag
       if(mouseDownFlag)
       {
-        console.log(widthChangeTargetCell1, widthChangeTargetCell2)
+        //console.log(widthChangeTargetCell1, widthChangeTargetCell2)
         //전체 너비는 바꾸지 않고, 연관된 cell 2 개만 너비를 바꾼다.
         
         let changeWidth = widthChangeX - e.clientX ;
-        console.log(changeWidth)
+        //console.log(changeWidth)
         
 
           // 첫 번째 셀의 너비 조정
           if (widthChangeTargetCell1) {
-            console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX)
+            //console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX)
 
             widthChangeTargetCell1.style.width = source1Width - changeWidth + 'px';
           }
@@ -255,7 +284,7 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
     }
 
     const mouseDownTh = (e, depth, index) => {
-      console.log(e, "hello")
+      //console.log(e, "hello")
       
       
 
@@ -265,7 +294,7 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
       {
         setMouseDownFlag(true)
         setWidthChangeX(e.clientX);
-        console.log("왼")
+        //console.log("왼")
 
         let downX = e.clientX;
         let downY = e.clientY;
@@ -294,7 +323,7 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
       {
         setMouseDownFlag(true)
         setWidthChangeX(e.clientX);
-        console.log("오")
+        //console.log("오")
         let downX = e.clientX;
         let downY = e.clientY;
         let newDownX = downX + 5;
@@ -327,60 +356,198 @@ export const HummingTable = ({ dataSource = [], columns = [], headerStyle = [], 
     }
 
     const mouseUpTh = (e, depth, index) => {
-      console.log(e, "hello")
+      //console.log(e, "hello")
       setMouseDownFlag(false)
+    }
 
+    const goNextPage = () => {
+      let tmpValue = Math.ceil(data.length / Number(rowNum))
+      if(selectedPage !== tmpValue)
+      {
+        renderData(data, columnData, selectedPage + 1);
+        setSelectedPage((prev) => {
+          return (prev+1)
+        })
+      }
+    }
+    const goLastPage = () => {
+      let tmpValue = Math.ceil(data.length / Number(rowNum))
+      if(selectedPage !== tmpValue)
+      {
+        renderData(data, columnData, tmpValue);
+        setSelectedPage((prev) => {
+          return (tmpValue)
+        })
+      }
 
+    }
+    const goPrevPage = () => {
+      if(selectedPage !== 1)
+      {
+        renderData(data, columnData, selectedPage - 1);
+        setSelectedPage((prev) => {
+          return (prev-1)
+        })
+      }
+
+    }
+    const goFirstPage = () => {
+      if(selectedPage !== 1)
+      {
+        renderData(data, columnData, 1);
+        setSelectedPage((prev) => {
+          return (1)
+        })
+      }
 
     }
 
+    const paginationComponent = () => {
+      //console.log(data)
+      let pageNumList = []
+      for(let i = 0 ; i < data.length / Number(rowNum) ; i++)
+      {
+        //console.log(i)
+        pageNumList.push(i+1)
+      }
+
+      const startPage = Math.floor((selectedPage - 1) / 10) * 10 + 1;
+      const endPage = Math.min(startPage + 9, pageNumList.length);
+
+      // Get the current range of pages to display
+      const currentPageRange = pageNumList.slice(startPage - 1, endPage);
+
+
+      return (
+        <div style={{ position: 'relative', paddingTop:"10px"}}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {paginationYn ? (
+              <div id="pagination1" style={{ display: 'flex', justifyContent:"center", alignItems:"center" }}>
+                <div className='double-arrow-left' onClick={goFirstPage} style={{cursor:selectedPage!==1?"pointer":"not-allowed", marginRight:"5px"}} ></div>
+                <div className='arrow-left' onClick={goPrevPage} style={{cursor:selectedPage!==1?"pointer":"not-allowed"}} ></div>
+                <div style={{display:"flex"}} >
+                  {currentPageRange.map((value)=>{
+                    
+                    return <div key={value} className={`pagnationNum${selectedPage === value ? ' selected' : ''}`} onClick={(val) => {
+                      setSelectedPage(Number(val.target.innerText))
+                    }}>{value}</div>
+                  })}
+                </div>
+                <div className='arrow-right' onClick={goNextPage} style={{cursor:selectedPage!==Math.ceil(data.length / Number(rowNum))?"pointer":"not-allowed"}}></div> 
+                <div className='double-arrow-right' onClick={goLastPage} style={{cursor:selectedPage!==Math.ceil(data.length / Number(rowNum))?"pointer":"not-allowed", marginLeft:"5px"}}></div> 
+              </div>
+            ) : null}
+            {sizeChanger ? (
+              <div id="pagination2" style={{ position: 'absolute', right: '30px' }}>
+                <select style={{width:"50px"}} value={(rowNum)} onChange={(val) => {
+                  setRowNum(Number(val.target.value))
+                  }}>
+                  {sizeChanger.map((value)=>{
+                      return(<option key={value} value={Number(value)} >{value}</option>)
+                  })}
+                </select>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )
+    }
     
 
   
     /* useEffect */
     useEffect(() => {
 
-    }, [])
+      let tmpData = props.dataSource?props.dataSource:[];
+      let tmpColumnData = props.columns?props.columns:[];
+      let tmpHeaderStyleData = props.headerStyle?props.headerStyle:{
+        backgroundColor:defaultHeaderColor,
+        color:"black",
+      }
+      let tmpTableTitle = props.title?props.title:null;
+      let tmpDisplayedRowNum = props.displayedRowNum?Number(props.displayedRowNum):defaultDisplayedRowNum;
+      let tmpDisplayRowNumsYn = props.displayRowNumsYn?props.displayRowNumsYn:false;
+      let tmpSizeChanger = props.sizeChanger?props.sizeChanger:null;
+      let tmpTableWidth = props.width?props.width:"100%";
+      let tmpZebra = props.zebra?props.zebra:"";
+
+      setData(tmpData);
+      setColumnData(tmpColumnData);
+      setHeaderStyleData(tmpHeaderStyleData);
+
+      setTableTitle(tmpTableTitle);
+      setRowNum(Number(tmpDisplayedRowNum));
+      setShowRowNumYn(tmpDisplayRowNumsYn);
+      setSizeChanger(tmpSizeChanger);
+      setTableWidth(tmpTableWidth)
+      setRowZebraYn(tmpZebra);
+      //console.log(tmpData.length, tmpDisplayedRowNum)
+      if(tmpData.length > Number(tmpDisplayedRowNum) && props.paginationYn !== null)
+      {
+        setPaginationYn(true)
+      }
+      else
+      {
+        setPaginationYn(false)
+      }
+      //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
+    }, [props])
 
     useEffect(() => {
-      setData(dataSource)
+      let tmpData = props.dataSource?props.dataSource:[]
+      //console.log("data:",tmpData)
+      setData(tmpData)
       //console.log("data : ", dataSource);
 
-    }, [dataSource])
+    }, [props.dataSource])
     
     useEffect(() => {
-      //console.log("column : ", columns)
-      setColumnData(columns)
-    }, [columns])
+      //console.log("showRowNumYn : ", showRowNumYn)
+      let tmpColumnData = props.columns//columnData
+      if(showRowNumYn === true)
+      {
+        let rowNumColumnConfig = {dataKey: "_hummingRowNums", label: "No.", width:"30px", sortable:"false"}
+        setColumnData((prev) => {
+          return[rowNumColumnConfig, ...prev]
+        })
+      }
+      else
+      {
+        setColumnData(tmpColumnData)
+      }
+    }, [props.columns, props.displayRowNumsYn, showRowNumYn])
     
-    useEffect(() => {
-      setHeaderStyleData(headerStyle)
-    }, [headerStyle])
 
     useEffect(() => {
-      setTableTitle(title)
-    }, [title])
-
-    useEffect(() => {
-      let tmpNum = Number(displayRowNum);
-      setRowNum(tmpNum);
-    }, [displayRowNum])
+      let tmpDisplayRowNumsYn = props.displayRowNumsYn?props.displayRowNumsYn:false
+      setShowRowNumYn(tmpDisplayRowNumsYn)
+      
+    }, [props.displayRowNumsYn])
 
 
     
 
   return (
 
-    <table style={{width:"100%", tableLayout:"fixed", padding:"20px"}}>
-      {tableTitle?<caption>{tableTitle}</caption>:null}
-      <thead style={headerStyleData}>
-        {makeHeader()}
-      </thead>
-      <tbody>
-        {renderData(data, columnData)}
-      </tbody>
-    </table>
-
+    <div style={{width:tableWidth}}>
+      <div id="tableArea" >
+        <table style={{width:"100%", tableLayout:"fixed", padding:"20px"}}>
+          {tableTitle?<caption>{tableTitle}</caption>:null}
+          <thead style={headerStyleData}>
+            {makeHeader()}
+          </thead>
+          <tbody>
+            {renderData(data, columnData, selectedPage)}
+          </tbody>
+        </table>
+      </div>
+      <div id="paginationArea">
+        {/* {paginationYn?paginationComponent():null}
+        {sizeChanger?<div>있음2</div>:null} */}
+        {paginationComponent()}
+      </div>
+      {"selectedPage : " + JSON.stringify(selectedPage)}
+    </div>
   );
 };
 

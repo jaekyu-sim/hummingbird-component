@@ -1,20 +1,44 @@
+/*table component*/
 table {
-    border-collapse: collapse;
-    border: 1px solid black;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 th{
-  border-right: 1px solid black;
-  border-top: 1px solid black;
+  
   border-collapse: collapse;
-  border: 1px solid black;
+  
 }
 td{
   border-collapse: collapse;
-  border: 1px solid black;
+  border: 1px solid #bbb;
 }
 td+td {
   width: auto;
 }
+
+table tr:first-child th:first-child {
+  border-top-left-radius: 5px;
+  border-top:0px;
+  border-left: 1px;
+}
+
+table tr:first-child th:last-child {
+  border-top-right-radius: 5px;
+
+}
+
+table th:last-child {
+  border-right: 0px ;
+}
+
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 5px;
+}
+
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 5px;
+}
+
 .group-header {
     border-right: 1px solid black;
 }
@@ -22,3 +46,97 @@ td+td {
     border-right: none;
 }
 
+/* pagination css */
+/* right arrow */
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 10px solid black;
+}
+
+.double-arrow-right {
+  display: inline-block;
+  position: relative;
+  width: 20px; /* Adjust width as needed */
+  height: 10px; /* Adjust height as needed */
+}
+
+.double-arrow-right::before,
+.double-arrow-right::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+.double-arrow-right::before {
+  border-left: 10px solid black;
+  left: 0;
+}
+
+.double-arrow-right::after {
+  border-left: 10px solid black;
+  left: 7px; /* Adjust left position to match the width of one arrow */
+}
+
+/* left arrow */
+.arrow-left {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 10px solid black;
+}
+
+.double-arrow-left {
+  display: inline-block;
+  position: relative;
+  width: 20px; /* Adjust width as needed */
+  height: 10px; /* Adjust height as needed */
+}
+
+.double-arrow-left::after,
+.double-arrow-left::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+.double-arrow-left::after {
+  border-right: 10px solid black;
+  left: 0;
+}
+
+.double-arrow-left::before {
+  border-right: 10px solid black;
+  right: 3px; /* Adjust left position to match the width of one arrow */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh; /* Viewport Height */
+  padding: 0 10px; /* Optional padding */
+}
+
+.pagnationNum{
+  background-color: white;
+  width: 20px;
+  margin: 5px;
+  cursor: pointer;
+}
+.pagnationNum.selected{
+  background-color: #6ac0fd;
+  border: 2px solid #6ac0fd;
+  border-radius: 3px;
+  margin: 5px;
+  cursor: pointer;
+}
