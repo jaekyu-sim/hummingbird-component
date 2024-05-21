@@ -2,8 +2,9 @@ import logo from './logo.svg';
 import './App.css';
 //import {faker} from '@faker-js/faker'
 import { HummingTable } from './components/HummingTable/HummingTable';
+
 import React, {useState, useEffect} from "react";
-import ResizableTable from './ResizableTable';
+//import ResizableTable from './ResizableTable';
 
 //faker.seed(100);
 
