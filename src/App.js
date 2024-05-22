@@ -2,14 +2,13 @@ import logo from './logo.svg';
 import './App.css';
 //import {faker} from '@faker-js/faker'
 import { HummingTable } from './components/HummingTable/HummingTable';
-
 import React, {useState, useEffect} from "react";
-//import ResizableTable from './ResizableTable';
+import ResizableTable from './ResizableTable';
 
 //faker.seed(100);
 
 function App() {
-  let dataLength = 125;
+  let dataLength = 15;
   const headerStyle = {
     //가능한 옵션 : backgroundColor, color
     backgroundColor: "#ACC",
@@ -171,9 +170,10 @@ for(let i = 0 ; i < dataLength ; i++)
 
 const [data, setData] = useState(tmpData)
 const [rowShowFlag, setRowShowFlag] = useState(true)
+const [rowSelectionType, setRowSelectionType] = useState("checkbox")
 
 useEffect(() => {
-  console.log(data)
+  //console.log(data)
 }, [])
 
 
@@ -234,6 +234,17 @@ const clickButton3 = () => {
   console.log("tmp1 : ", tmp)
   setRowShowFlag(tmp)
 }
+const clickButton4 = () => {
+  if(rowSelectionType === "radio")
+  {
+    setRowSelectionType("checkbox")
+  }
+  else if(rowSelectionType === "checkbox")
+  {
+    setRowSelectionType("radio")
+  }
+  
+}
   return (
     <div className="App" style={{textAlign:"center"}}>
       TEST
@@ -248,6 +259,12 @@ const clickButton3 = () => {
         displayRowNumsYn={rowShowFlag}
         sizeChanger={[5, 10, 20, 40]}
         zebra
+        rowSelection={{
+          type: rowSelectionType,
+          onChange: (selectedRows) => {
+            console.log(selectedRows)
+          }
+        }}
         //zebra, ...
       ></HummingTable>
       </div>
@@ -255,6 +272,7 @@ const clickButton3 = () => {
       <button onClick={clickButton1}>data1</button>
       <button onClick={clickButton2}>data2</button>
       <button onClick={clickButton3}>show rownum</button>
+      <button onClick={clickButton4}>switchCheckbox/Radio</button>
     </div>
     // <div className="App">
     //   <ResizableTable>

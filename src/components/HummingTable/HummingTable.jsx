@@ -13,6 +13,7 @@ export const HummingTable = (props) => {
     let defaultHeaderColor = "#99CCFF";
     let defaultRowColor = "white";
 
+
     /* useState */
     const [data, setData] = useState([]);
     const [columnData, setColumnData] = useState([]);
@@ -26,6 +27,8 @@ export const HummingTable = (props) => {
     const [selectedPage, setSelectedPage] = useState(1);
     const [tableWidth, setTableWidth] = useState("100%")
     const [rowZebraYn, setRowZebraYn] = useState(false);
+    const [rowSelectionConfig, setRowSelectionConfig] = useState({});
+    const [selectedRows, setSelectedRows] = useState([]);
     
 
     const [hoverCell, setHoverCell] = useState({row: "", idx: ""})
@@ -179,6 +182,7 @@ export const HummingTable = (props) => {
             //console.log("i: ",i)
             displayedData[idx]["_hummingRowNums"] = i+1
           }
+
         }
         else
         {
@@ -187,19 +191,58 @@ export const HummingTable = (props) => {
         idx++;
       }
       return displayedData.map((row, rowIndex) => (
-          <tr key={rowIndex} style={{borderBottom:"1px solid black", backgroundColor:rowZebraYn&&rowIndex%2===0?"#eee":"", height:"30px"}}>
-              {renderRowData(row, columns)}
+          <tr style={{height:'25px'}}key={rowIndex} onClick={(val) => {  }}>
+              {renderRowData(row, columns, (pageVal-1)*rowNum + rowIndex)}
           </tr>
       ));
     };
     
-    const renderRowData = (row, columns) => {
+    const renderRowData = (row, columns, rowIndex) => {
         return columns.map((column, index) => {
             if (column.children) {
-                return renderRowData(row, column.children);
+                return renderRowData(row, column.children, rowIndex);
             } else {
-              
-                return <td key={index} style={{width:column.width, overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}>{row[column.dataKey]}</td>;
+                //console.log(column, index)
+                if(column.dataKey === "_hummingRowSelection" && Object.keys(row).length !== 0)
+                {
+                  return <td key={index} style={{width:column.width, overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}>
+                    <input checked={row["_hummingRowSelection"]} type={rowSelectionConfig.type} onChange={(value) => {
+                      let tmpData = [...data];
+                      tmpData[rowIndex]["_hummingRowSelection"] = value.target.checked;
+                      setData(tmpData)
+
+                      let tmpSelectedRows = [...selectedRows]
+                      if(selectedRows.indexOf(tmpData[rowIndex]) === -1 && value.target.checked === true)
+                      {
+                        tmpSelectedRows = [...tmpSelectedRows, tmpData[rowIndex]]
+                        setSelectedRows((prev) => {
+                          return [...prev, tmpData[rowIndex]]
+                        })
+                      }
+                      else if(selectedRows.indexOf(tmpData[rowIndex]) !== -1 && value.target.checked === false)
+                      {
+                        tmpSelectedRows = tmpSelectedRows.filter((item) => item !== tmpData[rowIndex]);
+                        setSelectedRows((prev) => {
+                          // filter를 사용하여 tmpData[rowIndex] 제외한 새로운 배열을 반환합니다.
+                          return prev.filter((item) => item !== tmpData[rowIndex]);
+                        });
+                      }
+
+                      props.rowSelection.onChange(tmpSelectedRows)
+                      }} ></input>
+                  </td>;
+                }
+                else if(column.dataKey === "_hummingRowSelection" && Object.keys(row).length === 0)
+                {
+                  return <td key={index} style={{width:column.width, overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}>
+                  <div></div>
+                </td>;
+                }
+                else
+                {
+                  return <td key={index} style={{width:column.width, overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}>{row[column.dataKey]}</td>;
+                }
+                
             }
         });
     };
@@ -470,7 +513,31 @@ export const HummingTable = (props) => {
       let tmpSizeChanger = props.sizeChanger?props.sizeChanger:null;
       let tmpTableWidth = props.width?props.width:"100%";
       let tmpZebra = props.zebra?props.zebra:"";
+      let tmpRowSelection = props.rowSelection?props.rowSelection:null;
+      if(tmpRowSelection === null)
+      {
+        setRowSelectionConfig(tmpRowSelection);
+      }
+      else if((tmpRowSelection.type !== 'checkbox' && tmpRowSelection.type !== 'radio'))
+      {
+        throw new Error("rowSelection must have type 'checkbox' or 'radio'");
+      }
+      else
+      {
+        //정상적으로 rowSelection을 셋팅 할때,
+        if(tmpRowSelection.type)
+        {
+          tmpData.forEach((item) => {
+            item['_hummingRowSelection'] = false
+          })
+        }
 
+        //console.log(tmpData)
+        //displayedData[idx]["_hummingRowSelection"] = <input type={tmpRowSelection.type} onChange={(value) => {console.log(value)}}/>;
+        
+
+        setRowSelectionConfig(tmpRowSelection);
+      }
       setData(tmpData);
       setColumnData(tmpColumnData);
       setHeaderStyleData(tmpHeaderStyleData);
@@ -482,7 +549,7 @@ export const HummingTable = (props) => {
       setTableWidth(tmpTableWidth)
       setRowZebraYn(tmpZebra);
       //console.log(tmpData.length, tmpDisplayedRowNum)
-      if(tmpData.length > Number(tmpDisplayedRowNum) && props.paginationYn !== null)
+      if(props.paginationYn !== null)
       {
         setPaginationYn(true)
       }
@@ -490,6 +557,7 @@ export const HummingTable = (props) => {
       {
         setPaginationYn(false)
       }
+      
       //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     }, [props])
 
@@ -504,18 +572,34 @@ export const HummingTable = (props) => {
     useEffect(() => {
       //console.log("showRowNumYn : ", showRowNumYn)
       let tmpColumnData = props.columns//columnData
-      if(showRowNumYn === true)
+      //console.log("props.columns : ", props.columns, rowSelectionConfig)
+
+      if(props.rowSelection !== null || showRowNumYn === true)
       {
+        let bufferTmpColumnData = []
+        let rowSelectionColumnConfig = {dataKey: "_hummingRowSelection", label: props.rowSelection.type==="checkbox"?<input id="allCheck" type={props.rowSelection.type}/>:"", width:"30px", sortable:"false"}
         let rowNumColumnConfig = {dataKey: "_hummingRowNums", label: "No.", width:"30px", sortable:"false"}
-        setColumnData((prev) => {
-          return[rowNumColumnConfig, ...prev]
-        })
+        
+        if(props.rowSelection !== null)
+        {
+          bufferTmpColumnData = [rowSelectionColumnConfig, ...tmpColumnData];
+        }
+        if(showRowNumYn === true)
+        {
+          bufferTmpColumnData = [rowNumColumnConfig, ...bufferTmpColumnData];
+        }
+        
+        
+        setColumnData(bufferTmpColumnData)
       }
       else
       {
         setColumnData(tmpColumnData)
       }
-    }, [props.columns, props.displayRowNumsYn, showRowNumYn])
+
+      
+      
+    }, [props.columns, props.displayRowNumsYn, , showRowNumYn])
     
 
     useEffect(() => {
@@ -531,12 +615,12 @@ export const HummingTable = (props) => {
 
     <div style={{width:tableWidth}}>
       <div id="tableArea" >
-        <table style={{width:"100%", tableLayout:"fixed", padding:"20px"}}>
+        <table style={{}}>
           {tableTitle?<caption>{tableTitle}</caption>:null}
           <thead style={headerStyleData}>
             {makeHeader()}
           </thead>
-          <tbody>
+          <tbody className={rowZebraYn?'zebra':''}>
             {renderData(data, columnData, selectedPage)}
           </tbody>
         </table>
@@ -546,7 +630,6 @@ export const HummingTable = (props) => {
         {sizeChanger?<div>있음2</div>:null} */}
         {paginationComponent()}
       </div>
-      {"selectedPage : " + JSON.stringify(selectedPage)}
     </div>
   );
 };

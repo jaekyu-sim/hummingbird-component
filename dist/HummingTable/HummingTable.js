@@ -15,21 +15,28 @@ function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; 
 /**
  * Primary UI component for user interaction
  */
-const HummingTable = _ref => {
-  let {
-    dataSource = [],
-    columns = [],
-    headerStyle = [],
-    title = undefined
-  } = _ref;
+const HummingTable = props => {
   /* variable */
   //let widthChangeX = 0;
+  let defaultDisplayedRowNum = 10;
+  let defaultHeaderColor = "#99CCFF";
+  let defaultRowColor = "white";
 
   /* useState */
-  const [data, setData] = (0, _react.useState)(dataSource);
-  const [columnData, setColumnData] = (0, _react.useState)(columns);
-  const [headerStyleData, setHeaderStyleData] = (0, _react.useState)(headerStyle);
-  const [tableTitle, setTableTitle] = (0, _react.useState)();
+  const [data, setData] = (0, _react.useState)([]);
+  const [columnData, setColumnData] = (0, _react.useState)([]);
+  const [headerStyleData, setHeaderStyleData] = (0, _react.useState)({});
+  //const [rowStyleData, setRowStyleData] = useState({})
+  const [tableTitle, setTableTitle] = (0, _react.useState)("");
+  const [rowNum, setRowNum] = (0, _react.useState)();
+  const [showRowNumYn, setShowRowNumYn] = (0, _react.useState)();
+  const [sizeChanger, setSizeChanger] = (0, _react.useState)([]);
+  const [paginationYn, setPaginationYn] = (0, _react.useState)(true);
+  const [selectedPage, setSelectedPage] = (0, _react.useState)(1);
+  const [tableWidth, setTableWidth] = (0, _react.useState)("100%");
+  const [rowZebraYn, setRowZebraYn] = (0, _react.useState)(false);
+  const [rowSelectionConfig, setRowSelectionConfig] = (0, _react.useState)({});
+  const [selectedRows, setSelectedRows] = (0, _react.useState)([]);
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -66,6 +73,7 @@ const HummingTable = _ref => {
     function generateHeader(tableConfig) {
       let queue = [...tableConfig];
       let depthMap = new Map(); // depth별로 요소를 저장할 맵
+      //console.log("queue : ", tableConfig)
 
       while (queue.length > 0) {
         const node = queue.shift();
@@ -104,6 +112,9 @@ const HummingTable = _ref => {
     }
 
     // Example usage:
+
+    //let tmpColumnData = columnData
+
     const depthMap = generateHeader(columnData);
     const headers = [];
     depthMap.forEach((columns, depth) => {
@@ -123,35 +134,98 @@ const HummingTable = _ref => {
           cursor: JSON.stringify(hoverCell) === JSON.stringify({
             row: depth,
             idx: index
-          }) ? 'col-resize' : 'default'
+          }) ? 'col-resize' : 'default',
+          width: column.width,
+          height: "30px"
         }
       }, column.label))));
     });
     return headers;
   };
-  const renderData = (data, columns) => {
-    return data.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
-      key: rowIndex,
-      style: {
-        borderBottom: "1px solid black",
-        backgroundColor: "#D6EEEE"
+  const renderData = (data, columns, pageNum) => {
+    let pageVal = Number(pageNum);
+    let displayedData = [];
+    let idx = 0;
+    for (let i = (pageVal - 1) * rowNum; i < pageVal * rowNum; i++) {
+      //console.log("i: ", i);
+      if (data[i] !== undefined) {
+        displayedData.push(data[i]);
+        if (showRowNumYn === true) {
+          //console.log("i: ",i)
+          displayedData[idx]["_hummingRowNums"] = i + 1;
+        }
+      } else {
+        displayedData.push({});
       }
-    }, renderRowData(row, columns)));
+      idx++;
+    }
+    return displayedData.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
+      style: {
+        height: '25px'
+      },
+      key: rowIndex,
+      onClick: val => {}
+    }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
   };
-  const renderRowData = (row, columns) => {
+  const renderRowData = (row, columns, rowIndex) => {
     return columns.map((column, index) => {
       if (column.children) {
-        return renderRowData(row, column.children);
+        return renderRowData(row, column.children, rowIndex);
       } else {
-        return /*#__PURE__*/_react.default.createElement("td", {
-          key: index,
-          style: {
-            width: column.width,
-            overflow: "hidden",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis"
-          }
-        }, row[column.dataKey]);
+        //console.log(column, index)
+        if (column.dataKey === "_hummingRowSelection" && Object.keys(row).length !== 0) {
+          return /*#__PURE__*/_react.default.createElement("td", {
+            key: index,
+            style: {
+              width: column.width,
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis"
+            }
+          }, /*#__PURE__*/_react.default.createElement("input", {
+            checked: row["_hummingRowSelection"],
+            type: rowSelectionConfig.type,
+            onChange: value => {
+              let tmpData = [...data];
+              tmpData[rowIndex]["_hummingRowSelection"] = value.target.checked;
+              setData(tmpData);
+              let tmpSelectedRows = [...selectedRows];
+              if (selectedRows.indexOf(tmpData[rowIndex]) === -1 && value.target.checked === true) {
+                tmpSelectedRows = [...tmpSelectedRows, tmpData[rowIndex]];
+                setSelectedRows(prev => {
+                  return [...prev, tmpData[rowIndex]];
+                });
+              } else if (selectedRows.indexOf(tmpData[rowIndex]) !== -1 && value.target.checked === false) {
+                tmpSelectedRows = tmpSelectedRows.filter(item => item !== tmpData[rowIndex]);
+                setSelectedRows(prev => {
+                  // filter를 사용하여 tmpData[rowIndex] 제외한 새로운 배열을 반환합니다.
+                  return prev.filter(item => item !== tmpData[rowIndex]);
+                });
+              }
+              props.rowSelection.onChange(tmpSelectedRows);
+            }
+          }));
+        } else if (column.dataKey === "_hummingRowSelection" && Object.keys(row).length === 0) {
+          return /*#__PURE__*/_react.default.createElement("td", {
+            key: index,
+            style: {
+              width: column.width,
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis"
+            }
+          }, /*#__PURE__*/_react.default.createElement("div", null));
+        } else {
+          return /*#__PURE__*/_react.default.createElement("td", {
+            key: index,
+            style: {
+              width: column.width,
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis"
+            }
+          }, row[column.dataKey]);
+        }
       }
     });
   };
@@ -192,15 +266,16 @@ const HummingTable = _ref => {
 
     //setMouseDownFlag
     if (mouseDownFlag) {
-      console.log(widthChangeTargetCell1, widthChangeTargetCell2);
+      //console.log(widthChangeTargetCell1, widthChangeTargetCell2)
       //전체 너비는 바꾸지 않고, 연관된 cell 2 개만 너비를 바꾼다.
 
       let changeWidth = widthChangeX - e.clientX;
-      console.log(changeWidth);
+      //console.log(changeWidth)
 
       // 첫 번째 셀의 너비 조정
       if (widthChangeTargetCell1) {
-        console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX);
+        //console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX)
+
         widthChangeTargetCell1.style.width = source1Width - changeWidth + 'px';
       }
 
@@ -208,16 +283,18 @@ const HummingTable = _ref => {
       if (widthChangeTargetCell2) {
         //widthChangeTargetCell2.style.width = widthChangeTargetCell2.offsetWidth - 1 + 'px';
 
-        widthChangeTargetCell2.style.width = source2Width + changeWidth + 'px';
+        widthChangeTargetCell2.style.width = source2Width + changeWidth - 5 + 'px';
       }
     }
   };
   const mouseDownTh = (e, depth, index) => {
-    console.log(e, "hello");
+    //console.log(e, "hello")
+
     if (cell_left(e)) {
       setMouseDownFlag(true);
       setWidthChangeX(e.clientX);
-      console.log("왼");
+      //console.log("왼")
+
       let downX = e.clientX;
       let downY = e.clientY;
       let newDownX = downX - 5;
@@ -242,7 +319,7 @@ const HummingTable = _ref => {
     } else if (cell_right(e)) {
       setMouseDownFlag(true);
       setWidthChangeX(e.clientX);
-      console.log("오");
+      //console.log("오")
       let downX = e.clientX;
       let downY = e.clientY;
       let newDownX = downX + 5;
@@ -267,35 +344,241 @@ const HummingTable = _ref => {
     } else {}
   };
   const mouseUpTh = (e, depth, index) => {
-    console.log(e, "hello");
+    //console.log(e, "hello")
     setMouseDownFlag(false);
+  };
+  const goNextPage = () => {
+    let tmpValue = Math.ceil(data.length / Number(rowNum));
+    if (selectedPage !== tmpValue) {
+      renderData(data, columnData, selectedPage + 1);
+      setSelectedPage(prev => {
+        return prev + 1;
+      });
+    }
+  };
+  const goLastPage = () => {
+    let tmpValue = Math.ceil(data.length / Number(rowNum));
+    if (selectedPage !== tmpValue) {
+      renderData(data, columnData, tmpValue);
+      setSelectedPage(prev => {
+        return tmpValue;
+      });
+    }
+  };
+  const goPrevPage = () => {
+    if (selectedPage !== 1) {
+      renderData(data, columnData, selectedPage - 1);
+      setSelectedPage(prev => {
+        return prev - 1;
+      });
+    }
+  };
+  const goFirstPage = () => {
+    if (selectedPage !== 1) {
+      renderData(data, columnData, 1);
+      setSelectedPage(prev => {
+        return 1;
+      });
+    }
+  };
+  const paginationComponent = () => {
+    //console.log(data)
+    let pageNumList = [];
+    for (let i = 0; i < data.length / Number(rowNum); i++) {
+      //console.log(i)
+      pageNumList.push(i + 1);
+    }
+    const startPage = Math.floor((selectedPage - 1) / 10) * 10 + 1;
+    const endPage = Math.min(startPage + 9, pageNumList.length);
+
+    // Get the current range of pages to display
+    const currentPageRange = pageNumList.slice(startPage - 1, endPage);
+    return /*#__PURE__*/_react.default.createElement("div", {
+      style: {
+        position: 'relative',
+        paddingTop: "10px"
+      }
+    }, /*#__PURE__*/_react.default.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }
+    }, paginationYn ? /*#__PURE__*/_react.default.createElement("div", {
+      id: "pagination1",
+      style: {
+        display: 'flex',
+        justifyContent: "center",
+        alignItems: "center"
+      }
+    }, /*#__PURE__*/_react.default.createElement("div", {
+      className: "double-arrow-left",
+      onClick: goFirstPage,
+      style: {
+        cursor: selectedPage !== 1 ? "pointer" : "not-allowed",
+        marginRight: "5px"
+      }
+    }), /*#__PURE__*/_react.default.createElement("div", {
+      className: "arrow-left",
+      onClick: goPrevPage,
+      style: {
+        cursor: selectedPage !== 1 ? "pointer" : "not-allowed"
+      }
+    }), /*#__PURE__*/_react.default.createElement("div", {
+      style: {
+        display: "flex"
+      }
+    }, currentPageRange.map(value => {
+      return /*#__PURE__*/_react.default.createElement("div", {
+        key: value,
+        className: "pagnationNum".concat(selectedPage === value ? ' selected' : ''),
+        onClick: val => {
+          setSelectedPage(Number(val.target.innerText));
+        }
+      }, value);
+    })), /*#__PURE__*/_react.default.createElement("div", {
+      className: "arrow-right",
+      onClick: goNextPage,
+      style: {
+        cursor: selectedPage !== Math.ceil(data.length / Number(rowNum)) ? "pointer" : "not-allowed"
+      }
+    }), /*#__PURE__*/_react.default.createElement("div", {
+      className: "double-arrow-right",
+      onClick: goLastPage,
+      style: {
+        cursor: selectedPage !== Math.ceil(data.length / Number(rowNum)) ? "pointer" : "not-allowed",
+        marginLeft: "5px"
+      }
+    })) : null, sizeChanger ? /*#__PURE__*/_react.default.createElement("div", {
+      id: "pagination2",
+      style: {
+        position: 'absolute',
+        right: '30px'
+      }
+    }, /*#__PURE__*/_react.default.createElement("select", {
+      style: {
+        width: "50px"
+      },
+      value: rowNum,
+      onChange: val => {
+        setRowNum(Number(val.target.value));
+      }
+    }, sizeChanger.map(value => {
+      return /*#__PURE__*/_react.default.createElement("option", {
+        key: value,
+        value: Number(value)
+      }, value);
+    }))) : null));
   };
 
   /* useEffect */
-  (0, _react.useEffect)(() => {}, []);
   (0, _react.useEffect)(() => {
-    setData(dataSource);
-    //console.log("data : ", dataSource);
-  }, [dataSource]);
-  (0, _react.useEffect)(() => {
-    //console.log("column : ", columns)
-    setColumnData(columns);
-  }, [columns]);
-  (0, _react.useEffect)(() => {
-    setHeaderStyleData(headerStyle);
-  }, [headerStyle]);
-  (0, _react.useEffect)(() => {
-    setTableTitle(title);
-  }, [title]);
-  return /*#__PURE__*/_react.default.createElement("table", {
-    style: {
-      width: "100%",
-      tableLayout: "fixed",
-      padding: "20px"
+    let tmpData = props.dataSource ? props.dataSource : [];
+    let tmpColumnData = props.columns ? props.columns : [];
+    let tmpHeaderStyleData = props.headerStyle ? props.headerStyle : {
+      backgroundColor: defaultHeaderColor,
+      color: "black"
+    };
+    let tmpTableTitle = props.title ? props.title : null;
+    let tmpDisplayedRowNum = props.displayedRowNum ? Number(props.displayedRowNum) : defaultDisplayedRowNum;
+    let tmpDisplayRowNumsYn = props.displayRowNumsYn ? props.displayRowNumsYn : false;
+    let tmpSizeChanger = props.sizeChanger ? props.sizeChanger : null;
+    let tmpTableWidth = props.width ? props.width : "100%";
+    let tmpZebra = props.zebra ? props.zebra : "";
+    let tmpRowSelection = props.rowSelection ? props.rowSelection : null;
+    if (tmpRowSelection === null) {
+      setRowSelectionConfig(tmpRowSelection);
+    } else if (tmpRowSelection.type !== 'checkbox' && tmpRowSelection.type !== 'radio') {
+      throw new Error("rowSelection must have type 'checkbox' or 'radio'");
+    } else {
+      //정상적으로 rowSelection을 셋팅 할때,
+      if (tmpRowSelection.type) {
+        tmpData.forEach(item => {
+          item['_hummingRowSelection'] = false;
+        });
+      }
+
+      //console.log(tmpData)
+      //displayedData[idx]["_hummingRowSelection"] = <input type={tmpRowSelection.type} onChange={(value) => {console.log(value)}}/>;
+
+      setRowSelectionConfig(tmpRowSelection);
     }
+    setData(tmpData);
+    setColumnData(tmpColumnData);
+    setHeaderStyleData(tmpHeaderStyleData);
+    setTableTitle(tmpTableTitle);
+    setRowNum(Number(tmpDisplayedRowNum));
+    setShowRowNumYn(tmpDisplayRowNumsYn);
+    setSizeChanger(tmpSizeChanger);
+    setTableWidth(tmpTableWidth);
+    setRowZebraYn(tmpZebra);
+    //console.log(tmpData.length, tmpDisplayedRowNum)
+    if (props.paginationYn !== null) {
+      setPaginationYn(true);
+    } else {
+      setPaginationYn(false);
+    }
+
+    //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
+  }, [props]);
+  (0, _react.useEffect)(() => {
+    let tmpData = props.dataSource ? props.dataSource : [];
+    //console.log("data:",tmpData)
+    setData(tmpData);
+    //console.log("data : ", dataSource);
+  }, [props.dataSource]);
+  (0, _react.useEffect)(() => {
+    //console.log("showRowNumYn : ", showRowNumYn)
+    let tmpColumnData = props.columns; //columnData
+    //console.log("props.columns : ", props.columns, rowSelectionConfig)
+
+    if (props.rowSelection !== null || showRowNumYn === true) {
+      let bufferTmpColumnData = [];
+      let rowSelectionColumnConfig = {
+        dataKey: "_hummingRowSelection",
+        label: props.rowSelection.type === "checkbox" ? /*#__PURE__*/_react.default.createElement("input", {
+          id: "allCheck",
+          type: props.rowSelection.type
+        }) : "",
+        width: "30px",
+        sortable: "false"
+      };
+      let rowNumColumnConfig = {
+        dataKey: "_hummingRowNums",
+        label: "No.",
+        width: "30px",
+        sortable: "false"
+      };
+      if (props.rowSelection !== null) {
+        bufferTmpColumnData = [rowSelectionColumnConfig, ...tmpColumnData];
+      }
+      if (showRowNumYn === true) {
+        bufferTmpColumnData = [rowNumColumnConfig, ...bufferTmpColumnData];
+      }
+      setColumnData(bufferTmpColumnData);
+    } else {
+      setColumnData(tmpColumnData);
+    }
+  }, [props.columns, props.displayRowNumsYn,, showRowNumYn]);
+  (0, _react.useEffect)(() => {
+    let tmpDisplayRowNumsYn = props.displayRowNumsYn ? props.displayRowNumsYn : false;
+    setShowRowNumYn(tmpDisplayRowNumsYn);
+  }, [props.displayRowNumsYn]);
+  return /*#__PURE__*/_react.default.createElement("div", {
+    style: {
+      width: tableWidth
+    }
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    id: "tableArea"
+  }, /*#__PURE__*/_react.default.createElement("table", {
+    style: {}
   }, tableTitle ? /*#__PURE__*/_react.default.createElement("caption", null, tableTitle) : null, /*#__PURE__*/_react.default.createElement("thead", {
     style: headerStyleData
-  }, makeHeader()), /*#__PURE__*/_react.default.createElement("tbody", null, renderData(data, columnData)));
+  }, makeHeader()), /*#__PURE__*/_react.default.createElement("tbody", {
+    className: rowZebraYn ? 'zebra' : ''
+  }, renderData(data, columnData, selectedPage)))), /*#__PURE__*/_react.default.createElement("div", {
+    id: "paginationArea"
+  }, paginationComponent()));
 };
 exports.HummingTable = HummingTable;
 var _default = exports.default = HummingTable;
