@@ -1,34 +1,46 @@
-/*table component*/
+/* table component */
 table {
   border-collapse: separate;
   border-spacing: 0;
+  table-layout: fixed;
 }
-th{
-  
+th {
+  position: relative; /* 가상 요소를 사용하기 위해 상대 위치 지정 */
   border-collapse: collapse;
-  
+  padding: 10px; /* 상단과 하단에 여백을 추가하여 중앙에 border를 표시 */
 }
-td{
+th::after {
+  content: "";
+  position: absolute;
+  top: 25%; /* 상단에서 25% 위치에서 시작 */
+  bottom: 25%; /* 하단에서 25% 위치에서 끝 */
+  right: 0;
+  width: 1px; /* border 두께 */
+  background-color: #bbb; /* border 색상 */
+}
+th:last-child::after {
+  content: none; /* 마지막 th 요소에는 border를 표시하지 않음 */
+}
+td {
   border-collapse: collapse;
   border: 1px solid #bbb;
 }
-td+td {
+td + td {
   width: auto;
 }
 
 table tr:first-child th:first-child {
   border-top-left-radius: 5px;
-  border-top:0px;
+  border-top: 0px;
   border-left: 1px;
 }
 
 table tr:first-child th:last-child {
   border-top-right-radius: 5px;
-
 }
 
 table th:last-child {
-  border-right: 0px ;
+  border-right: 0px;
 }
 
 table tr:last-child td:first-child {
@@ -40,10 +52,25 @@ table tr:last-child td:last-child {
 }
 
 .group-header {
-    border-right: 1px solid black;
+  border-right: 1px solid black;
 }
+
 .group-header:last-child {
-    border-right: none;
+  border-right: none;
+}
+
+/* Zebra striping */
+.zebra tr:nth-child(odd) {
+  background-color: #fff; /* White color for odd rows */
+}
+
+.zebra tr:nth-child(even) {
+  background-color: #eee; /* Grey color for even rows */
+}
+
+/* Row hover effect */
+.zebra tr:hover {
+  background-color: #e0e0e0 !important; /* Change this color as needed */
 }
 
 /* pagination css */
@@ -127,16 +154,31 @@ table tr:last-child td:last-child {
   padding: 0 10px; /* Optional padding */
 }
 
-.pagnationNum{
+.paginationNum {
   background-color: white;
   width: 20px;
   margin: 5px;
   cursor: pointer;
 }
-.pagnationNum.selected{
+
+.paginationNum.selected {
   background-color: #6ac0fd;
   border: 2px solid #6ac0fd;
   border-radius: 3px;
   margin: 5px;
   cursor: pointer;
+}
+
+td:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  background: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  z-index: 10;
+  
 }

@@ -32,43 +32,43 @@ function App() {
       dataKey:"other",
       label:"그외 정보",
       width:"50%",
-      sortable: true,
+      sortable: false,
       children: [
         {
           dataKey:"age",
           label:"나이",
           width:"20%",
-          sortable: true,
+          sortable: false,
         },
         {
           dataKey:"address",
           label:"주소",
           width:"30%",
-          sortable: true,
+          sortable: false,
           children: [
             {
               dataKey:"street",
               label:"세부 주소1",
               width:"20%",
-              sortable: true,
+              sortable: false,
             },
             {
               dataKey:"block",
               label:"세부 주소2",
               width:"10%",
-              sortable: true,
+              sortable: false,
               children: [
                 {
                   dataKey:"building",
                   label:"동",
                   width:"5%",
-                  sortable: true,
+                  sortable: false,
                 },
                 {
                   dataKey:"doorNo",
                   label:"호수",
                   width:"5%",
-                  sortable: true,
+                  sortable: false,
                 }
               ]
             }
@@ -86,13 +86,13 @@ function App() {
           dataKey:"companyAddress",
           label:"회사 주소",
           width:"17%",
-          sortable: true,
+          sortable: false,
         },
         {
           dataKey:"companyName",
           label:"회사 명",
           width:"17%",
-          sortable: true,
+          sortable: false,
         }
       ]
     }
@@ -102,50 +102,58 @@ const columnConfig2 = [
   {
       dataKey:"id",
       label:"아이디",
+      //width:"120px",
       width:"12%",
       sortable: true,
   },
   {
     dataKey:"name",
     label:"이름",
+    //width:"120px",
     width:"12%",
     sortable: true,
   },
   {
     dataKey:"age",
     label:"나이",
-    width:"12%",
+    width:"120px",
+    //width:"12%",
     sortable: true,
   },
   {
     dataKey:"street",
     label:"세부 주소1",
     width:"12%",
-    sortable: true,
+    //width:"120px",
+    sortable: false,
   },
   {
     dataKey:"building",
     label:"동",
-    width:"12%",
-    sortable: true,
+    width:"120px",
+    //width:"12%",
+    sortable: false,
   },
   {
     dataKey:"doorNo",
     label:"호수",
-    width:"12%",
-    sortable: true,
+    width:"120px",
+    //width:"12%",
+    sortable: false,
   },
   {
     dataKey:"companyAddress",
     label:"회사 주소",
-    width:"18%",
-    sortable: true,
+    width:"180px",
+    //width:"18%",
+    sortable: false,
   },
   {
     dataKey:"companyName",
     label:"회사 명",
-    width:"12%",
-    sortable: true,
+    width:"120px",
+    //width:"12%",
+    sortable: false,
   }
 
 
@@ -154,17 +162,35 @@ const columnConfig2 = [
 let tmpData = []
 for(let i = 0 ; i < dataLength ; i++)
 {
-  tmpData.push({
-    key: i,
-    id : "n"+i,
-    name : "sim"+i,
-    age: i,
-    street: "yeongtong-3o",
-    building: i+"824",
-    doorNo: (i+1)+"503",
-    companyAddress: "suwon-si",
-    companyName: "SK"+i
-  })
+  
+  if(i === 3)
+  {
+    tmpData.push({
+      key: i,
+      id : "n"+i,
+      name : "sim"+i,
+      age: i,
+      street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdasdfasdff",
+      building: i+"824",
+      doorNo: (i+1)+"503",
+      companyAddress: "suwon-si",
+      companyName: <button>{"SK"+i}</button>//"SK"+i
+    })
+  }
+  else
+  {
+    tmpData.push({
+      key: i,
+      id : "n"+i,
+      name : "sim"+i,
+      age: i,
+      street: "yeongtong-3o",
+      building: i+"824",
+      doorNo: (i+1)+"503",
+      companyAddress: "suwon-si",
+      companyName: <button>{"SK"+i}</button>//"SK"+i
+    })
+  }
 }
 
 
@@ -248,7 +274,7 @@ const clickButton4 = () => {
   return (
     <div className="App" style={{textAlign:"center"}}>
       TEST
-      <div id="3" style={{paddingLeft:"300px"}}>
+      <div id="3" >
       <HummingTable 
         width={"80%"}
         columns={columnConfig2}
