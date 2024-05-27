@@ -21,6 +21,7 @@ function App() {
       label:"아이디",
       width:"8%",
       sortable: true,
+      filter: true,
     },
     {
       dataKey:"name",
@@ -105,6 +106,7 @@ const columnConfig2 = [
       //width:"120px",
       width:"12%",
       sortable: true,
+      filter: true,
   },
   {
     dataKey:"name",
@@ -126,6 +128,7 @@ const columnConfig2 = [
     width:"12%",
     //width:"120px",
     sortable: false,
+    filter: true,
   },
   {
     dataKey:"building",
@@ -140,6 +143,7 @@ const columnConfig2 = [
     width:"120px",
     //width:"12%",
     sortable: false,
+    
   },
   {
     dataKey:"companyAddress",
@@ -147,6 +151,7 @@ const columnConfig2 = [
     width:"180px",
     //width:"18%",
     sortable: false,
+    filter: true,
   },
   {
     dataKey:"companyName",
@@ -170,7 +175,7 @@ for(let i = 0 ; i < dataLength ; i++)
       id : "n"+i,
       name : "sim"+i,
       age: i,
-      street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdasdfasdff",
+      street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf",
       building: i+"824",
       doorNo: (i+1)+"503",
       companyAddress: "suwon-si",
@@ -274,12 +279,13 @@ const clickButton4 = () => {
   return (
     <div className="App" style={{textAlign:"center"}}>
       TEST
-      <div id="3" >
+      <div id="3" style={{}}>
       <HummingTable 
-        width={"80%"}
-        columns={columnConfig2}
+        width={"85%"}
+        height={"100%"}
+        columns={columnConfig1}
         dataSource={data}
-        //headerStyle={headerStyle}
+        headerStyle={headerStyle}
         title={"table title test"}
         displayedRowNum="10"
         displayRowNumsYn={rowShowFlag}
@@ -289,6 +295,12 @@ const clickButton4 = () => {
           type: rowSelectionType,
           onChange: (selectedRows) => {
             console.log(selectedRows)
+          }
+        }}
+        pagination={{
+          //dataLength: 1000,
+          onClick: (pageNum) => {
+            console.log(pageNum)
           }
         }}
         //zebra, ...

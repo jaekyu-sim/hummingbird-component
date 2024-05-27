@@ -1,7 +1,8 @@
 /* library import */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import PropTypes from 'prop-types';
 import "./HummingTable.css"
+import NoDataIcon from './Icons/NoDataIcon'; // 아이콘이 저장된 파일 경로를 적어줍니다.
 //import './button.css';
 
 
@@ -24,10 +25,16 @@ export const HummingTable = (props) => {
     const [sizeChanger, setSizeChanger] = useState([]);
     const [paginationYn, setPaginationYn] = useState(true);
     const [selectedPage, setSelectedPage] = useState(1);
-    const [tableWidth, setTableWidth] = useState("100%")
+    const [tableWidth, setTableWidth] = useState("100%");
+    const [tableHeight, setTableHeight] = useState("100%");
     const [rowZebraYn, setRowZebraYn] = useState(false);
     const [rowSelectionConfig, setRowSelectionConfig] = useState({});
     const [selectedRows, setSelectedRows] = useState([]);
+    const [paginationInfo, setPaginationInfo] = useState();
+    const [activeFilterColumn, setActiveFilterColumn] = useState(null);
+    const [activeFilteringDataLists, setActiveFilteringDataLists] = useState({});
+    const [activeFilterCheckedData, setActiveFilterCheckedData] = useState({});
+    
     
 
     const [hoverCell, setHoverCell] = useState({row: "", idx: ""})
@@ -39,7 +46,8 @@ export const HummingTable = (props) => {
     const [source2Width, setSource2Width] = useState(0);
 
     /* useRef */
-    
+    const filterPopupRef = useRef();
+    const latestActiveFilterCheckedData = useRef(activeFilterCheckedData);
 
     
       
@@ -59,7 +67,7 @@ export const HummingTable = (props) => {
       }
       else
       {
-        console.log("true~", e)
+        //console.log("true~", e)
 
       }
     }
@@ -97,7 +105,6 @@ export const HummingTable = (props) => {
 
     }
     const makeHeader = () => {
-
       function countTotalChildren(node) {
         if (!node.children) return 1;
       
@@ -183,8 +190,11 @@ export const HummingTable = (props) => {
 
       const depthMap = generateHeader(columnData);
       const headers = [];
+      let filterLists = [];
+      //debugger;
       
       depthMap.forEach((columns, depth) => {
+        
         headers.push(
           <tr key={depth} style={{cursor:"col-resize"}}>
             {columns.map((column, index) => (
@@ -236,7 +246,98 @@ export const HummingTable = (props) => {
                         }}>
                           {"▼"}
                         </div>:""}
-                        
+                        {column.filter === true?<div  onClick={() => {
+                          setActiveFilterColumn(column.dataKey)
+
+                          data.forEach((item)=>{
+                            if(filterLists.indexOf(item[column.dataKey]) === -1)
+                            {
+                              filterLists.push(item[column.dataKey])
+                            }
+                          })
+                          setActiveFilteringDataLists((prev)=>{
+                            return filterLists
+                          })
+                          //console.log(filterLists)
+
+                        }}>
+                          {"🔍"}
+                        </div>:""}
+                        {activeFilterColumn === column.dataKey &&(
+                          <div ref={filterPopupRef} 
+                            key={column.dataKey}
+                            style={{
+                            position: 'absolute', 
+                            top: '60%', 
+                            right: '0%', 
+                            background: 'white', 
+                            border: '1px solid #ccc', 
+                            zIndex: 1000,
+                            minHeight: '100px',
+                            maxHeight: '350px',
+                            height: '100%',
+                            maxWidth: '150px',
+                            width: '100%',
+                            overflowY: 'auto'
+                          }}>
+                            {
+                              "Column Filter"
+                            }
+                            {
+                              activeFilteringDataLists.map((item, idx)=>{
+                                return <div key={item+idx} style={{textAlign:"left", paddingLeft:"5px"}}>
+                                  {
+                                    <input 
+                                      key={item+idx} 
+                                      type='checkbox' 
+                                      checked={
+                                        activeFilterCheckedData[column.dataKey] && activeFilterCheckedData[column.dataKey].includes(item)?true:false
+                                      }
+                                      onChange={(values) => {
+                                        let checkedLists = {...activeFilterCheckedData}//state 변수를 직접 때려박아서 업데이트 하면 안됨. 복사해서 업데이트 해야함.
+                                        //debugger;
+                                        if(checkedLists[column.dataKey])
+                                        {
+
+                                          if(checkedLists[column.dataKey].includes(item))
+                                          {
+                                            
+                                            let tmpCheckedLists = checkedLists[column.dataKey].filter(function(data) {
+                                              return data !== item
+                                            })
+                                            if(tmpCheckedLists.length === 0)
+                                            {
+                                              delete checkedLists[column.dataKey]
+                                            }
+                                            else
+                                            {
+                                              checkedLists[column.dataKey] = tmpCheckedLists
+                                            }
+                                          
+                                          }
+                                          else
+                                          {
+                                            checkedLists[column.dataKey].push(item)
+                                          }
+                                        }
+                                        
+                                        else
+                                        {
+                                          checkedLists[column.dataKey] = [item]
+                                        }
+                                        console.log( checkedLists)
+                                        
+                                        setActiveFilterCheckedData(checkedLists);
+                                      }}>
+
+                                    </input>}
+                                    {item}
+                                </div>
+                              })
+                              
+                            }
+                          </div>
+                        )}
                       </div>
                   </div>
               </th>
@@ -275,11 +376,25 @@ export const HummingTable = (props) => {
         }
         idx++;
       }
+      if(data.length !== 0)
+      {
       return displayedData.map((row, rowIndex) => (
           <tr style={{height:'27px'}}key={rowIndex} onClick={(val) => {  }}>
               {renderRowData(row, columns, (pageVal-1)*rowNum + rowIndex)}
+
           </tr>
-      ));
+        ));
+      }
+      else{
+        return (
+          <tr>
+            <td colSpan={columnData.length}>
+              <NoDataIcon></NoDataIcon>
+            </td>
+          </tr>
+        )
+      }
+
     };
     
     const renderRowData = (row, columns, rowIndex) => {
@@ -346,7 +461,7 @@ export const HummingTable = (props) => {
           }
           else
           {
-            console.log(column.label, column.width)
+            //console.log(column.label, column.width)
             return <td key={index} style={{minWidth:column.width, maxWidth:column.width, cursor:"default", whiteSpace:"nowrap"}}>
               <div style={{width:"100%", display:'flex', justifyContent:'center', alignItems:"center"}}>
                 <div style={{overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}
@@ -544,6 +659,8 @@ export const HummingTable = (props) => {
       setMouseDownFlag(false)
     }
 
+    
+
     const goNextPage = () => {
       let tmpValue = Math.ceil(data.length / Number(rowNum))
       if(selectedPage !== tmpValue)
@@ -589,10 +706,22 @@ export const HummingTable = (props) => {
     const paginationComponent = () => {
       //console.log(data)
       let pageNumList = []
-      for(let i = 0 ; i < data.length / Number(rowNum) ; i++)
+      //debugger;
+      if(paginationInfo && paginationInfo.dataLength !== undefined)
       {
-        //console.log(i)
-        pageNumList.push(i+1)
+        for(let i = 0 ; i < paginationInfo.dataLength / Number(rowNum) ; i++)
+        {
+          //console.log(i)
+          pageNumList.push(i+1)
+        }
+      }
+      else
+      {
+        for(let i = 0 ; i < data.length / Number(rowNum) ; i++)
+        {
+          //console.log(i)
+          pageNumList.push(i+1)
+        }
       }
 
       const startPage = Math.floor((selectedPage - 1) / 10) * 10 + 1;
@@ -601,21 +730,27 @@ export const HummingTable = (props) => {
       // Get the current range of pages to display
       const currentPageRange = pageNumList.slice(startPage - 1, endPage);
 
-
       return (
         <div style={{ position: 'relative', paddingTop:"10px"}}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             {paginationYn ? (
               <div id="pagination1" style={{ display: 'flex', justifyContent:"center", alignItems:"center" }}>
                 <div className='double-arrow-left' onClick={goFirstPage} style={{cursor:selectedPage!==1?"pointer":"not-allowed", marginRight:"5px"}} ></div>
+
                 <div className='arrow-left' onClick={goPrevPage} style={{cursor:selectedPage!==1?"pointer":"not-allowed"}} ></div>
                 <div style={{display:"flex"}} >
-                  {currentPageRange.map((value)=>{
-                    
-                    return <div key={value} className={`paginationNum${selectedPage === value ? ' selected' : ''}`} onClick={(val) => {
-                      setSelectedPage(Number(val.target.innerText))
-                    }}>{value}</div>
-                  })}
+                  
+                  {
+                    currentPageRange.length === 0?<pre>   </pre>:
+                      currentPageRange.map((value)=>{
+                        
+                        return <div key={value} className={`paginationNum${selectedPage === value ? ' selected' : ''}`} onClick={(val) => {
+                          setSelectedPage(Number(val.target.innerText))
+                          props.pagination.onClick(Number(val.target.innerText))
+                        }}>{value}</div>
+                      })
+                  }
                 </div>
                 <div className='arrow-right' onClick={goNextPage} style={{cursor:selectedPage!==Math.ceil(data.length / Number(rowNum))?"pointer":"not-allowed"}}></div> 
                 <div className='double-arrow-right' onClick={goLastPage} style={{cursor:selectedPage!==Math.ceil(data.length / Number(rowNum))?"pointer":"not-allowed", marginLeft:"5px"}}></div> 
@@ -636,6 +771,44 @@ export const HummingTable = (props) => {
         </div>
       )
     }
+
+    const handleClickOutside = (event) => {
+      if (filterPopupRef.current && !filterPopupRef.current.contains(event.target)) {
+        setActiveFilterColumn(null);
+        //debugger;
+        
+        
+        let tmpData = props.dataSource;
+        tmpData.forEach((item) => {
+
+        })
+        let tmpFilterList = {...latestActiveFilterCheckedData.current}
+        console.log("ref : ", tmpFilterList, props.dataSource )
+        let tmpKeys = Object.keys(tmpFilterList);
+        let tmpFilteredData = tmpData.filter((item)=>{
+          // item -> 데이터 한 줄.
+          
+          // key 를 모두 조회하여
+          
+          let flag = true;
+          for(let i = 0 ; i < tmpKeys.length ; i++)
+          {
+            if(tmpFilterList[tmpKeys[i]].indexOf(item[tmpKeys[i]]) === -1)
+            {
+              flag = false;
+            }
+          }
+          if(flag)
+          {
+            return item
+          }
+        })
+        console.log(tmpFilteredData);
+        setData(tmpFilteredData)
+        
+        //setActiveFilterCheckedData({})
+      }
+    };
     
 
   
@@ -643,10 +816,6 @@ export const HummingTable = (props) => {
     useEffect(() => {
 
       let tmpData = props.dataSource?props.dataSource:[];
-      if(!props.columns)
-      {
-        throw new Error("It is necessary to put columns in component. There is no contents in columns")
-      }
       let tmpColumnData = props.columns?props.columns:[];
       let tmpHeaderStyleData = props.headerStyle?props.headerStyle:{
         backgroundColor:defaultHeaderColor,
@@ -656,8 +825,10 @@ export const HummingTable = (props) => {
       let tmpDisplayRowNumsYn = props.displayRowNumsYn?props.displayRowNumsYn:false;
       let tmpSizeChanger = props.sizeChanger?props.sizeChanger:null;
       let tmpTableWidth = props.width?props.width:"100%";
+      let tmpTableHeight = props.height?props.height:"100%";
       let tmpZebra = props.zebra?props.zebra:"";
       let tmpRowSelection = props.rowSelection?props.rowSelection:null;
+      let tmpPaginationInfo = props.pagination?props.pagination:null;
       if(tmpRowSelection === null)
       {
         setRowSelectionConfig(tmpRowSelection);
@@ -690,7 +861,7 @@ export const HummingTable = (props) => {
         {
           if(tmpWidth.charAt(tmpWidth.length -1) === "%")
           {
-            console.log(tmpWidth)
+            //console.log(tmpWidth)
             let tableWidth = Number(document.getElementById("tableArea").offsetWidth);
             tmpWidth = Number(tmpWidth.substr(0, tmpWidth.length - 1)) / 100 * tableWidth;
             tmpColumnData[index].width = tmpWidth+"px"//""//tmpWidth
@@ -706,6 +877,7 @@ export const HummingTable = (props) => {
       setShowRowNumYn(tmpDisplayRowNumsYn);
       setSizeChanger(tmpSizeChanger);
       setTableWidth(tmpTableWidth)
+      setTableHeight(tmpTableHeight);
       setRowZebraYn(tmpZebra);
       //console.log(tmpData.length, tmpDisplayedRowNum)
       if(props.paginationYn !== null)
@@ -716,6 +888,7 @@ export const HummingTable = (props) => {
       {
         setPaginationYn(false)
       }
+      setPaginationInfo(tmpPaginationInfo);
       
       //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     }, [props])
@@ -784,7 +957,7 @@ export const HummingTable = (props) => {
 
       
       
-    }, [props.columns, props.displayRowNumsYn, , showRowNumYn])
+    }, [props.columns, props.displayRowNumsYn, showRowNumYn])
     
 
     useEffect(() => {
@@ -796,13 +969,23 @@ export const HummingTable = (props) => {
     useEffect(() => {
       setSelectedRows([])
     }, [props.rowSelection])
+
+    useEffect(() => {
+      latestActiveFilterCheckedData.current = activeFilterCheckedData;
+    }, [activeFilterCheckedData]);
     
+    useEffect(() => {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, []);
 
   return (
 
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-      <div style={{width:tableWidth}}>
-        <div id="tableArea" >
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: tableHeight }}>
+      <div style={{width:tableWidth, height:tableHeight}}>
+        <div id="tableArea"  style={{overflowY:"auto", maxHeight:"calc("+tableHeight+" - 33px)"}} >
           <table style={{fontSize:"70%", fontFamily:"monospace, sans-serif, serif"}}>
             {tableTitle?<caption>{tableTitle}</caption>:null}
             <thead style={headerStyleData}>
