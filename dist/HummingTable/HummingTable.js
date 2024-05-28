@@ -7,11 +7,13 @@ exports.default = exports.HummingTable = void 0;
 var _react = _interopRequireWildcard(require("react"));
 var _propTypes = _interopRequireDefault(require("prop-types"));
 require("./HummingTable.css");
+var _NoDataIcon = _interopRequireDefault(require("./Icons/NoDataIcon"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 /* library import */
 
+// 아이콘이 저장된 파일 경로를 적어줍니다.
 //import './button.css';
 
 const HummingTable = props => {
@@ -32,9 +34,14 @@ const HummingTable = props => {
   const [paginationYn, setPaginationYn] = (0, _react.useState)(true);
   const [selectedPage, setSelectedPage] = (0, _react.useState)(1);
   const [tableWidth, setTableWidth] = (0, _react.useState)("100%");
+  const [tableHeight, setTableHeight] = (0, _react.useState)("100%");
   const [rowZebraYn, setRowZebraYn] = (0, _react.useState)(false);
   const [rowSelectionConfig, setRowSelectionConfig] = (0, _react.useState)({});
   const [selectedRows, setSelectedRows] = (0, _react.useState)([]);
+  const [paginationInfo, setPaginationInfo] = (0, _react.useState)();
+  const [activeFilterColumn, setActiveFilterColumn] = (0, _react.useState)(null);
+  const [activeFilteringDataLists, setActiveFilteringDataLists] = (0, _react.useState)({});
+  const [activeFilterCheckedData, setActiveFilterCheckedData] = (0, _react.useState)({});
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -47,6 +54,8 @@ const HummingTable = props => {
   const [source2Width, setSource2Width] = (0, _react.useState)(0);
 
   /* useRef */
+  const filterPopupRef = (0, _react.useRef)();
+  const latestActiveFilterCheckedData = (0, _react.useRef)(activeFilterCheckedData);
 
   /* custom function */
   const checkTextOveflow = e => {
@@ -60,7 +69,7 @@ const HummingTable = props => {
     if (checkTextOveflow(e) === false) {
       return;
     } else {
-      console.log("true~", e);
+      //console.log("true~", e)
     }
   };
   const makeAlldataCheckState = value => {
@@ -149,6 +158,9 @@ const HummingTable = props => {
 
     const depthMap = generateHeader(columnData);
     const headers = [];
+    let filterLists = [];
+    //debugger;
+
     depthMap.forEach((columns, depth) => {
       headers.push( /*#__PURE__*/_react.default.createElement("tr", {
         key: depth,
@@ -209,7 +221,73 @@ const HummingTable = props => {
           });
           setData(sortedData);
         }
-      }, "▼") : ""))))));
+      }, "▼") : "", column.filter === true ? /*#__PURE__*/_react.default.createElement("div", {
+        onClick: () => {
+          setActiveFilterColumn(column.dataKey);
+          data.forEach(item => {
+            if (filterLists.indexOf(item[column.dataKey]) === -1) {
+              filterLists.push(item[column.dataKey]);
+            }
+          });
+          setActiveFilteringDataLists(prev => {
+            return filterLists;
+          });
+          //console.log(filterLists)
+        }
+      }, "🔍") : "", activeFilterColumn === column.dataKey && /*#__PURE__*/_react.default.createElement("div", {
+        ref: filterPopupRef,
+        key: column.dataKey,
+        style: {
+          position: 'absolute',
+          top: '60%',
+          right: '0%',
+          background: 'white',
+          border: '1px solid #ccc',
+          zIndex: 1000,
+          minHeight: '100px',
+          maxHeight: '350px',
+          height: '100%',
+          maxWidth: '150px',
+          width: '100%',
+          overflowY: 'auto'
+        }
+      }, "Column Filter", activeFilteringDataLists.map((item, idx) => {
+        return /*#__PURE__*/_react.default.createElement("div", {
+          key: item + idx,
+          style: {
+            textAlign: "left",
+            paddingLeft: "5px"
+          }
+        }, /*#__PURE__*/_react.default.createElement("input", {
+          key: item + idx,
+          type: "checkbox",
+          checked: activeFilterCheckedData[column.dataKey] && activeFilterCheckedData[column.dataKey].includes(item) ? true : false,
+          onChange: values => {
+            let checkedLists = {
+              ...activeFilterCheckedData
+            }; //state 변수를 직접 때려박아서 업데이트 하면 안됨. 복사해서 업데이트 해야함.
+            //debugger;
+            if (checkedLists[column.dataKey]) {
+              if (checkedLists[column.dataKey].includes(item)) {
+                let tmpCheckedLists = checkedLists[column.dataKey].filter(function (data) {
+                  return data !== item;
+                });
+                if (tmpCheckedLists.length === 0) {
+                  delete checkedLists[column.dataKey];
+                } else {
+                  checkedLists[column.dataKey] = tmpCheckedLists;
+                }
+              } else {
+                checkedLists[column.dataKey].push(item);
+              }
+            } else {
+              checkedLists[column.dataKey] = [item];
+            }
+            console.log(checkedLists);
+            setActiveFilterCheckedData(checkedLists);
+          }
+        }), item);
+      }))))))));
     });
     return headers;
   };
@@ -230,13 +308,19 @@ const HummingTable = props => {
       }
       idx++;
     }
-    return displayedData.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
-      style: {
-        height: '27px'
-      },
-      key: rowIndex,
-      onClick: val => {}
-    }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
+    if (data.length !== 0) {
+      return displayedData.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
+        style: {
+          height: '27px'
+        },
+        key: rowIndex,
+        onClick: val => {}
+      }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
+    } else {
+      return /*#__PURE__*/_react.default.createElement("tr", null, /*#__PURE__*/_react.default.createElement("td", {
+        colSpan: columnData.length
+      }, /*#__PURE__*/_react.default.createElement(_NoDataIcon.default, null)));
+    }
   };
   const renderRowData = (row, columns, rowIndex) => {
     return columns.map((column, index) => {
@@ -305,7 +389,7 @@ const HummingTable = props => {
             }
           });
         } else {
-          console.log(column.label, column.width);
+          //console.log(column.label, column.width)
           return /*#__PURE__*/_react.default.createElement("td", {
             key: index,
             style: {
@@ -511,9 +595,17 @@ const HummingTable = props => {
   const paginationComponent = () => {
     //console.log(data)
     let pageNumList = [];
-    for (let i = 0; i < data.length / Number(rowNum); i++) {
-      //console.log(i)
-      pageNumList.push(i + 1);
+    //debugger;
+    if (paginationInfo && paginationInfo.dataLength !== undefined) {
+      for (let i = 0; i < paginationInfo.dataLength / Number(rowNum); i++) {
+        //console.log(i)
+        pageNumList.push(i + 1);
+      }
+    } else {
+      for (let i = 0; i < data.length / Number(rowNum); i++) {
+        //console.log(i)
+        pageNumList.push(i + 1);
+      }
     }
     const startPage = Math.floor((selectedPage - 1) / 10) * 10 + 1;
     const endPage = Math.min(startPage + 9, pageNumList.length);
@@ -555,12 +647,13 @@ const HummingTable = props => {
       style: {
         display: "flex"
       }
-    }, currentPageRange.map(value => {
+    }, currentPageRange.length === 0 ? /*#__PURE__*/_react.default.createElement("pre", null, "   ") : currentPageRange.map(value => {
       return /*#__PURE__*/_react.default.createElement("div", {
         key: value,
         className: "paginationNum".concat(selectedPage === value ? ' selected' : ''),
         onClick: val => {
           setSelectedPage(Number(val.target.innerText));
+          props.pagination.onClick(Number(val.target.innerText));
         }
       }, value);
     })), /*#__PURE__*/_react.default.createElement("div", {
@@ -597,13 +690,43 @@ const HummingTable = props => {
       }, value);
     }))) : null));
   };
+  const handleClickOutside = event => {
+    if (filterPopupRef.current && !filterPopupRef.current.contains(event.target)) {
+      setActiveFilterColumn(null);
+      //debugger;
+
+      let tmpData = props.dataSource;
+      tmpData.forEach(item => {});
+      let tmpFilterList = {
+        ...latestActiveFilterCheckedData.current
+      };
+      console.log("ref : ", tmpFilterList, props.dataSource);
+      let tmpKeys = Object.keys(tmpFilterList);
+      let tmpFilteredData = tmpData.filter(item => {
+        // item -> 데이터 한 줄.
+
+        // key 를 모두 조회하여
+
+        let flag = true;
+        for (let i = 0; i < tmpKeys.length; i++) {
+          if (tmpFilterList[tmpKeys[i]].indexOf(item[tmpKeys[i]]) === -1) {
+            flag = false;
+          }
+        }
+        if (flag) {
+          return item;
+        }
+      });
+      console.log(tmpFilteredData);
+      setData(tmpFilteredData);
+
+      //setActiveFilterCheckedData({})
+    }
+  };
 
   /* useEffect */
   (0, _react.useEffect)(() => {
     let tmpData = props.dataSource ? props.dataSource : [];
-    if (!props.columns) {
-      throw new Error("It is necessary to put columns in component. There is no contents in columns");
-    }
     let tmpColumnData = props.columns ? props.columns : [];
     let tmpHeaderStyleData = props.headerStyle ? props.headerStyle : {
       backgroundColor: defaultHeaderColor
@@ -613,8 +736,10 @@ const HummingTable = props => {
     let tmpDisplayRowNumsYn = props.displayRowNumsYn ? props.displayRowNumsYn : false;
     let tmpSizeChanger = props.sizeChanger ? props.sizeChanger : null;
     let tmpTableWidth = props.width ? props.width : "100%";
+    let tmpTableHeight = props.height ? props.height : "100%";
     let tmpZebra = props.zebra ? props.zebra : "";
     let tmpRowSelection = props.rowSelection ? props.rowSelection : null;
+    let tmpPaginationInfo = props.pagination ? props.pagination : null;
     if (tmpRowSelection === null) {
       setRowSelectionConfig(tmpRowSelection);
     } else if (tmpRowSelection.type !== 'checkbox' && tmpRowSelection.type !== 'radio') {
@@ -638,7 +763,7 @@ const HummingTable = props => {
       let tmpWidth = item.width;
       if (tmpWidth) {
         if (tmpWidth.charAt(tmpWidth.length - 1) === "%") {
-          console.log(tmpWidth);
+          //console.log(tmpWidth)
           let tableWidth = Number(document.getElementById("tableArea").offsetWidth);
           tmpWidth = Number(tmpWidth.substr(0, tmpWidth.length - 1)) / 100 * tableWidth;
           tmpColumnData[index].width = tmpWidth + "px"; //""//tmpWidth
@@ -652,6 +777,7 @@ const HummingTable = props => {
     setShowRowNumYn(tmpDisplayRowNumsYn);
     setSizeChanger(tmpSizeChanger);
     setTableWidth(tmpTableWidth);
+    setTableHeight(tmpTableHeight);
     setRowZebraYn(tmpZebra);
     //console.log(tmpData.length, tmpDisplayedRowNum)
     if (props.paginationYn !== null) {
@@ -659,6 +785,7 @@ const HummingTable = props => {
     } else {
       setPaginationYn(false);
     }
+    setPaginationInfo(tmpPaginationInfo);
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
   }, [props]);
@@ -714,7 +841,7 @@ const HummingTable = props => {
     } else {
       setColumnData(tmpColumnData);
     }
-  }, [props.columns, props.displayRowNumsYn,, showRowNumYn]);
+  }, [props.columns, props.displayRowNumsYn, showRowNumYn]);
   (0, _react.useEffect)(() => {
     let tmpDisplayRowNumsYn = props.displayRowNumsYn ? props.displayRowNumsYn : false;
     setShowRowNumYn(tmpDisplayRowNumsYn);
@@ -722,19 +849,33 @@ const HummingTable = props => {
   (0, _react.useEffect)(() => {
     setSelectedRows([]);
   }, [props.rowSelection]);
+  (0, _react.useEffect)(() => {
+    latestActiveFilterCheckedData.current = activeFilterCheckedData;
+  }, [activeFilterCheckedData]);
+  (0, _react.useEffect)(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   return /*#__PURE__*/_react.default.createElement("div", {
     style: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100%'
+      height: tableHeight
     }
   }, /*#__PURE__*/_react.default.createElement("div", {
     style: {
-      width: tableWidth
+      width: tableWidth,
+      height: tableHeight
     }
   }, /*#__PURE__*/_react.default.createElement("div", {
-    id: "tableArea"
+    id: "tableArea",
+    style: {
+      overflowY: "auto",
+      maxHeight: "calc(" + tableHeight + " - 33px)"
+    }
   }, /*#__PURE__*/_react.default.createElement("table", {
     style: {
       fontSize: "70%",

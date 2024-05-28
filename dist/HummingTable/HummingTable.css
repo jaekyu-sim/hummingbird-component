@@ -8,6 +8,9 @@ th {
   position: relative; /* 가상 요소를 사용하기 위해 상대 위치 지정 */
   border-collapse: collapse;
   padding: 10px; /* 상단과 하단에 여백을 추가하여 중앙에 border를 표시 */
+  border-top: 1px solid #bbb;
+
+
 }
 th::after {
   content: "";

@@ -1,4 +1,8 @@
-const NoDataIcon = () => (
+import React from 'react';
+
+const NoDataIcon = () => {
+
+  return(
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 100 100"
@@ -23,6 +27,8 @@ const NoDataIcon = () => (
         <text x="50" y="90" textAnchor="middle" fill="gray" fontSize="10">Nothing To Show</text>
       </g>
     </svg>
-  );
+    )
   
-  export default NoDataIcon;
+}
+
+export default NoDataIcon;
