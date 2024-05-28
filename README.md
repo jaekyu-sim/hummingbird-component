@@ -125,7 +125,7 @@ return (
 
 ### 2. Column Sort Usage.
 #### 2.1 Table
-
+<img src="./result_image/column sort usage.png" width="80%" title="column sort usage">
 #### 2.2 Sourcecode
 ```javascript
 import {HummingTable} from "hummingbird-component"
@@ -237,7 +237,7 @@ return (
 
 ### 3. Column Filter Usage.
 #### 3.1 Table
-
+<img src="./result_image/column filter usage.png" width="80%" title="column filter usage">
 #### 3.2 Sourcecode
 ```javascript
 import {HummingTable} from "hummingbird-component"
@@ -351,7 +351,7 @@ return (
 
 ### 4. Width/Height Properties Usage.
 #### 4.1 Table
-
+<img src="./result_image/width.height properties.png" width="80%" title="width height change usage">
 #### 4.2 Sourcecode
 ```javascript
 import {HummingTable} from "hummingbird-component"
@@ -465,7 +465,7 @@ return (
 ```
 ### 5. Header Style Properties Usage.
 #### 5.1 Table
-
+<img src="./result_image/header style usage.png" width="80%" title="header style usage">
 #### 5.2 Sourcecode
 ```javascript
 import {HummingTable} from "hummingbird-component"
@@ -588,7 +588,7 @@ return (
 
 ### 6. Title Properties Usage.
 #### 6.1 Table
-
+<img src="./result_image/title properties.png" width="80%" title="title usage">
 #### 6.2 Sourcecode
 ```javascript
 import {HummingTable} from "hummingbird-component"
@@ -711,7 +711,7 @@ return (
 
 ### 7. Display Rows / zebra Properties Usage.
 #### 7.1 Table
-
+<img src="./result_image/rowstyle&showRowNum.png" width="80%" title="rowStyle usage">
 #### 7.2 Sourcecode
 ```javascript
 import {HummingTable} from "hummingbird-component"
@@ -836,9 +836,9 @@ return (
 ```
 
 ### 8. Row Selection / SizeChanger / pagination Properties Usage.
-#### 7.1 Table
-
-#### 7.2 Sourcecode
+#### 8.1 Table
+<img src="./result_image/pagination,rowselection.png" width="80%" title="rowselection usage">
+#### 8.2 Sourcecode
 ```javascript
 import {HummingTable} from "hummingbird-component"
 
