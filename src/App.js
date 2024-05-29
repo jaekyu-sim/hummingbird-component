@@ -8,7 +8,7 @@ import ResizableTable from './ResizableTable';
 //faker.seed(100);
 
 function App() {
-  let dataLength = 15;
+  let dataLength = 0;
   const headerStyle = {
     //가능한 옵션 : backgroundColor, color
     backgroundColor: "#ACC",

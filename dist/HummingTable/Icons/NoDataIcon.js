@@ -10,8 +10,8 @@ const NoDataIcon = () => {
   return /*#__PURE__*/_react.default.createElement("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     viewBox: "0 0 100 100",
-    width: "64",
-    height: "64",
+    width: "104",
+    height: "74",
     fill: "gray"
   }, /*#__PURE__*/_react.default.createElement("g", null, /*#__PURE__*/_react.default.createElement("circle", {
     cx: "50",
@@ -35,29 +35,26 @@ const NoDataIcon = () => {
     stroke: "gray",
     strokeWidth: "3",
     fill: "none"
-  }), /*#__PURE__*/_react.default.createElement("path", {
-    d: "M40 30 Q38 34 40 38",
-    fill: "blue"
   }), /*#__PURE__*/_react.default.createElement("line", {
-    x1: "30",
-    y1: "65",
-    x2: "70",
-    y2: "65",
+    x1: "41",
+    y1: "64",
+    x2: "57",
+    y2: "80",
     stroke: "gray",
     strokeWidth: "3"
   }), /*#__PURE__*/_react.default.createElement("line", {
-    x1: "50",
-    y1: "55",
-    x2: "50",
-    y2: "75",
+    x1: "41",
+    y1: "80",
+    x2: "57",
+    y2: "64",
     stroke: "gray",
     strokeWidth: "3"
   }), /*#__PURE__*/_react.default.createElement("text", {
     x: "50",
-    y: "90",
+    y: "95",
     textAnchor: "middle",
     fill: "gray",
-    fontSize: "10"
+    fontSize: "15"
   }, "Nothing To Show")));
 };
 var _default = exports.default = NoDataIcon;

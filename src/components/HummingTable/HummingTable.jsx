@@ -67,7 +67,7 @@ export const HummingTable = (props) => {
       }
       else
       {
-        //console.log("true~", e)
+        ////console.log("true~", e)
 
       }
     }
@@ -134,7 +134,7 @@ export const HummingTable = (props) => {
 
         let queue = [...tableConfig];
         let depthMap = new Map(); // depth별로 요소를 저장할 맵
-        //console.log("queue : ", tableConfig)
+        ////console.log("queue : ", tableConfig)
         
         //debugger
         while (queue.length > 0) {
@@ -258,7 +258,7 @@ export const HummingTable = (props) => {
                           setActiveFilteringDataLists((prev)=>{
                             return filterLists
                           })
-                          //console.log(filterLists)
+                          ////console.log(filterLists)
 
                         }}>
                           {"🔍"}
@@ -325,7 +325,7 @@ export const HummingTable = (props) => {
                                         {
                                           checkedLists[column.dataKey] = [item]
                                         }
-                                        console.log( checkedLists)
+                                        //console.log( checkedLists)
                                         
                                         setActiveFilterCheckedData(checkedLists);
                                       }}>
@@ -359,13 +359,13 @@ export const HummingTable = (props) => {
 
       for(let i = (pageVal-1)*rowNum ; i < (pageVal)*rowNum ; i++)
       {
-        //console.log("i: ", i);
+        ////console.log("i: ", i);
         if(data[i] !== undefined)
         {
           displayedData.push(data[i])
           if(showRowNumYn === true)
           {
-            //console.log("i: ",i)
+            ////console.log("i: ",i)
             displayedData[idx]["_hummingRowNums"] = i+1
           }
 
@@ -386,9 +386,16 @@ export const HummingTable = (props) => {
         ));
       }
       else{
+        //children 없는 column 의 갯수 세어서 colSpan 에 입력. 이때 RowNum, Checkbox 갯수도 같이 파악.
+        // header group 이 없으면 상관 없는데, group 인 경우 가장 최 상단의 컬럼 갯수로만 col span 해버리기 때문에 총 갯수 다시 파악해야함.
+        //console.log(columnData)
+        let columnLength = 0;
+        columnData.forEach((item) => {
+          columnLength = columnLength + item.childCount
+        })
         return (
           <tr>
-            <td colSpan={columnData.length}>
+            <td colSpan={columnLength}>
               <NoDataIcon></NoDataIcon>
             </td>
           </tr>
@@ -402,7 +409,7 @@ export const HummingTable = (props) => {
         if (column.children) {
           return renderRowData(row, column.children, rowIndex);
         } else {
-          //console.log(column, index)
+          //////console.log(column, index)
           if(column.dataKey === "_hummingRowSelection" && Object.keys(row).length !== 0)
           {
             return <td  key={index} style={{width:column.width, overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}>
@@ -461,21 +468,21 @@ export const HummingTable = (props) => {
           }
           else
           {
-            //console.log(column.label, column.width)
+            //////console.log(column.label, column.width)
             return <td key={index} style={{minWidth:column.width, maxWidth:column.width, cursor:"default", whiteSpace:"nowrap"}}>
               <div style={{width:"100%", display:'flex', justifyContent:'center', alignItems:"center"}}>
                 <div style={{overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}
                   onMouseOver={
                     (e) => {
-                      //console.log("over~")
-                      //console.log(checkTextOveflow(e))
+                      //////console.log("over~")
+                      //////console.log(checkTextOveflow(e))
                       getDetailValue(e);
                     }
                     
                   }
                   onMouseOut={
                     (e) => {
-                      //console.log("out~")
+                      //////console.log("out~")
                     }
                   }
                  >
@@ -544,18 +551,18 @@ export const HummingTable = (props) => {
       if(mouseDownFlag)
       {
         //debugger;
-        //console.log(widthChangeTargetCell1, widthChangeTargetCell2)
+        //////console.log(widthChangeTargetCell1, widthChangeTargetCell2)
         //전체 너비는 바꾸지 않고, 연관된 cell 2 개만 너비를 바꾼다.
         
         let changeWidth = widthChangeX - e.clientX ;
-        //console.log(changeWidth)
+        //////console.log(changeWidth)
         
 
-          console.log("source1 width : ", source1Width, changeWidth, widthChangeTargetCell1.tagName)
-          console.log("source2 width : ", source2Width, changeWidth, widthChangeTargetCell2.tagName)
+          ////console.log("source1 width : ", source1Width, changeWidth, widthChangeTargetCell1.tagName)
+          ////console.log("source2 width : ", source2Width, changeWidth, widthChangeTargetCell2.tagName)
           // 첫 번째 셀의 너비 조정
           if (widthChangeTargetCell1) {
-            //console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX)
+            //////console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX)
 
             widthChangeTargetCell1.style.width = source1Width - changeWidth + 'px';
           }
@@ -572,14 +579,14 @@ export const HummingTable = (props) => {
     }
 
     const mouseDownTh = (e, depth, index) => {
-      //console.log(e, "hello")
+      //////console.log(e, "hello")
 
       
       if(cell_left(e))
       {
         setMouseDownFlag(true)
         setWidthChangeX(e.clientX);
-        console.log("왼")
+        ////console.log("왼")
 
         let downX = e.clientX;
         let downY = e.clientY;
@@ -602,8 +609,8 @@ export const HummingTable = (props) => {
         //   element2 = element2.parentElement;
         // }
 
-        //console.log("element1 : ", element1)
-        //console.log("element2 : ", element2)
+        //////console.log("element1 : ", element1)
+        ////console.log("element2 : ", element2)
         
         
         setWidthChangeTargetCell1(element2)
@@ -615,7 +622,7 @@ export const HummingTable = (props) => {
       {
         setMouseDownFlag(true)
         setWidthChangeX(e.clientX);
-        console.log("오")
+        //console.log("오")
         let downX = e.clientX;
         let downY = e.clientY;
         let newDownX = downX + 10;
@@ -637,8 +644,8 @@ export const HummingTable = (props) => {
         //   element2 = element2.parentElement;
         // }
 
-        //console.log("element1 : ", element1)
-        //console.log("element2 : ", element2)
+        ////console.log("element1 : ", element1)
+        ////console.log("element2 : ", element2)
         
         setWidthChangeTargetCell1(element1)
         setWidthChangeTargetCell2(element2)
@@ -655,7 +662,7 @@ export const HummingTable = (props) => {
     }
 
     const mouseUpTh = (e, depth, index) => {
-      //console.log(e, "hello")
+      ////console.log(e, "hello")
       setMouseDownFlag(false)
     }
 
@@ -704,14 +711,14 @@ export const HummingTable = (props) => {
     }
 
     const paginationComponent = () => {
-      //console.log(data)
+      ////console.log(data)
       let pageNumList = []
       //debugger;
       if(paginationInfo && paginationInfo.dataLength !== undefined)
       {
         for(let i = 0 ; i < paginationInfo.dataLength / Number(rowNum) ; i++)
         {
-          //console.log(i)
+          ////console.log(i)
           pageNumList.push(i+1)
         }
       }
@@ -719,7 +726,7 @@ export const HummingTable = (props) => {
       {
         for(let i = 0 ; i < data.length / Number(rowNum) ; i++)
         {
-          //console.log(i)
+          ////console.log(i)
           pageNumList.push(i+1)
         }
       }
@@ -783,7 +790,7 @@ export const HummingTable = (props) => {
 
         })
         let tmpFilterList = {...latestActiveFilterCheckedData.current}
-        console.log("ref : ", tmpFilterList, props.dataSource )
+        //console.log("ref : ", tmpFilterList, props.dataSource )
         let tmpKeys = Object.keys(tmpFilterList);
         let tmpFilteredData = tmpData.filter((item)=>{
           // item -> 데이터 한 줄.
@@ -803,7 +810,7 @@ export const HummingTable = (props) => {
             return item
           }
         })
-        console.log(tmpFilteredData);
+        //console.log(tmpFilteredData);
         setData(tmpFilteredData)
         
         //setActiveFilterCheckedData({})
@@ -847,8 +854,8 @@ export const HummingTable = (props) => {
           })
         }
 
-        //console.log(tmpData)
-        //displayedData[idx]["_hummingRowSelection"] = <input type={tmpRowSelection.type} onChange={(value) => {console.log(value)}}/>;
+        ////console.log(tmpData)
+        //displayedData[idx]["_hummingRowSelection"] = <input type={tmpRowSelection.type} onChange={(value) => {//console.log(value)}}/>;
         
 
         setRowSelectionConfig(tmpRowSelection);
@@ -861,7 +868,7 @@ export const HummingTable = (props) => {
         {
           if(tmpWidth.charAt(tmpWidth.length -1) === "%")
           {
-            //console.log(tmpWidth)
+            ////console.log(tmpWidth)
             let tableWidth = Number(document.getElementById("tableArea").offsetWidth);
             tmpWidth = Number(tmpWidth.substr(0, tmpWidth.length - 1)) / 100 * tableWidth;
             tmpColumnData[index].width = tmpWidth+"px"//""//tmpWidth
@@ -879,7 +886,7 @@ export const HummingTable = (props) => {
       setTableWidth(tmpTableWidth)
       setTableHeight(tmpTableHeight);
       setRowZebraYn(tmpZebra);
-      //console.log(tmpData.length, tmpDisplayedRowNum)
+      ////console.log(tmpData.length, tmpDisplayedRowNum)
       if(props.paginationYn !== null)
       {
         setPaginationYn(true)
@@ -895,16 +902,16 @@ export const HummingTable = (props) => {
 
     useEffect(() => {
       let tmpData = props.dataSource?props.dataSource:[]
-      //console.log("data:",tmpData)
+      ////console.log("data:",tmpData)
       setData(tmpData)
-      //console.log("data : ", dataSource);
+      ////console.log("data : ", dataSource);
 
     }, [props.dataSource])
     
     useEffect(() => {
-      //console.log("showRowNumYn : ", showRowNumYn)
+      ////console.log("showRowNumYn : ", showRowNumYn)
       let tmpColumnData = props.columns//columnData
-      //console.log("props.columns : ", props.columns, rowSelectionConfig)
+      ////console.log("props.columns : ", props.columns, rowSelectionConfig)
 
       if(props.rowSelection !== undefined || showRowNumYn === true)
       {
@@ -917,7 +924,7 @@ export const HummingTable = (props) => {
             dataKey: "_hummingRowSelection", 
             label: props.rowSelection.type==="checkbox"?
               <input id="allCheck" type={props.rowSelection.type} onChange={(value) => {
-                //console.log("allchecked: ", value.target.checked)
+                ////console.log("allchecked: ", value.target.checked)
                 makeAlldataCheckState(value.target.checked)
               }}/>:"", width:"30px", sortable:"false"}
         }
