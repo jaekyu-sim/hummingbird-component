@@ -284,7 +284,7 @@ const clickButton4 = () => {
         width={"85%"}
         height={"100%"}
         columns={columnConfig1}
-        dataSource={data}
+        dataSource={[]}
         headerStyle={headerStyle}
         title={"table title test"}
         displayedRowNum="10"

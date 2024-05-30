@@ -326,6 +326,7 @@ const HummingTable = props => {
         columnLength = columnLength + item.childCount;
       });
       return /*#__PURE__*/_react.default.createElement("tr", null, /*#__PURE__*/_react.default.createElement("td", {
+        style: {},
         colSpan: columnLength
       }, /*#__PURE__*/_react.default.createElement(_NoDataIcon.default, null)));
     }

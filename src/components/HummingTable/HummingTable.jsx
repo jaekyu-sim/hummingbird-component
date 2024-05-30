@@ -395,7 +395,7 @@ export const HummingTable = (props) => {
         })
         return (
           <tr>
-            <td colSpan={columnLength}>
+            <td style={{}} colSpan={columnLength}>
               <NoDataIcon></NoDataIcon>
             </td>
           </tr>
