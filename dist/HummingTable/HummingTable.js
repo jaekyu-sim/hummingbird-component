@@ -315,7 +315,10 @@ const HummingTable = props => {
           height: '27px'
         },
         key: rowIndex,
-        onClick: val => {}
+        onClick: val => {
+          //console.log("***", row);
+          props.rowClick.onClick(row);
+        }
       }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
     } else {
       //children 없는 column 의 갯수 세어서 colSpan 에 입력. 이때 RowNum, Checkbox 갯수도 같이 파악.
@@ -750,6 +753,7 @@ const HummingTable = props => {
     let tmpZebra = props.zebra ? props.zebra : "";
     let tmpRowSelection = props.rowSelection ? props.rowSelection : null;
     let tmpPaginationInfo = props.pagination ? props.pagination : null;
+    let tmpRowClick = props.rowClick ? props.rowClick : null;
     if (tmpRowSelection === null) {
       setRowSelectionConfig(tmpRowSelection);
     } else if (tmpRowSelection.type !== 'checkbox' && tmpRowSelection.type !== 'radio') {
