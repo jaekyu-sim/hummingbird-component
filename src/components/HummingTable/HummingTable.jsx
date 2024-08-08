@@ -378,8 +378,13 @@ export const HummingTable = (props) => {
       }
       if(data.length !== 0)
       {
+
       return displayedData.map((row, rowIndex) => (
-          <tr style={{height:'27px'}}key={rowIndex} onClick={(val) => {  }}>
+        
+          <tr style={{height:'27px'}}key={rowIndex} onClick={(val) => { 
+            //console.log("***", row);
+            props.rowClick.onClick(row)
+            }}>
               {renderRowData(row, columns, (pageVal-1)*rowNum + rowIndex)}
 
           </tr>
@@ -836,6 +841,7 @@ export const HummingTable = (props) => {
       let tmpZebra = props.zebra?props.zebra:"";
       let tmpRowSelection = props.rowSelection?props.rowSelection:null;
       let tmpPaginationInfo = props.pagination?props.pagination:null;
+      let tmpRowClick = props.rowClick?props.rowClick:null;
       if(tmpRowSelection === null)
       {
         setRowSelectionConfig(tmpRowSelection);

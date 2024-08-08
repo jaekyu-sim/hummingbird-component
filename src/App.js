@@ -8,7 +8,7 @@ import ResizableTable from './ResizableTable';
 //faker.seed(100);
 
 function App() {
-  let dataLength = 0;
+  let dataLength = 10;
   const headerStyle = {
     //가능한 옵션 : backgroundColor, color
     backgroundColor: "#ACC",
@@ -284,7 +284,8 @@ const clickButton4 = () => {
         width={"85%"}
         height={"100%"}
         columns={columnConfig1}
-        dataSource={[]}
+        // dataSource={[]}
+        dataSource={data}
         headerStyle={headerStyle}
         title={"table title test"}
         displayedRowNum="10"
@@ -297,6 +298,12 @@ const clickButton4 = () => {
             console.log(selectedRows)
           }
         }}
+        rowClick={{
+          onClick:(value)=>{
+            console.log("here is clicked row values :", value)
+          }
+        }}
+        
         pagination={{
           //dataLength: 1000,
           onClick: (pageNum) => {
