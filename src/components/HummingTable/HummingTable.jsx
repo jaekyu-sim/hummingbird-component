@@ -11,6 +11,7 @@ export const HummingTable = (props) => {
     //let widthChangeX = 0;
     let defaultDisplayedRowNum = 10;
     let defaultHeaderColor = "#efefef";
+    let clickedRowColor = "#999";
 
 
 
@@ -34,6 +35,7 @@ export const HummingTable = (props) => {
     const [activeFilterColumn, setActiveFilterColumn] = useState(null);
     const [activeFilteringDataLists, setActiveFilteringDataLists] = useState({});
     const [activeFilterCheckedData, setActiveFilterCheckedData] = useState({});
+    const [clickedRowIdx, setClickedRowIdx] = useState();
     
     
 
@@ -72,14 +74,17 @@ export const HummingTable = (props) => {
       }
     }
     const makeAlldataCheckState = (value) => {
+      console.log("data : ", data);
       let tmpData = [...data];
       let tmpSelectedRows = [...selectedRows]
-
+      //debugger;
       tmpData.forEach((item, rowIndex) => {
         item['_hummingRowSelection'] = value
 
         if(selectedRows.indexOf(tmpData[rowIndex]) === -1 && value === true)
         {
+          //debugger;
+          
           tmpSelectedRows = [...tmpSelectedRows, tmpData[rowIndex]]
           setSelectedRows((prev) => {
             return [...prev, tmpData[rowIndex]]
@@ -87,20 +92,21 @@ export const HummingTable = (props) => {
         }
         else if(selectedRows.indexOf(tmpData[rowIndex]) !== -1 && value === false)
         {
+          //debugger;
           tmpSelectedRows = tmpSelectedRows.filter((item) => item !== tmpData[rowIndex]);
           setSelectedRows((prev) => {
             // filter를 사용하여 tmpData[rowIndex] 제외한 새로운 배열을 반환합니다.
+            //debugger;
+            //return tmpSelectedRows;
             return prev.filter((item) => item !== tmpData[rowIndex]);
           });
         }
       })
 
       setData(tmpData);
-
-      
-      
-
-      props.rowSelection.onChange(tmpSelectedRows)
+      let tmpSelect = tmpData.filter((item)=>item["_hummingRowSelection"] === true)
+      //props.rowSelection.onChange(tmpSelectedRows)
+      props.rowSelection.onChange(tmpSelect)
 
 
     }
@@ -378,17 +384,24 @@ export const HummingTable = (props) => {
       }
       if(data.length !== 0)
       {
-
-      return displayedData.map((row, rowIndex) => (
         
-          <tr style={{height:'27px'}}key={rowIndex} onClick={(val) => { 
-            //console.log("***", row);
-            props.rowClick.onClick(row)
-            }}>
-              {renderRowData(row, columns, (pageVal-1)*rowNum + rowIndex)}
+        return displayedData.map((row, rowIndex) => (
+          
+            <tr 
+              style={{height:'27px', backgroundColor:rowIndex===clickedRowIdx?clickedRowColor:""}} 
+              key={rowIndex} 
+              onDoubleClick={(val)=>{
+                props.rowClick.onDoubleClick(row);
+              }}
+              onClick={(val) => { 
+                setClickedRowIdx(rowIndex)
+                
+                props.rowClick.onClick(row)
+              }}>
+                {renderRowData(row, columns, (pageVal-1)*rowNum + rowIndex)}
 
-          </tr>
-        ));
+            </tr>
+          ));
       }
       else{
         //children 없는 column 의 갯수 세어서 colSpan 에 입력. 이때 RowNum, Checkbox 갯수도 같이 파악.
@@ -420,7 +433,7 @@ export const HummingTable = (props) => {
             return <td  key={index} style={{width:column.width, overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}>
               <input checked={row["_hummingRowSelection"]} type={rowSelectionConfig.type} onChange={(value) => {
                 let tmpData = [...data];
-
+                //debugger;
                 if(rowSelectionConfig.type === "checkbox")
                 {
                   tmpData[rowIndex]["_hummingRowSelection"] = value.target.checked;
@@ -435,14 +448,24 @@ export const HummingTable = (props) => {
                   }
                   else if(selectedRows.indexOf(tmpData[rowIndex]) !== -1 && value.target.checked === false)
                   {
+                    //debugger;
                     tmpSelectedRows = tmpSelectedRows.filter((item) => item !== tmpData[rowIndex]);
                     setSelectedRows((prev) => {
                       // filter를 사용하여 tmpData[rowIndex] 제외한 새로운 배열을 반환합니다.
                       return prev.filter((item) => item !== tmpData[rowIndex]);
                     });
                   }
-
-                  props.rowSelection.onChange(tmpSelectedRows)
+                  else if(selectedRows.indexOf(tmpData[rowIndex]) === -1 && value.target.checked === false)
+                  {
+                    //debugger;
+                  }
+                  else
+                  {
+                    //debugger;
+                  }
+                  let tmpSelect = tmpData.filter((item)=>item["_hummingRowSelection"] === true)
+                  //props.rowSelection.onChange(tmpSelectedRows)
+                  props.rowSelection.onChange(tmpSelect)
                 }
                 else if(rowSelectionConfig.type === "radio")
                 {
@@ -462,7 +485,9 @@ export const HummingTable = (props) => {
                   //tmpSelectedRows = tmpSelectedRows.filter((item) => item !== tmpData[rowIndex]);
                   
                   setSelectedRows(tmpSelectedRow);
-                  props.rowSelection.onChange(tmpSelectedRow)
+                  let tmpSelect = tmpData.filter((item)=>item["_hummingRowSelection"] === true)
+                  //props.rowSelection.onChange(tmpSelectedRow)
+                  props.rowSelection.onChange(tmpSelect)
                 }
                 }} ></input>
             </td>;
@@ -913,6 +938,10 @@ export const HummingTable = (props) => {
       ////console.log("data : ", dataSource);
 
     }, [props.dataSource])
+
+    useEffect(()=>{
+      //console.log("rowIdx : ", clickedRowIdx)
+    }, [clickedRowIdx])
     
     useEffect(() => {
       ////console.log("showRowNumYn : ", showRowNumYn)
@@ -996,7 +1025,7 @@ export const HummingTable = (props) => {
 
   return (
 
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: tableHeight }}>
+    <div style={{textAlign:"center", display: 'flex', justifyContent: 'center', alignItems: 'center', height: tableHeight }}>
       <div style={{width:tableWidth, height:tableHeight}}>
         <div id="tableArea"  style={{overflowY:"auto", maxHeight:"calc("+tableHeight+" - 33px)"}} >
           <table style={{fontSize:"70%", fontFamily:"monospace, sans-serif, serif"}}>

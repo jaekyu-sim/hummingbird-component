@@ -21,6 +21,7 @@ const HummingTable = props => {
   //let widthChangeX = 0;
   let defaultDisplayedRowNum = 10;
   let defaultHeaderColor = "#efefef";
+  let clickedRowColor = "#999";
 
   /* useState */
   const [data, setData] = (0, _react.useState)([]);
@@ -42,6 +43,7 @@ const HummingTable = props => {
   const [activeFilterColumn, setActiveFilterColumn] = (0, _react.useState)(null);
   const [activeFilteringDataLists, setActiveFilteringDataLists] = (0, _react.useState)({});
   const [activeFilterCheckedData, setActiveFilterCheckedData] = (0, _react.useState)({});
+  const [clickedRowIdx, setClickedRowIdx] = (0, _react.useState)();
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -73,25 +75,34 @@ const HummingTable = props => {
     }
   };
   const makeAlldataCheckState = value => {
+    console.log("data : ", data);
     let tmpData = [...data];
     let tmpSelectedRows = [...selectedRows];
+    //debugger;
     tmpData.forEach((item, rowIndex) => {
       item['_hummingRowSelection'] = value;
       if (selectedRows.indexOf(tmpData[rowIndex]) === -1 && value === true) {
+        //debugger;
+
         tmpSelectedRows = [...tmpSelectedRows, tmpData[rowIndex]];
         setSelectedRows(prev => {
           return [...prev, tmpData[rowIndex]];
         });
       } else if (selectedRows.indexOf(tmpData[rowIndex]) !== -1 && value === false) {
+        //debugger;
         tmpSelectedRows = tmpSelectedRows.filter(item => item !== tmpData[rowIndex]);
         setSelectedRows(prev => {
           // filter를 사용하여 tmpData[rowIndex] 제외한 새로운 배열을 반환합니다.
+          //debugger;
+          //return tmpSelectedRows;
           return prev.filter(item => item !== tmpData[rowIndex]);
         });
       }
     });
     setData(tmpData);
-    props.rowSelection.onChange(tmpSelectedRows);
+    let tmpSelect = tmpData.filter(item => item["_hummingRowSelection"] === true);
+    //props.rowSelection.onChange(tmpSelectedRows)
+    props.rowSelection.onChange(tmpSelect);
   };
   const makeHeader = () => {
     function countTotalChildren(node) {
@@ -312,11 +323,15 @@ const HummingTable = props => {
     if (data.length !== 0) {
       return displayedData.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
         style: {
-          height: '27px'
+          height: '27px',
+          backgroundColor: rowIndex === clickedRowIdx ? clickedRowColor : ""
         },
         key: rowIndex,
+        onDoubleClick: val => {
+          props.rowClick.onDoubleClick(row);
+        },
         onClick: val => {
-          //console.log("***", row);
+          setClickedRowIdx(rowIndex);
           props.rowClick.onClick(row);
         }
       }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
@@ -354,6 +369,7 @@ const HummingTable = props => {
             type: rowSelectionConfig.type,
             onChange: value => {
               let tmpData = [...data];
+              //debugger;
               if (rowSelectionConfig.type === "checkbox") {
                 tmpData[rowIndex]["_hummingRowSelection"] = value.target.checked;
                 setData(tmpData);
@@ -364,13 +380,20 @@ const HummingTable = props => {
                     return [...prev, tmpData[rowIndex]];
                   });
                 } else if (selectedRows.indexOf(tmpData[rowIndex]) !== -1 && value.target.checked === false) {
+                  //debugger;
                   tmpSelectedRows = tmpSelectedRows.filter(item => item !== tmpData[rowIndex]);
                   setSelectedRows(prev => {
                     // filter를 사용하여 tmpData[rowIndex] 제외한 새로운 배열을 반환합니다.
                     return prev.filter(item => item !== tmpData[rowIndex]);
                   });
+                } else if (selectedRows.indexOf(tmpData[rowIndex]) === -1 && value.target.checked === false) {
+                  //debugger;
+                } else {
+                  //debugger;
                 }
-                props.rowSelection.onChange(tmpSelectedRows);
+                let tmpSelect = tmpData.filter(item => item["_hummingRowSelection"] === true);
+                //props.rowSelection.onChange(tmpSelectedRows)
+                props.rowSelection.onChange(tmpSelect);
               } else if (rowSelectionConfig.type === "radio") {
                 let tmpSelectedRow = [];
                 tmpData.forEach((item, idx) => {
@@ -386,7 +409,9 @@ const HummingTable = props => {
                 //tmpSelectedRows = tmpSelectedRows.filter((item) => item !== tmpData[rowIndex]);
 
                 setSelectedRows(tmpSelectedRow);
-                props.rowSelection.onChange(tmpSelectedRow);
+                let tmpSelect = tmpData.filter(item => item["_hummingRowSelection"] === true);
+                //props.rowSelection.onChange(tmpSelectedRow)
+                props.rowSelection.onChange(tmpSelect);
               }
             }
           }));
@@ -810,6 +835,9 @@ const HummingTable = props => {
     ////console.log("data : ", dataSource);
   }, [props.dataSource]);
   (0, _react.useEffect)(() => {
+    //console.log("rowIdx : ", clickedRowIdx)
+  }, [clickedRowIdx]);
+  (0, _react.useEffect)(() => {
     ////console.log("showRowNumYn : ", showRowNumYn)
     let tmpColumnData = props.columns; //columnData
     ////console.log("props.columns : ", props.columns, rowSelectionConfig)
@@ -874,6 +902,7 @@ const HummingTable = props => {
   }, []);
   return /*#__PURE__*/_react.default.createElement("div", {
     style: {
+      textAlign: "center",
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',

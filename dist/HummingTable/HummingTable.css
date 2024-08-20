@@ -75,7 +75,6 @@ table tr:last-child td:last-child {
 .zebra tr:hover {
   background-color: #e0e0e0 !important; /* Change this color as needed */
 }
-
 /* pagination css */
 /* right arrow */
 .arrow-right {

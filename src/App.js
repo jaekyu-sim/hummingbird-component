@@ -277,21 +277,21 @@ const clickButton4 = () => {
   
 }
   return (
-    <div className="App" style={{textAlign:"center"}}>
+    <div className="App" style={{}}>
       TEST
       <div id="3" style={{}}>
       <HummingTable 
         width={"85%"}
         height={"100%"}
         columns={columnConfig1}
-        // dataSource={[]}
+        //dataSource={[]}
         dataSource={data}
         headerStyle={headerStyle}
         title={"table title test"}
         displayedRowNum="10"
         displayRowNumsYn={rowShowFlag}
         sizeChanger={[5, 10, 20, 40]}
-        zebra
+        //zebra
         rowSelection={{
           type: rowSelectionType,
           onChange: (selectedRows) => {
@@ -301,6 +301,9 @@ const clickButton4 = () => {
         rowClick={{
           onClick:(value)=>{
             console.log("here is clicked row values :", value)
+          },
+          onDoubleClick:(value)=>{
+            console.log("here is double clicked row : ", value);
           }
         }}
         

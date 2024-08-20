@@ -1,6 +1,6 @@
 {
   "name": "hummingbird-component",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "main": "dist/index.js",
   "private": false,
   "files": [ "dist", "README.md" ],
