@@ -31,7 +31,9 @@ td {
 td + td {
   width: auto;
 }
-
+#table-row-area tr:hover {
+  background-color: #ccc !important; /* Change this color as needed */
+}
 table tr:first-child th:first-child {
   border-top-left-radius: 5px;
   border-top: 0px;
@@ -73,7 +75,7 @@ table tr:last-child td:last-child {
 
 /* Row hover effect */
 .zebra tr:hover {
-  background-color: #e0e0e0 !important; /* Change this color as needed */
+  background-color: #999 !important; /* Change this color as needed */
 }
 /* pagination css */
 /* right arrow */

@@ -392,13 +392,13 @@ export const HummingTable = (props) => {
               style={{height:rowHeight, backgroundColor:rowIndex===clickedRowIdx?clickedRowColor:""}} 
               key={rowIndex} 
               onDoubleClick={(val)=>{
-                if(props.rowClick.onDoubleClick)
+                if(props.rowClick && props.rowClick.onDoubleClick)
                 props.rowClick?.onDoubleClick(row);
               }}
               onClick={(val) => { 
                 
                 setClickedRowIdx(rowIndex)
-                if(props.rowClick.onClick)
+                if(props.rowClick && props.rowClick.onClick)
                 props.rowClick?.onClick(row)
               }}>
                 {renderRowData(row, columns, (pageVal-1)*rowNum + rowIndex)}

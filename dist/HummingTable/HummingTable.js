@@ -44,6 +44,7 @@ const HummingTable = props => {
   const [activeFilteringDataLists, setActiveFilteringDataLists] = (0, _react.useState)({});
   const [activeFilterCheckedData, setActiveFilterCheckedData] = (0, _react.useState)({});
   const [clickedRowIdx, setClickedRowIdx] = (0, _react.useState)();
+  const [rowHeight, setRowHeight] = (0, _react.useState)("27px");
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -323,16 +324,18 @@ const HummingTable = props => {
     if (data.length !== 0) {
       return displayedData.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
         style: {
-          height: '27px',
+          height: rowHeight,
           backgroundColor: rowIndex === clickedRowIdx ? clickedRowColor : ""
         },
         key: rowIndex,
         onDoubleClick: val => {
-          props.rowClick.onDoubleClick(row);
+          var _props$rowClick;
+          if (props.rowClick.onDoubleClick) (_props$rowClick = props.rowClick) === null || _props$rowClick === void 0 || _props$rowClick.onDoubleClick(row);
         },
         onClick: val => {
+          var _props$rowClick2;
           setClickedRowIdx(rowIndex);
-          props.rowClick.onClick(row);
+          if (props.rowClick.onClick) (_props$rowClick2 = props.rowClick) === null || _props$rowClick2 === void 0 || _props$rowClick2.onClick(row);
         }
       }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
     } else {
@@ -343,7 +346,14 @@ const HummingTable = props => {
       columnData.forEach(item => {
         columnLength = columnLength + item.childCount;
       });
-      return /*#__PURE__*/_react.default.createElement("tr", null, /*#__PURE__*/_react.default.createElement("td", {
+      let tmpRowHeight = Number(rowHeight.split("px")[0]); /////
+      let trHeight = rowNum * tmpRowHeight;
+      //debugger;
+      return /*#__PURE__*/_react.default.createElement("tr", {
+        style: {
+          height: trHeight + "px"
+        }
+      }, /*#__PURE__*/_react.default.createElement("td", {
         style: {},
         colSpan: columnLength
       }, /*#__PURE__*/_react.default.createElement(_NoDataIcon.default, null)));
@@ -779,6 +789,16 @@ const HummingTable = props => {
     let tmpRowSelection = props.rowSelection ? props.rowSelection : null;
     let tmpPaginationInfo = props.pagination ? props.pagination : null;
     let tmpRowClick = props.rowClick ? props.rowClick : null;
+    let tmpRowHeight;
+    if (props.rowHeight === undefined) {
+      tmpRowHeight = "27px";
+    } else if (props.rowHeight && props.rowHeight.includes("px")) {
+      tmpRowHeight = props.rowHeight;
+    } else if (!props.rowHeight.includes("px")) {
+      throw new Error("row height must be represented in px.");
+    } else {
+      tmpRowHeight = "27px";
+    }
     if (tmpRowSelection === null) {
       setRowSelectionConfig(tmpRowSelection);
     } else if (tmpRowSelection.type !== 'checkbox' && tmpRowSelection.type !== 'radio') {
@@ -825,6 +845,7 @@ const HummingTable = props => {
       setPaginationYn(false);
     }
     setPaginationInfo(tmpPaginationInfo);
+    setRowHeight(tmpRowHeight);
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
   }, [props]);
@@ -833,6 +854,7 @@ const HummingTable = props => {
     ////console.log("data:",tmpData)
     setData(tmpData);
     ////console.log("data : ", dataSource);
+    setClickedRowIdx();
   }, [props.dataSource]);
   (0, _react.useEffect)(() => {
     //console.log("rowIdx : ", clickedRowIdx)
@@ -925,8 +947,10 @@ const HummingTable = props => {
       fontFamily: "monospace, sans-serif, serif"
     }
   }, tableTitle ? /*#__PURE__*/_react.default.createElement("caption", null, tableTitle) : null, /*#__PURE__*/_react.default.createElement("thead", {
+    id: "table-header-area",
     style: headerStyleData
   }, makeHeader()), /*#__PURE__*/_react.default.createElement("tbody", {
+    id: "table-row-area",
     className: rowZebraYn ? 'zebra' : ''
   }, renderData(data, columnData, selectedPage)))), /*#__PURE__*/_react.default.createElement("div", {
     id: "paginationArea"
