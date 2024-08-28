@@ -31,8 +31,8 @@ td {
 td + td {
   width: auto;
 }
-tr:hover {
-  background-color: #999 !important; /* Change this color as needed */
+#table-row-area tr:hover {
+  background-color: #ccc !important; /* Change this color as needed */
 }
 table tr:first-child th:first-child {
   border-top-left-radius: 5px;

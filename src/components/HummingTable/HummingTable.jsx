@@ -36,6 +36,7 @@ export const HummingTable = (props) => {
     const [activeFilteringDataLists, setActiveFilteringDataLists] = useState({});
     const [activeFilterCheckedData, setActiveFilterCheckedData] = useState({});
     const [clickedRowIdx, setClickedRowIdx] = useState();
+    const [rowHeight, setRowHeight] = useState("27px");
     
     
 
@@ -388,7 +389,7 @@ export const HummingTable = (props) => {
         return displayedData.map((row, rowIndex) => (
           
             <tr 
-              style={{height:'27px', backgroundColor:rowIndex===clickedRowIdx?clickedRowColor:""}} 
+              style={{height:rowHeight, backgroundColor:rowIndex===clickedRowIdx?clickedRowColor:""}} 
               key={rowIndex} 
               onDoubleClick={(val)=>{
                 if(props.rowClick.onDoubleClick)
@@ -413,8 +414,11 @@ export const HummingTable = (props) => {
         columnData.forEach((item) => {
           columnLength = columnLength + item.childCount
         })
+        let tmpRowHeight = Number(rowHeight.split("px")[0]);/////
+        let trHeight = rowNum * tmpRowHeight;
+        //debugger;
         return (
-          <tr>
+          <tr style={{height:trHeight+"px"}}>
             <td style={{}} colSpan={columnLength}>
               <NoDataIcon></NoDataIcon>
             </td>
@@ -869,6 +873,26 @@ export const HummingTable = (props) => {
       let tmpRowSelection = props.rowSelection?props.rowSelection:null;
       let tmpPaginationInfo = props.pagination?props.pagination:null;
       let tmpRowClick = props.rowClick?props.rowClick:null;
+      let tmpRowHeight;
+      
+      if(props.rowHeight === undefined)
+      {
+        tmpRowHeight = "27px";
+      }
+      else if(props.rowHeight && props.rowHeight.includes("px"))
+      {
+        tmpRowHeight = props.rowHeight
+      }
+      else if(!props.rowHeight.includes("px"))
+      {
+        throw new Error("row height must be represented in px.");
+      }
+      else
+      {
+        tmpRowHeight = "27px";
+      }
+
+      
       if(tmpRowSelection === null)
       {
         setRowSelectionConfig(tmpRowSelection);
@@ -929,6 +953,7 @@ export const HummingTable = (props) => {
         setPaginationYn(false)
       }
       setPaginationInfo(tmpPaginationInfo);
+      setRowHeight(tmpRowHeight);
       
       //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     }, [props])
@@ -938,6 +963,7 @@ export const HummingTable = (props) => {
       ////console.log("data:",tmpData)
       setData(tmpData)
       ////console.log("data : ", dataSource);
+      setClickedRowIdx()
 
     }, [props.dataSource])
 
@@ -1032,10 +1058,10 @@ export const HummingTable = (props) => {
         <div id="tableArea"  style={{overflowY:"auto", maxHeight:"calc("+tableHeight+" - 33px)"}} >
           <table style={{fontSize:"70%", fontFamily:"monospace, sans-serif, serif"}}>
             {tableTitle?<caption>{tableTitle}</caption>:null}
-            <thead style={headerStyleData}>
+            <thead id="table-header-area" style={headerStyleData}>
               {makeHeader()}
             </thead>
-            <tbody className={rowZebraYn?'zebra':''}>
+            <tbody id="table-row-area" className={rowZebraYn?'zebra':''}>
               {renderData(data, columnData, selectedPage)}
             </tbody>
           </table>

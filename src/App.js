@@ -279,7 +279,7 @@ const clickButton4 = () => {
   return (
     <div className="App" style={{}}>
       TEST
-      <div id="3" style={{}}>
+      <div id="3" style={{height:"550px"}}>
       <HummingTable 
         width={"85%"}
         height={"100%"}
@@ -291,6 +291,7 @@ const clickButton4 = () => {
         displayedRowNum="10"
         displayRowNumsYn={rowShowFlag}
         sizeChanger={[5, 10, 20, 40]}
+        rowHeight="30px"
         //zebra
         rowSelection={{
           type: rowSelectionType,
