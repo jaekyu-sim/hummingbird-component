@@ -299,14 +299,14 @@ const clickButton4 = () => {
             console.log(selectedRows)
           }
         }}
-        // rowClick={{
-        //   onClick:(value)=>{
-        //     console.log("here is clicked row values :", value)
-        //   },
-        //   // onDoubleClick:(value)=>{
-        //   //   console.log("here is double clicked row : ", value);
-        //   // }
-        // }}
+        rowClick={{
+          onClick:(value)=>{
+            console.log("here is clicked row values :", value)
+          },
+          // onDoubleClick:(value)=>{
+          //   console.log("here is double clicked row : ", value);
+          // }
+        }}
         
         pagination={{
           //dataLength: 1000,

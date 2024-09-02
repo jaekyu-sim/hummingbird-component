@@ -392,16 +392,7 @@ export const HummingTable = (props) => {
             <tr 
               style={{height:rowHeight, backgroundColor:rowIndex===clickedRowIdx?clickedRowColor:""}} 
               key={rowIndex} 
-              onDoubleClick={(val)=>{
-                if(props.rowClick && props.rowClick.onDoubleClick)
-                props.rowClick?.onDoubleClick(row);
-              }}
-              onClick={(val) => { 
-                
-                setClickedRowIdx(rowIndex)
-                if(props.rowClick && props.rowClick.onClick)
-                props.rowClick?.onClick(row)
-              }}>
+              >
                 {renderRowData(row, columns, (pageVal-1)*rowNum + rowIndex)}
 
             </tr>
@@ -506,7 +497,27 @@ export const HummingTable = (props) => {
           else
           {
             //////console.log(column.label, column.width)
-            return <td key={index} style={{minWidth:column.width, maxWidth:column.width, cursor:"default", whiteSpace:"nowrap"}}>
+            return <td 
+              key={index} 
+              style={{minWidth:column.width, maxWidth:column.width, cursor:"default", whiteSpace:"nowrap"}}
+              onDoubleClick={(val)=>{
+                if(props.rowClick && props.rowClick.onDoubleClick)
+                props.rowClick?.onDoubleClick({
+                  rowData : row,
+                  colData : column
+                });
+              }}
+              onClick={(val) => { 
+                
+                setClickedRowIdx(rowIndex)
+                if(props.rowClick && props.rowClick.onClick)
+                props.rowClick?.onClick(
+                  {
+                    rowData : row,
+                    colData : column
+                  })
+              }}
+              >
               <div style={{width:"100%", display:'flex', justifyContent:'center', alignItems:"center"}}>
                 <div style={{overflow:"hidden", whiteSpace:"nowrap", textOverflow:"ellipsis"}}
                   onMouseOver={
