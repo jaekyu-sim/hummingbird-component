@@ -322,6 +322,20 @@ const clickButton4 = () => {
       <button onClick={clickButton2}>data2</button>
       <button onClick={clickButton3}>show rownum</button>
       <button onClick={clickButton4}>switchCheckbox/Radio</button>
+      <table>
+        <thead>
+          <tr>
+            <th>1</th>
+            <th>2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1234</td>
+            <td>24234</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     // <div className="App">
     //   <ResizableTable>

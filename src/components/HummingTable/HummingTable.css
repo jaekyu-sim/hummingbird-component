@@ -1,85 +1,91 @@
 /* table component */
-table {
+
+#hummingbird table {
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
 }
-th {
-  position: relative; /* 가상 요소를 사용하기 위해 상대 위치 지정 */
+
+
+#hummingbird th {
+  position: relative; 
   border-collapse: collapse;
-  padding: 10px; /* 상단과 하단에 여백을 추가하여 중앙에 border를 표시 */
+  padding: 10px; 
   border-top: 1px solid #bbb;
 
 
-}
-th::after {
+} 
+
+
+
+#hummingbird th::after {
   content: "";
   position: absolute;
-  top: 25%; /* 상단에서 25% 위치에서 시작 */
-  bottom: 25%; /* 하단에서 25% 위치에서 끝 */
+  top: 25%; 
+  bottom: 25%; 
   right: 0;
-  width: 1px; /* border 두께 */
-  background-color: #bbb; /* border 색상 */
+  width: 1px; 
+  background-color: #bbb; 
 }
-th:last-child::after {
-  content: none; /* 마지막 th 요소에는 border를 표시하지 않음 */
+#hummingbird th:last-child::after {
+  content: none; 
 }
-td {
+#hummingbird td {
   border-collapse: collapse;
   border: 1px solid #bbb;
 }
-td + td {
+#hummingbird td + td {
   width: auto;
 }
-#table-row-area tr:hover {
+#hummingbird #table-row-area tr:hover {
   background-color: #ccc !important; /* Change this color as needed */
 }
-table tr:first-child th:first-child {
+#hummingbird table tr:first-child th:first-child {
   border-top-left-radius: 5px;
   border-top: 0px;
   border-left: 1px;
 }
 
-table tr:first-child th:last-child {
+#hummingbird table tr:first-child th:last-child {
   border-top-right-radius: 5px;
 }
 
-table th:last-child {
+#hummingbird table th:last-child {
   border-right: 0px;
 }
 
-table tr:last-child td:first-child {
+#hummingbird table tr:last-child td:first-child {
   border-bottom-left-radius: 5px;
 }
 
-table tr:last-child td:last-child {
+#hummingbird table tr:last-child td:last-child {
   border-bottom-right-radius: 5px;
 }
 
-.group-header {
+#hummingbird .group-header {
   border-right: 1px solid black;
 }
 
-.group-header:last-child {
+#hummingbird .group-header:last-child {
   border-right: none;
 }
 
 /* Zebra striping */
-.zebra tr:nth-child(odd) {
+#hummingbird .zebra tr:nth-child(odd) {
   background-color: #fff; /* White color for odd rows */
 }
 
-.zebra tr:nth-child(even) {
+#hummingbird .zebra tr:nth-child(even) {
   background-color: #eee; /* Grey color for even rows */
 }
 
 /* Row hover effect */
-.zebra tr:hover {
+#hummingbird .zebra tr:hover {
   background-color: #999 !important; /* Change this color as needed */
 }
 /* pagination css */
 /* right arrow */
-.arrow-right {
+#hummingbird .arrow-right {
   width: 0;
   height: 0;
   border-top: 5px solid transparent;
@@ -87,15 +93,15 @@ table tr:last-child td:last-child {
   border-left: 10px solid black;
 }
 
-.double-arrow-right {
+#hummingbird .double-arrow-right {
   display: inline-block;
   position: relative;
   width: 20px; /* Adjust width as needed */
   height: 10px; /* Adjust height as needed */
 }
 
-.double-arrow-right::before,
-.double-arrow-right::after {
+#hummingbird .double-arrow-right::before,
+#hummingbird .double-arrow-right::after {
   content: '';
   position: absolute;
   width: 0;
@@ -104,18 +110,18 @@ table tr:last-child td:last-child {
   border-bottom: 5px solid transparent;
 }
 
-.double-arrow-right::before {
+#hummingbird .double-arrow-right::before {
   border-left: 10px solid black;
   left: 0;
 }
 
-.double-arrow-right::after {
+#hummingbird .double-arrow-right::after {
   border-left: 10px solid black;
   left: 7px; /* Adjust left position to match the width of one arrow */
 }
 
 /* left arrow */
-.arrow-left {
+#hummingbird .arrow-left {
   width: 0;
   height: 0;
   border-top: 5px solid transparent;
@@ -123,15 +129,15 @@ table tr:last-child td:last-child {
   border-right: 10px solid black;
 }
 
-.double-arrow-left {
+#hummingbird .double-arrow-left {
   display: inline-block;
   position: relative;
   width: 20px; /* Adjust width as needed */
   height: 10px; /* Adjust height as needed */
 }
 
-.double-arrow-left::after,
-.double-arrow-left::before {
+#hummingbird .double-arrow-left::after,
+#hummingbird .double-arrow-left::before {
   content: '';
   position: absolute;
   width: 0;
@@ -140,17 +146,17 @@ table tr:last-child td:last-child {
   border-bottom: 5px solid transparent;
 }
 
-.double-arrow-left::after {
+#hummingbird .double-arrow-left::after {
   border-right: 10px solid black;
   left: 0;
 }
 
-.double-arrow-left::before {
+#hummingbird .double-arrow-left::before {
   border-right: 10px solid black;
   right: 3px; /* Adjust left position to match the width of one arrow */
 }
 
-.container {
+#hummingbird .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -158,14 +164,14 @@ table tr:last-child td:last-child {
   padding: 0 10px; /* Optional padding */
 }
 
-.paginationNum {
+#hummingbird .paginationNum {
   background-color: white;
   width: 20px;
   margin: 5px;
   cursor: pointer;
 }
 
-.paginationNum.selected {
+#hummingbird .paginationNum.selected {
   background-color: #6ac0fd;
   border: 2px solid #6ac0fd;
   border-radius: 3px;
@@ -173,7 +179,7 @@ table tr:last-child td:last-child {
   cursor: pointer;
 }
 
-td:hover::after {
+#hummingbird td:hover::after {
   content: attr(title);
   position: absolute;
   left: 0;

@@ -330,12 +330,12 @@ const HummingTable = props => {
         key: rowIndex,
         onDoubleClick: val => {
           var _props$rowClick;
-          if (props.rowClick.onDoubleClick) (_props$rowClick = props.rowClick) === null || _props$rowClick === void 0 || _props$rowClick.onDoubleClick(row);
+          if (props.rowClick && props.rowClick.onDoubleClick) (_props$rowClick = props.rowClick) === null || _props$rowClick === void 0 || _props$rowClick.onDoubleClick(row);
         },
         onClick: val => {
           var _props$rowClick2;
           setClickedRowIdx(rowIndex);
-          if (props.rowClick.onClick) (_props$rowClick2 = props.rowClick) === null || _props$rowClick2 === void 0 || _props$rowClick2.onClick(row);
+          if (props.rowClick && props.rowClick.onClick) (_props$rowClick2 = props.rowClick) === null || _props$rowClick2 === void 0 || _props$rowClick2.onClick(row);
         }
       }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
     } else {
