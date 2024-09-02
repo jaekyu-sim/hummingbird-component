@@ -3,9 +3,11 @@
 #hummingbird table {
   border-collapse: separate;
   border-spacing: 0;
-  table-layout: fixed;
+  /* table-layout: fixed; */
 }
-
+#humming-table{
+  width: 100%;
+}
 
 #hummingbird th {
   position: relative; 
@@ -16,10 +18,10 @@
 
 } 
 
-/* #hummingbird #humming-table{
+#hummingbird #humming-table{
   width:100%;
   min-width: 0;
-} */
+}
 
 
 #hummingbird th::after {

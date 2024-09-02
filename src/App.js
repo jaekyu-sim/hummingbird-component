@@ -279,9 +279,9 @@ const clickButton4 = () => {
   return (
     <div className="App" style={{}}>
       TEST
-      <div id="3" style={{height:"550px"}}>
+      <div id="3" style={{height:"550px", width:"95%"}}>
       <HummingTable 
-        width={"85%"}
+        width={"100%"}
         height={"100%"}
         columns={columnConfig1}
         //dataSource={[]}

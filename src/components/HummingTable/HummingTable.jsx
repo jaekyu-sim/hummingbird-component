@@ -959,6 +959,9 @@ export const HummingTable = (props) => {
       //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     }, [props])
 
+    useEffect(()=>{
+    }, [props.width])
+
     useEffect(() => {
       let tmpData = props.dataSource?props.dataSource:[]
       ////console.log("data:",tmpData)
@@ -1056,7 +1059,7 @@ export const HummingTable = (props) => {
     <div id="hummingbird">
       <div style={{textAlign:"center", display: 'flex', justifyContent: 'center', alignItems: 'center', height: tableHeight }}>
         <div style={{width:tableWidth, height:tableHeight}}>
-          <div id="tableArea"  style={{overflowY:"auto", maxHeight:"calc("+tableHeight+" - 33px)", width:"100%"}} >
+          <div id="tableArea"  style={{overflowY:"auto", maxHeight:"calc("+tableHeight+" - 33px)", width:tableWidth}} >
             <table id="humming-table" style={{maxWidth:"calc(100%)", fontSize:"70%", fontFamily:"monospace, sans-serif, serif"}}>
               {tableTitle?<caption>{tableTitle}</caption>:null}
               <thead id="table-header-area" style={headerStyleData}>

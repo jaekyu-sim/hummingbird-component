@@ -949,7 +949,7 @@ const HummingTable = props => {
   }, /*#__PURE__*/_react.default.createElement("table", {
     id: "humming-table",
     style: {
-      width: "100%",
+      maxWidth: "calc(100%)",
       fontSize: "70%",
       fontFamily: "monospace, sans-serif, serif"
     }
