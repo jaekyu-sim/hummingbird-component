@@ -178,8 +178,9 @@
 }
 
 #hummingbird .paginationNum.selected {
-  background-color: #6ac0fd;
-  border: 2px solid #6ac0fd;
+  background-color: #3A3B50;
+  border: 2px solid #3A3B50;
+  color: white;
   border-radius: 3px;
   margin: 5px;
   cursor: pointer;

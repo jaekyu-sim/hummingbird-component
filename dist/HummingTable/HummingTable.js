@@ -851,6 +851,7 @@ const HummingTable = props => {
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
   }, [props]);
+  (0, _react.useEffect)(() => {}, [props.width]);
   (0, _react.useEffect)(() => {
     let tmpData = props.dataSource ? props.dataSource : [];
     ////console.log("data:",tmpData)
@@ -944,7 +945,7 @@ const HummingTable = props => {
     style: {
       overflowY: "auto",
       maxHeight: "calc(" + tableHeight + " - 33px)",
-      width: "100%"
+      width: tableWidth
     }
   }, /*#__PURE__*/_react.default.createElement("table", {
     id: "humming-table",
