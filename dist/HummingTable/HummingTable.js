@@ -175,11 +175,13 @@ const HummingTable = props => {
 
     depthMap.forEach((columns, depth) => {
       headers.push( /*#__PURE__*/_react.default.createElement("tr", {
+        id: "humming-table-header-row",
         key: depth,
         style: {
           cursor: "col-resize"
         }
       }, columns.map((column, index) => /*#__PURE__*/_react.default.createElement("th", {
+        id: "humming-table-th",
         key: depth + "." + index,
         rowSpan: column.rowSpanCount,
         colSpan: column.childCount
@@ -923,6 +925,8 @@ const HummingTable = props => {
     };
   }, []);
   return /*#__PURE__*/_react.default.createElement("div", {
+    id: "hummingbird"
+  }, /*#__PURE__*/_react.default.createElement("div", {
     style: {
       textAlign: "center",
       display: 'flex',
@@ -942,6 +946,7 @@ const HummingTable = props => {
       maxHeight: "calc(" + tableHeight + " - 33px)"
     }
   }, /*#__PURE__*/_react.default.createElement("table", {
+    id: "humming-table",
     style: {
       fontSize: "70%",
       fontFamily: "monospace, sans-serif, serif"
@@ -954,7 +959,7 @@ const HummingTable = props => {
     className: rowZebraYn ? 'zebra' : ''
   }, renderData(data, columnData, selectedPage)))), /*#__PURE__*/_react.default.createElement("div", {
     id: "paginationArea"
-  }, paginationComponent())));
+  }, paginationComponent()))));
 };
 exports.HummingTable = HummingTable;
 var _default = exports.default = HummingTable;
