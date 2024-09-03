@@ -862,7 +862,11 @@ const HummingTable = props => {
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
   }, [props]);
-  (0, _react.useEffect)(() => {}, [props.width]);
+  (0, _react.useEffect)(() => {
+    let tmpTableWidth = props.width ? props.width : "100%";
+    setTableWidth(tmpTableWidth);
+    debugger;
+  }, [props.width]);
   (0, _react.useEffect)(() => {
     let tmpData = props.dataSource ? props.dataSource : [];
     ////console.log("data:",tmpData)
