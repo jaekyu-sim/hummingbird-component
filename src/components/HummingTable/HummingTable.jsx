@@ -971,6 +971,9 @@ export const HummingTable = (props) => {
     }, [props])
 
     useEffect(()=>{
+      let tmpTableWidth = props.width?props.width:"100%";
+      setTableWidth(tmpTableWidth);
+      debugger;
     }, [props.width])
 
     useEffect(() => {

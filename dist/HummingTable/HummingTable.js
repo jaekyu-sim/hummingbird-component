@@ -174,6 +174,7 @@ const HummingTable = props => {
     //debugger;
 
     depthMap.forEach((columns, depth) => {
+      debugger;
       headers.push( /*#__PURE__*/_react.default.createElement("tr", {
         id: "humming-table-header-row",
         key: depth,
@@ -195,7 +196,7 @@ const HummingTable = props => {
             idx: index
           }) ? 'col-resize' : 'default',
           width: column.width,
-          height: "30px",
+          height: "10px",
           //display:"flex",
           textAlign: "center",
           justifyContent: 'center',
@@ -204,12 +205,16 @@ const HummingTable = props => {
       }, /*#__PURE__*/_react.default.createElement("div", {
         style: {
           display: "flex",
-          alignItems: "center"
+          alignItems: "center",
+          width: column.width,
+          overflow: "hidden"
         }
       }, /*#__PURE__*/_react.default.createElement("div", {
         style: {
           flex: 1,
-          textAlign: "center"
+          textAlign: "center",
+          height: "100%",
+          overflow: "hidden"
         }
       }, column.label), /*#__PURE__*/_react.default.createElement("div", {
         style: {
