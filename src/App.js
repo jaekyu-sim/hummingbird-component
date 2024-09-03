@@ -102,7 +102,7 @@ function App() {
 const columnConfig2 = [
   {
       dataKey:"id",
-      label:"아이디",
+      label:"아이디dddddddddddddddddafdskal;sjfhweioahfkjasdfnkl;asdjf;klddd",
       //width:"120px",
       width:"12%",
       sortable: true,
@@ -283,7 +283,7 @@ const clickButton4 = () => {
       <HummingTable 
         width={"100%"}
         height={"100%"}
-        columns={columnConfig1}
+        columns={columnConfig2}
         //dataSource={[]}
         dataSource={data}
         headerStyle={headerStyle}

@@ -201,7 +201,7 @@ export const HummingTable = (props) => {
       //debugger;
       
       depthMap.forEach((columns, depth) => {
-        
+        debugger;
         headers.push(
           <tr id="humming-table-header-row" key={depth} style={{cursor:"col-resize"}}>
             {columns.map((column, index) => (
@@ -216,7 +216,7 @@ export const HummingTable = (props) => {
                 style={{
                   cursor: JSON.stringify(hoverCell) === JSON.stringify({row: depth, idx: index})? 'col-resize': 'default',
                   width:column.width,
-                  height:"30px",
+                  height:"10px",
                   //display:"flex",
                   textAlign:"center",
                   justifyContent:'center',
@@ -227,8 +227,8 @@ export const HummingTable = (props) => {
                   {/* <div style={{ flex: 1, textAlign: "center" }}>
                     {column.label}
                   </div> */}
-                  <div style={{ display: "flex", alignItems: "center",  }}>
-                      <div style={{ flex: 1, textAlign: "center",  }}>
+                  <div style={{ display: "flex", alignItems: "center", width:column.width, overflow:"hidden"}}>
+                      <div style={{ flex: 1, textAlign: "center", height:"100%", overflow:"hidden" }}>
                           {column.label}
                       </div>
                       <div style={{ display:"flex", }}>

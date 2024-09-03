@@ -329,16 +329,7 @@ const HummingTable = props => {
           height: rowHeight,
           backgroundColor: rowIndex === clickedRowIdx ? clickedRowColor : ""
         },
-        key: rowIndex,
-        onDoubleClick: val => {
-          var _props$rowClick;
-          if (props.rowClick && props.rowClick.onDoubleClick) (_props$rowClick = props.rowClick) === null || _props$rowClick === void 0 || _props$rowClick.onDoubleClick(row);
-        },
-        onClick: val => {
-          var _props$rowClick2;
-          setClickedRowIdx(rowIndex);
-          if (props.rowClick && props.rowClick.onClick) (_props$rowClick2 = props.rowClick) === null || _props$rowClick2 === void 0 || _props$rowClick2.onClick(row);
-        }
+        key: rowIndex
       }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
     } else {
       //children 없는 column 의 갯수 세어서 colSpan 에 입력. 이때 RowNum, Checkbox 갯수도 같이 파악.
@@ -446,6 +437,21 @@ const HummingTable = props => {
               maxWidth: column.width,
               cursor: "default",
               whiteSpace: "nowrap"
+            },
+            onDoubleClick: val => {
+              var _props$rowClick;
+              if (props.rowClick && props.rowClick.onDoubleClick) (_props$rowClick = props.rowClick) === null || _props$rowClick === void 0 || _props$rowClick.onDoubleClick({
+                rowData: row,
+                colData: column
+              });
+            },
+            onClick: val => {
+              var _props$rowClick2;
+              setClickedRowIdx(rowIndex);
+              if (props.rowClick && props.rowClick.onClick) (_props$rowClick2 = props.rowClick) === null || _props$rowClick2 === void 0 || _props$rowClick2.onClick({
+                rowData: row,
+                colData: column
+              });
             }
           }, /*#__PURE__*/_react.default.createElement("div", {
             style: {
