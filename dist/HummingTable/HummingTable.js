@@ -173,24 +173,21 @@ const HummingTable = props => {
     let windowWidth = window.innerWidth;
     if (columnData.length !== 0) {
       // debugger;
-      // columnData.forEach((item, idx)=>{
-      //   if(typeof item.width == "string")
-      //   {
-      //     let itemWidth = Number(item.width.split("px")[0]);
-      //     totalWidth = totalWidth + itemWidth;
-      //   }
-
-      // })
-
-      let tmpTotalWidth = document.getElementById("humming-table").clientWidth; //totalWidth;//column 너비 다 합친 값.
+      columnData.forEach((item, idx) => {
+        if (typeof item.width == "string") {
+          if (item.dataKey === "_hummingRowSelection" || item.dataKey === "_hummingRowNums") {
+            totalWidth = totalWidth + 30;
+          }
+        }
+      });
+      let tmpTotalWidth = totalWidth + document.getElementById("humming-table").clientWidth; //totalWidth;//column 너비 다 합친 값.
       //이제 humming-table-area 의 너비 필요.
       let tmpTableWidth = document.getElementById("tableArea").clientWidth;
       let tmpTableRatio = tmpTableWidth / tmpTotalWidth;
       columnData.forEach((item, idx) => {
         //item.width = (item.width * tmpTableRatio) + "px";
-        if (item.dataKey === "_hummingRowSelection") {} else {
-          item.width = Number(item.width.split("px")[0]) * tmpTableRatio + "px";
-        }
+
+        item.width = Number(item.width.split("px")[0]) * tmpTableRatio + "px";
       });
       debugger;
     }
@@ -891,7 +888,7 @@ const HummingTable = props => {
   (0, _react.useEffect)(() => {
     let tmpTableWidth = props.width ? props.width : "100%";
     setTableWidth(tmpTableWidth);
-    debugger;
+    //debugger;
   }, [props.width]);
   (0, _react.useEffect)(() => {
     let tmpData = props.dataSource ? props.dataSource : [];

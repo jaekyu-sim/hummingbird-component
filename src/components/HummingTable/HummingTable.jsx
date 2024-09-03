@@ -37,6 +37,7 @@ export const HummingTable = (props) => {
     const [activeFilterCheckedData, setActiveFilterCheckedData] = useState({});
     const [clickedRowIdx, setClickedRowIdx] = useState();
     const [rowHeight, setRowHeight] = useState("27px");
+    const [hummingTableWidth, setHummingTableWidth] = useState("100%");
     
     
 
@@ -195,6 +196,7 @@ export const HummingTable = (props) => {
       //let tmpColumnData = columnData
       
       //debugger;
+      /*
       let totalWidth = 0;
       let windowWidth = window.innerWidth;
       
@@ -204,6 +206,7 @@ export const HummingTable = (props) => {
         columnData.forEach((item, idx)=>{
           if(typeof item.width == "string")
           {
+            //debugger;
             if(item.dataKey === "_hummingRowSelection" || item.dataKey === "_hummingRowNums")
             {
               totalWidth = totalWidth + 30;
@@ -216,6 +219,7 @@ export const HummingTable = (props) => {
         //이제 humming-table-area 의 너비 필요.
         let tmpTableWidth = document.getElementById("tableArea").clientWidth;
         let tmpTableRatio = tmpTableWidth / tmpTotalWidth;
+        setHummingTableWidth(tmpTotalWidth * tmpTableRatio * 0.9)
         columnData.forEach((item, idx)=>{
           //item.width = (item.width * tmpTableRatio) + "px";
           
@@ -223,9 +227,10 @@ export const HummingTable = (props) => {
           
           
         })
-        debugger;
         
-      }
+        
+      }*/
+      
       const depthMap = generateHeader(columnData);
       const headers = [];
       let filterLists = [];
@@ -1004,7 +1009,7 @@ export const HummingTable = (props) => {
     useEffect(()=>{
       let tmpTableWidth = props.width?props.width:"100%";
       setTableWidth(tmpTableWidth);
-      debugger;
+      //debugger;
     }, [props.width])
 
     useEffect(() => {
@@ -1105,7 +1110,7 @@ export const HummingTable = (props) => {
       <div style={{textAlign:"center", display: 'flex', justifyContent: 'center', alignItems: 'center', height: tableHeight }}>
         <div style={{width:tableWidth, height:tableHeight}}>
           <div id="tableArea"  style={{overflowY:"auto", maxHeight:"calc("+tableHeight+" - 33px)", width:tableWidth}} >
-            <table id="humming-table" style={{maxWidth:"calc(100%)", fontSize:"70%", fontFamily:"monospace, sans-serif, serif"}}>
+            <table id="humming-table" style={{width:hummingTableWidth, fontSize:"70%", fontFamily:"monospace, sans-serif, serif"}}>
               {tableTitle?<caption>{tableTitle}</caption>:null}
               <thead id="table-header-area" style={headerStyleData}>
                 {makeHeader()}
