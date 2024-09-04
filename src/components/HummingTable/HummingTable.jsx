@@ -252,7 +252,7 @@ export const HummingTable = (props) => {
                 style={{
                   cursor: JSON.stringify(hoverCell) === JSON.stringify({row: depth, idx: index})? 'col-resize': 'default',
                   width:column.width,
-                  height:"10px",
+                  // height:"10px",
                   //display:"flex",
                   textAlign:"center",
                   justifyContent:'center',
@@ -263,8 +263,8 @@ export const HummingTable = (props) => {
                   {/* <div style={{ flex: 1, textAlign: "center" }}>
                     {column.label}
                   </div> */}
-                  <div style={{ display: "flex", alignItems: "center", width:column.width, overflow:"hidden"}}>
-                      <div style={{ flex: 1, textAlign: "center", height:"100%", overflow:"hidden" }}>
+                  <div style={{ display: "flex", alignItems: "center", overflow:"hidden"}}>
+                      <div style={{ flex: 1, textAlign: "center", height:"100%", padding:"10px", overflow:"hidden" }}>
                           {column.label}
                       </div>
                       <div style={{ display:"flex", }}>

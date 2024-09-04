@@ -45,6 +45,7 @@ const HummingTable = props => {
   const [activeFilterCheckedData, setActiveFilterCheckedData] = (0, _react.useState)({});
   const [clickedRowIdx, setClickedRowIdx] = (0, _react.useState)();
   const [rowHeight, setRowHeight] = (0, _react.useState)("27px");
+  const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("100%");
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -169,28 +170,40 @@ const HummingTable = props => {
     //let tmpColumnData = columnData
 
     //debugger;
+    /*
     let totalWidth = 0;
     let windowWidth = window.innerWidth;
-    if (columnData.length !== 0) {
+    
+    if(columnData.length !== 0)
+    {
       // debugger;
-      columnData.forEach((item, idx) => {
-        if (typeof item.width == "string") {
-          if (item.dataKey === "_hummingRowSelection" || item.dataKey === "_hummingRowNums") {
+      columnData.forEach((item, idx)=>{
+        if(typeof item.width == "string")
+        {
+          //debugger;
+          if(item.dataKey === "_hummingRowSelection" || item.dataKey === "_hummingRowNums")
+          {
             totalWidth = totalWidth + 30;
           }
         }
-      });
-      let tmpTotalWidth = totalWidth + document.getElementById("humming-table").clientWidth; //totalWidth;//column 너비 다 합친 값.
+        
+      })
+        let tmpTotalWidth = totalWidth + document.getElementById("humming-table").clientWidth;//totalWidth;//column 너비 다 합친 값.
       //이제 humming-table-area 의 너비 필요.
       let tmpTableWidth = document.getElementById("tableArea").clientWidth;
       let tmpTableRatio = tmpTableWidth / tmpTotalWidth;
-      columnData.forEach((item, idx) => {
+      setHummingTableWidth(tmpTotalWidth * tmpTableRatio * 0.9)
+      columnData.forEach((item, idx)=>{
         //item.width = (item.width * tmpTableRatio) + "px";
+        
+        item.width = Number(item.width.split("px")[0])*tmpTableRatio + "px";
+        
+        
+      })
+      
+      
+    }*/
 
-        item.width = Number(item.width.split("px")[0]) * tmpTableRatio + "px";
-      });
-      debugger;
-    }
     const depthMap = generateHeader(columnData);
     const headers = [];
     let filterLists = [];
@@ -988,7 +1001,7 @@ const HummingTable = props => {
   }, /*#__PURE__*/_react.default.createElement("table", {
     id: "humming-table",
     style: {
-      maxWidth: "calc(100%)",
+      width: hummingTableWidth,
       fontSize: "70%",
       fontFamily: "monospace, sans-serif, serif"
     }
