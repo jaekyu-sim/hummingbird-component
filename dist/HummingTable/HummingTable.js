@@ -22,7 +22,7 @@ const HummingTable = props => {
   /* variable */
   //let widthChangeX = 0;
   let defaultDisplayedRowNum = 10;
-  let defaultHeaderColor = "#efefef";
+  let defaultHeaderColor = "#eee";
   let clickedRowColor = "#999";
   let defaultRowHeight = "27px";
   /* useState */
@@ -270,7 +270,8 @@ const HummingTable = props => {
         }
       }, column.label), /*#__PURE__*/_react.default.createElement("div", {
         style: {
-          display: "flex"
+          display: "flex",
+          marginRight: "5px"
         }
       }, column.sortable === true ? /*#__PURE__*/_react.default.createElement("div", {
         style: {
@@ -1085,6 +1086,7 @@ const HummingTable = props => {
     id: "humming-table",
     style: {
       width: hummingTableWidth
+
       //fontSize: "70%",
       //fontFamily: "monospace, sans-serif, serif",
     }

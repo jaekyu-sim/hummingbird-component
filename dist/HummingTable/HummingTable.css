@@ -48,6 +48,7 @@
   /* border: 1px solid #bbb; */
   box-sizing: border-box;
   text-align:center;
+  /* border-radius: 5px; */
   
 }
 #humming-table{
@@ -63,7 +64,8 @@
   box-sizing: border-box;
   /* border-bottom: 1px solid #aaa; */
   color:#999;
-  border: 1px solid rgba(255, 255, 255, 0.1)
+  border: 2px solid rgba(255, 255, 255, 0.1);
+
 } 
 
 #hummingbird #humming-table{
@@ -121,6 +123,7 @@
 
 #hummingbird table th:last-child {
   /* border-right: 0px; */
+  /* border-radius: 15px; */
 }
 
 #hummingbird table tr:last-child td:first-child {
