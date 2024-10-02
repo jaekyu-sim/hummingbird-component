@@ -8,10 +8,10 @@ import ResizableTable from './ResizableTable';
 //faker.seed(100);
 
 function App() {
-  let dataLength = 10;
+  let dataLength = 30;
   const headerStyle = {
     //가능한 옵션 : backgroundColor, color
-    backgroundColor: "#ACC",
+    //backgroundColor: "#ACC",
     
   }
 
@@ -32,43 +32,43 @@ function App() {
     {
       dataKey:"other",
       label:"그외 정보",
-      width:"50%",
+      width:"calc(50% - 60px)",
       sortable: false,
       children: [
         {
           dataKey:"age",
           label:"나이",
-          width:"20%",
+          width:"40%",
           sortable: false,
         },
         {
           dataKey:"address",
           label:"주소",
-          width:"30%",
+          width:"60%",
           sortable: false,
           children: [
             {
               dataKey:"street",
               label:"세부 주소1",
-              width:"20%",
+              width:"70%",
               sortable: false,
             },
             {
               dataKey:"block",
               label:"세부 주소2",
-              width:"10%",
+              width:"30%",
               sortable: false,
               children: [
                 {
                   dataKey:"building",
                   label:"동",
-                  width:"5%",
+                  width:"50%",
                   sortable: false,
                 },
                 {
                   dataKey:"doorNo",
                   label:"호수",
-                  width:"5%",
+                  width:"50%",
                   sortable: false,
                 }
               ]
@@ -86,13 +86,13 @@ function App() {
         {
           dataKey:"companyAddress",
           label:"회사 주소",
-          width:"17%",
+          width:"50%",
           sortable: false,
         },
         {
           dataKey:"companyName",
           label:"회사 명",
-          width:"17%",
+          width:"50%",
           sortable: false,
         }
       ]
@@ -102,17 +102,17 @@ function App() {
 const columnConfig2 = [
   {
       dataKey:"id",
-      label:"아이디dddddddddddddddddafdskal;sjfhweioahfkjasdfnkl;asdjf;klddd",
-      //width:"120px",
-      width:"12%",
+      label:"아이디",
+      width:"120px",
+      //width:"12%",
       sortable: true,
       filter: true,
   },
   {
     dataKey:"name",
     label:"이름",
-    //width:"120px",
-    width:"12%",
+    width:"120px",
+    //width:"12%",
     sortable: true,
   },
   {
@@ -125,8 +125,8 @@ const columnConfig2 = [
   {
     dataKey:"street",
     label:"세부 주소1",
-    width:"12%",
-    //width:"120px",
+    //width:"12%",
+    width:"120px",
     sortable: false,
     filter: true,
   },
@@ -162,6 +162,90 @@ const columnConfig2 = [
   }
 
 
+]
+
+const columnConfig3 = [
+  {
+    dataKey:"id",
+    label:"아이디",
+    width:"100px",
+    sortable: true,
+    filter: true,
+  },
+  {
+    dataKey:"name",
+    label:"이름",
+    width:"100px",
+    sortable: true,
+  },
+  {
+    dataKey:"other",
+    label:"그외 정보",
+    width:"calc(720px)",
+    sortable: false,
+    children: [
+      {
+        dataKey:"age",
+        label:"나이",
+        width:"300px",
+        sortable: false,
+      },
+      {
+        dataKey:"address",
+        label:"주소",
+        width:"420px",
+        sortable: false,
+        children: [
+          {
+            dataKey:"street",
+            label:"세부 주소1",
+            width:"300px",
+            sortable: false,
+          },
+          {
+            dataKey:"block",
+            label:"세부 주소2",
+            width:"120px",
+            sortable: false,
+            children: [
+              {
+                dataKey:"building",
+                label:"동",
+                width:"60px",
+                sortable: false,
+              },
+              {
+                dataKey:"doorNo",
+                label:"호수",
+                width:"60px",
+                sortable: false,
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    dataKey:"company",
+    label:"회사 정보",
+    width:"200px",
+    sortable: false,
+    children:[
+      {
+        dataKey:"companyAddress",
+        label:"회사 주소",
+        width:"100px",
+        sortable: false,
+      },
+      {
+        dataKey:"companyName",
+        label:"회사 명",
+        width:"100px",
+        sortable: false,
+      }
+    ]
+  }
 ]
 
 let tmpData = []
@@ -279,6 +363,7 @@ const clickButton4 = () => {
   return (
     <div className="App" style={{}}>
       TEST
+      <div style={{display:"flex", justifyContent:"center"}}>
       <div id="3" style={{height:"550px", width:"95%"}}>
       <HummingTable 
         width={"100%"}
@@ -286,12 +371,12 @@ const clickButton4 = () => {
         columns={columnConfig2}
         //dataSource={[]}
         dataSource={data}
-        headerStyle={headerStyle}
+        //headerStyle={headerStyle}
         title={"table title test"}
         displayedRowNum="10"
         displayRowNumsYn={rowShowFlag}
         sizeChanger={[5, 10, 20, 40]}
-        rowHeight="30px"
+        rowHeight="40px"
         //zebra
         rowSelection={{
           type: rowSelectionType,
@@ -307,17 +392,17 @@ const clickButton4 = () => {
           //   console.log("here is double clicked row : ", value);
           // }
         }}
-        
-        pagination={{
-          //dataLength: 1000,
-          onClick: (pageNum) => {
-            console.log(pageNum)
-          }
-        }}
+        // paginationUseYn="N"
+        // pagination={{
+        //   dataLength: 1000,
+        //   onClick: (pageNum) => {
+        //     console.log(pageNum)
+        //   }
+        // }}
         //zebra, ...
       ></HummingTable>
       </div>
-
+      </div>
       <button onClick={clickButton1}>data1</button>
       <button onClick={clickButton2}>data2</button>
       <button onClick={clickButton3}>show rownum</button>
@@ -337,33 +422,7 @@ const clickButton4 = () => {
         </tbody>
       </table>
     </div>
-    // <div className="App">
-    //   <ResizableTable>
-    //     <thead>
-    //       <tr>
-    //         <th rowspan="4" width="8%">아이디</th>
-    //         <th rowspan="4" width="8%">이름</th>
-    //         <th rowspan="4" colspan="1" width="18%">그외 정보</th>
-    //         <th rowspan="4" colspan="2" width="8%">회사 정보</th>
-    //         <th colspan="3" width="15%">주소</th>
-    //         <th rowspan="4" width="8%">회사 주소</th>
-    //         <th rowspan="4" width="8%">회사 명</th>
-    //       </tr>
-    //       <tr>
-    //         <th rowspan="3" width="8%">나이</th>
-    //         <th rowspan="2" width="8%">세부 주소1</th>
-    //         <th colspan="2" width="15%">세부 주소2</th>
-    //       </tr>
-    //       <tr>
-    //         <th id="resize-dong" width="7.5%">동</th>
-    //         <th id="resize-hosu" width="7.5%">호수</th>
-    //       </tr>
-    //     </thead>
-    //     <tbody>
-    //       {/* 테이블 본문 내용은 여기에 작성합니다 */}
-    //     </tbody>
-    //   </ResizableTable>
-    // </div>
+    
     );
 }
 

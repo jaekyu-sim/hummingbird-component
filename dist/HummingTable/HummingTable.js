@@ -232,7 +232,7 @@ const HummingTable = props => {
             idx: index
           }) ? 'col-resize' : 'default',
           width: column.width,
-          height: "10px",
+          // height:"10px",
           //display:"flex",
           textAlign: "center",
           justifyContent: 'center',
@@ -242,7 +242,6 @@ const HummingTable = props => {
         style: {
           display: "flex",
           alignItems: "center",
-          width: column.width,
           overflow: "hidden"
         }
       }, /*#__PURE__*/_react.default.createElement("div", {
@@ -250,6 +249,7 @@ const HummingTable = props => {
           flex: 1,
           textAlign: "center",
           height: "100%",
+          padding: "10px",
           overflow: "hidden"
         }
       }, column.label), /*#__PURE__*/_react.default.createElement("div", {

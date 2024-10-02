@@ -1,44 +1,107 @@
 /* table component */
+*{
+  
+}
+#hummingbird{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+}
+#hummingbird-filter-div{
 
+  position: absolute;
+  top: 60%;
+  right: 0%;
+  background: white;
+  /* border: 1px solid #ccc; */
+  z-index: 1000;
+  min-height: 100px;
+  max-height: 350px;
+  height: 100%;
+  max-width: 150px;
+  width: 100%;
+  overflow-y: auto;
+  border:1px solid black;
+  border-radius: 0.5rem;
+  color:rgba(0, 0, 0, 255);
+  font-size: 0.7rem;
+}
+#hummingbird-filter-div::-webkit-scrollbar{
+  width:5px;
+  height:5px;
+}
+#hummingbird-filter-div::-webkit-scrollbar-corner{
+  width:5px
+}
+#hummingbird-filter-div::-webkit-scrollbar-thumb {
+  background: rgb(117, 117, 117); /* 스크롤바 색상 */
+  border-radius: 10px; /* 스크롤바 둥근 테두리 */
+}
+
+#hummingbird-filter-div::-webkit-scrollbar-track {
+  background: rgba(115, 115, 115, 0.1);  /*스크롤바 뒷 배경 색상*/
+}
 #hummingbird table {
-  border-collapse: separate;
+  /* border-collapse: separate; */
+  border-collapse: collapse;
   border-spacing: 0;
-  table-layout: fixed;
+  /* table-layout: fixed; */
+  /* border: 1px solid #bbb; */
+  box-sizing: border-box;
+  text-align:center;
+  
 }
 #humming-table{
   width: 100%;
+  
 }
 
 #hummingbird th {
   position: relative; 
   border-collapse: collapse;
   /* padding: 10px;  */
-  border-top: 1px solid #bbb;
+  /* border: 1px solid #bbb; */
+  box-sizing: border-box;
+  border-bottom: 1px solid #aaa;
 
-
+  color:#999
 } 
 
 #hummingbird #humming-table{
   width:100%;
   min-width: 0;
+  border-collapse: collapse;
+  box-sizing: border-box;
 }
 
+#hummingbird #page-size-changer-selectbox{
+  /* background-color: red; */
+  transition: all 0.1s ease;
+}
+#hummingbird #page-size-changer-selectbox:focus{
+  /* background-color: blue; */
+  border: 2px solid rgba(244, 150, 68, 0.5);
+  
+}
 
 #hummingbird th::after {
+  border-collapse: collapse;
   content: "";
   position: absolute;
-  top: 25%; 
-  bottom: 25%; 
+  top: 0%; 
+  bottom: 0%; 
   right: 0;
-  width: 1px; 
+  /* width: 1px;  */
   background-color: #bbb; 
 }
 #hummingbird th:last-child::after {
-  content: none; 
+  content: none;
+  border-collapse: collapse; 
 }
 #hummingbird td {
   border-collapse: collapse;
-  border: 1px solid #bbb;
+  /* border: 1px solid #bbb; */
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
 }
 #hummingbird td + td {
   width: auto;
@@ -48,8 +111,8 @@
 }
 #hummingbird table tr:first-child th:first-child {
   border-top-left-radius: 5px;
-  border-top: 0px;
-  border-left: 1px;
+  /* border-top: 1px solid #bbb;
+  border-left: 1px; */
 }
 
 #hummingbird table tr:first-child th:last-child {
@@ -57,7 +120,7 @@
 }
 
 #hummingbird table th:last-child {
-  border-right: 0px;
+  /* border-right: 0px; */
 }
 
 #hummingbird table tr:last-child td:first-child {
@@ -69,11 +132,11 @@
 }
 
 #hummingbird .group-header {
-  border-right: 1px solid black;
+  /* border-right: 1px solid black; */
 }
 
 #hummingbird .group-header:last-child {
-  border-right: none;
+  /* border-right: none; */
 }
 
 /* Zebra striping */
@@ -171,19 +234,22 @@
 }
 
 #hummingbird .paginationNum {
+  text-align: center;
   background-color: white;
   width: 20px;
   margin: 5px;
   cursor: pointer;
+  border-radius: 50%;
 }
 
 #hummingbird .paginationNum.selected {
   background-color: #3A3B50;
   border: 2px solid #3A3B50;
   color: white;
-  border-radius: 3px;
+  /* border-radius: 3px; */
   margin: 5px;
   cursor: pointer;
+  border-radius: 50%;
 }
 
 #hummingbird td:hover::after {
