@@ -821,7 +821,7 @@ export const HummingTable = (props) => {
   const isLastPage = () => {
     if(paginationInfo)
     {
-      if(selectedPage !== Math.ceil(paginationInfo.dataLength / Number(rowNum)))
+      if(selectedPage < Math.ceil(paginationInfo.dataLength / Number(rowNum)))
       {
         return false;
       }
@@ -832,7 +832,7 @@ export const HummingTable = (props) => {
     }
     else
     {
-      if(selectedPage !== Math.ceil(data.length / Number(rowNum)))
+      if(selectedPage < Math.ceil(data.length / Number(rowNum)))
         {
           return false;
         }
@@ -847,7 +847,7 @@ export const HummingTable = (props) => {
     if(paginationInfo)
     {
       let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
-      if (selectedPage !== tmpValue) {
+      if (selectedPage < tmpValue) {
         renderData(data, columnData, selectedPage + 1);
         setSelectedPage((prev) => {
           return prev + 1;
@@ -857,7 +857,7 @@ export const HummingTable = (props) => {
     else
     {
       let tmpValue = Math.ceil(data.length / Number(rowNum));
-      if (selectedPage !== tmpValue) {
+      if (selectedPage < tmpValue) {
         renderData(data, columnData, selectedPage + 1);
         setSelectedPage((prev) => {
           return prev + 1;
@@ -869,7 +869,7 @@ export const HummingTable = (props) => {
     if(paginationInfo)
     {
       let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
-      if (selectedPage !== tmpValue) {
+      if (selectedPage < tmpValue) {
         renderData(data, columnData, selectedPage + 1);
         setSelectedPage((prev) => {
           return tmpValue;
@@ -881,7 +881,7 @@ export const HummingTable = (props) => {
 
       
       let tmpValue = Math.ceil(data.length / Number(rowNum));
-      if (selectedPage !== tmpValue) {
+      if (selectedPage < tmpValue) {
         renderData(data, columnData, tmpValue);
         setSelectedPage((prev) => {
           return tmpValue;

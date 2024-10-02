@@ -8,12 +8,14 @@ var _react = _interopRequireWildcard(require("react"));
 var _propTypes = _interopRequireDefault(require("prop-types"));
 require("./HummingTable.css");
 var _NoDataIcon = _interopRequireDefault(require("./Icons/NoDataIcon"));
+var _SearchIcon = _interopRequireDefault(require("./Icons/SearchIcon"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 /* library import */
 
 // 아이콘이 저장된 파일 경로를 적어줍니다.
+
 //import './button.css';
 
 const HummingTable = props => {
@@ -22,7 +24,7 @@ const HummingTable = props => {
   let defaultDisplayedRowNum = 10;
   let defaultHeaderColor = "#efefef";
   let clickedRowColor = "#999";
-
+  let defaultRowHeight = "27px";
   /* useState */
   const [data, setData] = (0, _react.useState)([]);
   const [columnData, setColumnData] = (0, _react.useState)([]);
@@ -32,7 +34,7 @@ const HummingTable = props => {
   const [rowNum, setRowNum] = (0, _react.useState)();
   const [showRowNumYn, setShowRowNumYn] = (0, _react.useState)();
   const [sizeChanger, setSizeChanger] = (0, _react.useState)([]);
-  const [paginationYn, setPaginationYn] = (0, _react.useState)(true);
+  const [paginationUseYn, setPaginationUseYn] = (0, _react.useState)(true);
   const [selectedPage, setSelectedPage] = (0, _react.useState)(1);
   const [tableWidth, setTableWidth] = (0, _react.useState)("100%");
   const [tableHeight, setTableHeight] = (0, _react.useState)("100%");
@@ -44,7 +46,7 @@ const HummingTable = props => {
   const [activeFilteringDataLists, setActiveFilteringDataLists] = (0, _react.useState)({});
   const [activeFilterCheckedData, setActiveFilterCheckedData] = (0, _react.useState)({});
   const [clickedRowIdx, setClickedRowIdx] = (0, _react.useState)();
-  const [rowHeight, setRowHeight] = (0, _react.useState)("27px");
+  const [rowHeight, setRowHeight] = (0, _react.useState)(defaultRowHeight);
   const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("100%");
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
@@ -56,6 +58,12 @@ const HummingTable = props => {
   const [widthChangeX, setWidthChangeX] = (0, _react.useState)(0);
   const [source1Width, setSource1Width] = (0, _react.useState)(0);
   const [source2Width, setSource2Width] = (0, _react.useState)(0);
+  const [showTooltip, setShowTooltip] = (0, _react.useState)(false);
+  const [tooltipContent, setTooltipContent] = (0, _react.useState)("");
+  const [tooltipPosition, setTooltipPosition] = (0, _react.useState)({
+    x: 0,
+    y: 0
+  });
 
   /* useRef */
   const filterPopupRef = (0, _react.useRef)();
@@ -71,9 +79,17 @@ const HummingTable = props => {
   };
   const getDetailValue = e => {
     if (checkTextOveflow(e) === false) {
+      setShowTooltip(false);
       return;
     } else {
-      ////console.log("true~", e)
+      setTooltipContent(e.target.textContent);
+      const rect = e.target.getBoundingClientRect();
+      setTooltipPosition({
+        x: rect.left,
+        y: rect.bottom
+      }); // 툴팁 위치 설정
+      setShowTooltip(true); // 툴팁 표시
+      console.log("true~", e.target.textContent);
     }
   };
   const makeAlldataCheckState = value => {
@@ -82,7 +98,7 @@ const HummingTable = props => {
     let tmpSelectedRows = [...selectedRows];
     //debugger;
     tmpData.forEach((item, rowIndex) => {
-      item['_hummingRowSelection'] = value;
+      item["_hummingRowSelection"] = value;
       if (selectedRows.indexOf(tmpData[rowIndex]) === -1 && value === true) {
         //debugger;
 
@@ -171,38 +187,38 @@ const HummingTable = props => {
 
     //debugger;
     /*
-    let totalWidth = 0;
-    let windowWidth = window.innerWidth;
-    
-    if(columnData.length !== 0)
-    {
-      // debugger;
-      columnData.forEach((item, idx)=>{
-        if(typeof item.width == "string")
-        {
-          //debugger;
-          if(item.dataKey === "_hummingRowSelection" || item.dataKey === "_hummingRowNums")
+      let totalWidth = 0;
+      let windowWidth = window.innerWidth;
+      
+      if(columnData.length !== 0)
+      {
+        // debugger;
+        columnData.forEach((item, idx)=>{
+          if(typeof item.width == "string")
           {
-            totalWidth = totalWidth + 30;
+            //debugger;
+            if(item.dataKey === "_hummingRowSelection" || item.dataKey === "_hummingRowNums")
+            {
+              totalWidth = totalWidth + 30;
+            }
           }
-        }
+          
+        })
+          let tmpTotalWidth = totalWidth + document.getElementById("humming-table").clientWidth;//totalWidth;//column 너비 다 합친 값.
+        //이제 humming-table-area 의 너비 필요.
+        let tmpTableWidth = document.getElementById("tableArea").clientWidth;
+        let tmpTableRatio = tmpTableWidth / tmpTotalWidth;
+        setHummingTableWidth(tmpTotalWidth * tmpTableRatio * 0.9)
+        columnData.forEach((item, idx)=>{
+          //item.width = (item.width * tmpTableRatio) + "px";
+          
+          item.width = Number(item.width.split("px")[0])*tmpTableRatio + "px";
+          
+          
+        })
         
-      })
-        let tmpTotalWidth = totalWidth + document.getElementById("humming-table").clientWidth;//totalWidth;//column 너비 다 합친 값.
-      //이제 humming-table-area 의 너비 필요.
-      let tmpTableWidth = document.getElementById("tableArea").clientWidth;
-      let tmpTableRatio = tmpTableWidth / tmpTotalWidth;
-      setHummingTableWidth(tmpTotalWidth * tmpTableRatio * 0.9)
-      columnData.forEach((item, idx)=>{
-        //item.width = (item.width * tmpTableRatio) + "px";
         
-        item.width = Number(item.width.split("px")[0])*tmpTableRatio + "px";
-        
-        
-      })
-      
-      
-    }*/
+      }*/
 
     const depthMap = generateHeader(columnData);
     const headers = [];
@@ -214,15 +230,13 @@ const HummingTable = props => {
       headers.push( /*#__PURE__*/_react.default.createElement("tr", {
         id: "humming-table-header-row",
         key: depth,
-        style: {
-          cursor: "col-resize"
-        }
+        style: {/*height:rowHeight*/}
       }, columns.map((column, index) => /*#__PURE__*/_react.default.createElement("th", {
         id: "humming-table-th",
         key: depth + "." + index,
         rowSpan: column.rowSpanCount,
         colSpan: column.childCount
-        //onMouseDown={(e) => mouseDownTh(e, depth, index)} 
+        //onMouseDown={(e) => mouseDownTh(e, depth, index)}
         //onMouseMove={(e) => mouseOnTh(e, depth, index)}
         //onMouseUp  ={(e) => mouseUpTh(e, depth, index)}
         ,
@@ -230,13 +244,16 @@ const HummingTable = props => {
           cursor: JSON.stringify(hoverCell) === JSON.stringify({
             row: depth,
             idx: index
-          }) ? 'col-resize' : 'default',
+          }) ? "col-resize" : "default",
           width: column.width,
           // height:"10px",
           //display:"flex",
           textAlign: "center",
-          justifyContent: 'center',
+          justifyContent: "center",
           alignItems: "center"
+          //overflow: "hidden",
+          // textOverflow: "ellipsis",
+          // whiteSpace: "nowrap",
         }
       }, /*#__PURE__*/_react.default.createElement("div", {
         style: {
@@ -257,6 +274,9 @@ const HummingTable = props => {
           display: "flex"
         }
       }, column.sortable === true ? /*#__PURE__*/_react.default.createElement("div", {
+        style: {
+          cursor: "pointer"
+        },
         onClick: () => {
           const sortedData = [...data].sort((a, b) => {
             if (a[column.dataKey] < b[column.dataKey]) {
@@ -267,6 +287,9 @@ const HummingTable = props => {
           setData(sortedData);
         }
       }, "▲") : "", column.sortable === true ? /*#__PURE__*/_react.default.createElement("div", {
+        style: {
+          cursor: "pointer"
+        },
         onClick: () => {
           const sortedData = [...data].sort((a, b) => {
             if (a[column.dataKey] > b[column.dataKey]) {
@@ -277,6 +300,9 @@ const HummingTable = props => {
           setData(sortedData);
         }
       }, "▼") : "", column.filter === true ? /*#__PURE__*/_react.default.createElement("div", {
+        style: {
+          cursor: "pointer"
+        },
         onClick: () => {
           setActiveFilterColumn(column.dataKey);
           data.forEach(item => {
@@ -289,29 +315,18 @@ const HummingTable = props => {
           });
           ////console.log(filterLists)
         }
-      }, "🔍") : "", activeFilterColumn === column.dataKey && /*#__PURE__*/_react.default.createElement("div", {
+      }, /*#__PURE__*/_react.default.createElement(_SearchIcon.default, null)) : "", activeFilterColumn === column.dataKey && /*#__PURE__*/_react.default.createElement("div", {
+        id: "hummingbird-filter-div",
         ref: filterPopupRef,
         key: column.dataKey,
-        style: {
-          position: 'absolute',
-          top: '60%',
-          right: '0%',
-          background: 'white',
-          border: '1px solid #ccc',
-          zIndex: 1000,
-          minHeight: '100px',
-          maxHeight: '350px',
-          height: '100%',
-          maxWidth: '150px',
-          width: '100%',
-          overflowY: 'auto'
-        }
-      }, "Column Filter", activeFilteringDataLists.map((item, idx) => {
+        style: {}
+      }, column.label + " Filter", activeFilteringDataLists.map((item, idx) => {
         return /*#__PURE__*/_react.default.createElement("div", {
           key: item + idx,
           style: {
             textAlign: "left",
-            paddingLeft: "5px"
+            paddingLeft: "5px",
+            display: "flex"
           }
         }, /*#__PURE__*/_react.default.createElement("input", {
           key: item + idx,
@@ -476,8 +491,12 @@ const HummingTable = props => {
             style: {
               minWidth: column.width,
               maxWidth: column.width,
+              width: column.width,
               cursor: "default",
-              whiteSpace: "nowrap"
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis"
+              //zIndex: "1",
             },
             onDoubleClick: val => {
               var _props$rowClick;
@@ -488,34 +507,35 @@ const HummingTable = props => {
             },
             onClick: val => {
               var _props$rowClick2;
-              setClickedRowIdx(rowIndex);
+              // debugger;
+              if (row["_hummingRowNums"]) {
+                setClickedRowIdx(rowIndex % rowNum);
+              }
               if (props.rowClick && props.rowClick.onClick) (_props$rowClick2 = props.rowClick) === null || _props$rowClick2 === void 0 || _props$rowClick2.onClick({
                 rowData: row,
                 colData: column
               });
-            }
-          }, /*#__PURE__*/_react.default.createElement("div", {
-            style: {
-              width: "100%",
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: "center"
-            }
-          }, /*#__PURE__*/_react.default.createElement("div", {
-            style: {
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis"
             },
             onMouseOver: e => {
-              //////console.log("over~")
-              //////console.log(checkTextOveflow(e))
               getDetailValue(e);
+              //console.log("e", e);
             },
-            onMouseOut: e => {
-              //////console.log("out~")
+            onMouseOut: () => setShowTooltip(false)
+          }, row[column.dataKey], showTooltip && /*#__PURE__*/_react.default.createElement("div", {
+            id: "hummingbird-tooltip",
+            style: {
+              position: "fixed",
+              top: "".concat(tooltipPosition.y, "px"),
+              left: "".concat(tooltipPosition.x, "px"),
+              backgroundColor: "#333",
+              color: "#fff",
+              padding: "5px",
+              borderRadius: "5px",
+              zIndex: 1000,
+              //fontSize: "12px",
+              whiteSpace: "nowrap"
             }
-          }, row[column.dataKey])));
+          }, tooltipContent));
         }
       }
     });
@@ -570,14 +590,14 @@ const HummingTable = props => {
       if (widthChangeTargetCell1) {
         //////console.log(widthChangeTargetCell1.offsetWidth, changeWidth, widthChangeX, e.clientX)
 
-        widthChangeTargetCell1.style.width = source1Width - changeWidth + 'px';
+        widthChangeTargetCell1.style.width = source1Width - changeWidth + "px";
       }
 
       // 두 번째 셀의 너비 조정
       if (widthChangeTargetCell2) {
         //widthChangeTargetCell2.style.width = widthChangeTargetCell2.offsetWidth - 1 + 'px';
 
-        widthChangeTargetCell2.style.width = source2Width + changeWidth + 'px';
+        widthChangeTargetCell2.style.width = source2Width + changeWidth + "px";
       }
     }
   };
@@ -655,22 +675,57 @@ const HummingTable = props => {
     ////console.log(e, "hello")
     setMouseDownFlag(false);
   };
+  const isLastPage = () => {
+    if (paginationInfo) {
+      if (selectedPage !== Math.ceil(paginationInfo.dataLength / Number(rowNum))) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      if (selectedPage !== Math.ceil(data.length / Number(rowNum))) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  };
   const goNextPage = () => {
-    let tmpValue = Math.ceil(data.length / Number(rowNum));
-    if (selectedPage !== tmpValue) {
-      renderData(data, columnData, selectedPage + 1);
-      setSelectedPage(prev => {
-        return prev + 1;
-      });
+    if (paginationInfo) {
+      let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
+      if (selectedPage !== tmpValue) {
+        renderData(data, columnData, selectedPage + 1);
+        setSelectedPage(prev => {
+          return prev + 1;
+        });
+      }
+    } else {
+      let tmpValue = Math.ceil(data.length / Number(rowNum));
+      if (selectedPage !== tmpValue) {
+        renderData(data, columnData, selectedPage + 1);
+        setSelectedPage(prev => {
+          return prev + 1;
+        });
+      }
     }
   };
   const goLastPage = () => {
-    let tmpValue = Math.ceil(data.length / Number(rowNum));
-    if (selectedPage !== tmpValue) {
-      renderData(data, columnData, tmpValue);
-      setSelectedPage(prev => {
-        return tmpValue;
-      });
+    if (paginationInfo) {
+      let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
+      if (selectedPage !== tmpValue) {
+        renderData(data, columnData, selectedPage + 1);
+        setSelectedPage(prev => {
+          return tmpValue;
+        });
+      }
+    } else {
+      let tmpValue = Math.ceil(data.length / Number(rowNum));
+      if (selectedPage !== tmpValue) {
+        renderData(data, columnData, tmpValue);
+        setSelectedPage(prev => {
+          return tmpValue;
+        });
+      }
     }
   };
   const goPrevPage = () => {
@@ -687,6 +742,13 @@ const HummingTable = props => {
       setSelectedPage(prev => {
         return 1;
       });
+    }
+  };
+  const totalDataLength = () => {
+    if (paginationInfo) {
+      return "" + paginationInfo.dataLength;
+    } else {
+      return "" + data.length;
     }
   };
   const paginationComponent = () => {
@@ -711,19 +773,25 @@ const HummingTable = props => {
     const currentPageRange = pageNumList.slice(startPage - 1, endPage);
     return /*#__PURE__*/_react.default.createElement("div", {
       style: {
-        position: 'relative',
+        position: "relative",
         paddingTop: "10px"
       }
     }, /*#__PURE__*/_react.default.createElement("div", {
       style: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "40px"
       }
-    }, paginationYn ? /*#__PURE__*/_react.default.createElement("div", {
+    }, paginationUseYn ? /*#__PURE__*/_react.default.createElement("div", {
+      style: {
+        position: "absolute",
+        left: "10px"
+      }
+    }, "Showing " + ((selectedPage - 1) * rowNum + 1) + " to " + selectedPage * rowNum + " of " + totalDataLength() + " entries") : null, paginationUseYn ? /*#__PURE__*/_react.default.createElement("div", {
       id: "pagination1",
       style: {
-        display: 'flex',
+        display: "flex",
         justifyContent: "center",
         alignItems: "center"
       }
@@ -744,37 +812,43 @@ const HummingTable = props => {
       style: {
         display: "flex"
       }
-    }, currentPageRange.length === 0 ? /*#__PURE__*/_react.default.createElement("pre", null, "   ") : currentPageRange.map(value => {
+    }, currentPageRange.length === 0 ? /*#__PURE__*/_react.default.createElement("pre", null, " ") : currentPageRange.map(value => {
       return /*#__PURE__*/_react.default.createElement("div", {
         key: value,
-        className: "paginationNum".concat(selectedPage === value ? ' selected' : ''),
+        className: "paginationNum".concat(selectedPage === value ? " selected" : ""),
         onClick: val => {
           setSelectedPage(Number(val.target.innerText));
-          props.pagination.onClick(Number(val.target.innerText));
+          // setSelectedRows();
+          setClickedRowIdx();
+          if (paginationInfo) {
+            props.pagination.onClick(Number(val.target.innerText));
+          }
         }
       }, value);
     })), /*#__PURE__*/_react.default.createElement("div", {
       className: "arrow-right",
       onClick: goNextPage,
       style: {
-        cursor: selectedPage !== Math.ceil(data.length / Number(rowNum)) ? "pointer" : "not-allowed"
+        cursor: isLastPage() ? "not-allowed" : "pointer"
       }
     }), /*#__PURE__*/_react.default.createElement("div", {
       className: "double-arrow-right",
       onClick: goLastPage,
       style: {
-        cursor: selectedPage !== Math.ceil(data.length / Number(rowNum)) ? "pointer" : "not-allowed",
+        cursor: isLastPage() ? "not-allowed" : "pointer",
         marginLeft: "5px"
       }
     })) : null, sizeChanger ? /*#__PURE__*/_react.default.createElement("div", {
       id: "pagination2",
       style: {
-        position: 'absolute',
-        right: '30px'
+        position: "absolute",
+        right: "30px"
       }
     }, /*#__PURE__*/_react.default.createElement("select", {
+      id: "page-size-changer-selectbox",
       style: {
-        width: "50px"
+        width: "70px",
+        height: "25px"
       },
       value: rowNum,
       onChange: val => {
@@ -823,6 +897,7 @@ const HummingTable = props => {
 
   /* useEffect */
   (0, _react.useEffect)(() => {
+    //let tmpPaginationUseYn = props.paginationUseYn ? props.paginationUseYn : "true";
     let tmpData = props.dataSource ? props.dataSource : [];
     let tmpColumnData = props.columns ? props.columns : [];
     let tmpHeaderStyleData = props.headerStyle ? props.headerStyle : {
@@ -839,24 +914,30 @@ const HummingTable = props => {
     let tmpPaginationInfo = props.pagination ? props.pagination : null;
     let tmpRowClick = props.rowClick ? props.rowClick : null;
     let tmpRowHeight;
+
+    // if(!(tmpPaginationUseYn === "true" || tmpPaginationUseYn === "false"))
+    // {
+    //   throw new Error("paginationUseYn must be represented in true or false")
+    // }
+
     if (props.rowHeight === undefined) {
-      tmpRowHeight = "27px";
+      tmpRowHeight = defaultRowHeight;
     } else if (props.rowHeight && props.rowHeight.includes("px")) {
       tmpRowHeight = props.rowHeight;
     } else if (!props.rowHeight.includes("px")) {
       throw new Error("row height must be represented in px.");
     } else {
-      tmpRowHeight = "27px";
+      tmpRowHeight = defaultRowHeight;
     }
     if (tmpRowSelection === null) {
       setRowSelectionConfig(tmpRowSelection);
-    } else if (tmpRowSelection.type !== 'checkbox' && tmpRowSelection.type !== 'radio') {
+    } else if (tmpRowSelection.type !== "checkbox" && tmpRowSelection.type !== "radio") {
       throw new Error("rowSelection must have type 'checkbox' or 'radio'");
     } else {
       //정상적으로 rowSelection을 셋팅 할때,
       if (tmpRowSelection.type) {
         tmpData.forEach(item => {
-          item['_hummingRowSelection'] = false;
+          item["_hummingRowSelection"] = false;
         });
       }
 
@@ -888,10 +969,13 @@ const HummingTable = props => {
     setTableHeight(tmpTableHeight);
     setRowZebraYn(tmpZebra);
     ////console.log(tmpData.length, tmpDisplayedRowNum)
-    if (props.paginationYn !== null) {
-      setPaginationYn(true);
+
+    if (props.paginationUseYn === "Y" || props.paginationUseYn === undefined) {
+      setPaginationUseYn(true);
+    } else if (props.paginationUseYn === "N") {
+      setPaginationUseYn(false);
     } else {
-      setPaginationYn(false);
+      throw new Error("paginationUSeYn muse be represented in Y or N");
     }
     setPaginationInfo(tmpPaginationInfo);
     setRowHeight(tmpRowHeight);
@@ -971,46 +1055,46 @@ const HummingTable = props => {
     latestActiveFilterCheckedData.current = activeFilterCheckedData;
   }, [activeFilterCheckedData]);
   (0, _react.useEffect)(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
   return /*#__PURE__*/_react.default.createElement("div", {
     id: "hummingbird"
   }, /*#__PURE__*/_react.default.createElement("div", {
     style: {
-      textAlign: "center",
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: tableHeight
+      // textAlign: "center",
+      // display: "flex",
+      // justifyContent: "center",
+      // alignItems: "center",
+      height: tableHeight,
+      overflow: "auto"
     }
   }, /*#__PURE__*/_react.default.createElement("div", {
     style: {
-      width: tableWidth,
-      height: tableHeight
+      borderCollapse: "collapse"
     }
   }, /*#__PURE__*/_react.default.createElement("div", {
     id: "tableArea",
     style: {
       overflowY: "auto",
-      maxHeight: "calc(" + tableHeight + " - 33px)",
-      width: tableWidth
+      maxHeight: "calc(" + tableHeight + " - 33px)"
+      // width: tableWidth,
     }
   }, /*#__PURE__*/_react.default.createElement("table", {
     id: "humming-table",
     style: {
-      width: hummingTableWidth,
-      fontSize: "70%",
-      fontFamily: "monospace, sans-serif, serif"
+      width: hummingTableWidth
+      //fontSize: "70%",
+      //fontFamily: "monospace, sans-serif, serif",
     }
   }, tableTitle ? /*#__PURE__*/_react.default.createElement("caption", null, tableTitle) : null, /*#__PURE__*/_react.default.createElement("thead", {
     id: "table-header-area",
     style: headerStyleData
   }, makeHeader()), /*#__PURE__*/_react.default.createElement("tbody", {
     id: "table-row-area",
-    className: rowZebraYn ? 'zebra' : ''
+    className: rowZebraYn ? "zebra" : ""
   }, renderData(data, columnData, selectedPage)))), /*#__PURE__*/_react.default.createElement("div", {
     id: "paginationArea"
   }, paginationComponent()))));
