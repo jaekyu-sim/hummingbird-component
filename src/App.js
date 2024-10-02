@@ -393,12 +393,12 @@ const clickButton4 = () => {
           // }
         }}
         // paginationUseYn="N"
-        // pagination={{
-        //   dataLength: 1000,
-        //   onClick: (pageNum) => {
-        //     console.log(pageNum)
-        //   }
-        // }}
+        pagination={{
+          // dataLength: 1000,
+          onClick: (pageNum) => {
+            console.log(pageNum)
+          }
+        }}
         //zebra, ...
       ></HummingTable>
       </div>

@@ -48,6 +48,7 @@ export const HummingTable = (props) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipContent, setTooltipContent] = useState("");
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  
 
   /* useRef */
   const filterPopupRef = useRef();
@@ -905,7 +906,7 @@ export const HummingTable = (props) => {
     }
   };
   const totalDataLength = () => {
-    if(paginationInfo)
+    if(paginationInfo && paginationInfo.dataLength)
     {
       return ""+paginationInfo.dataLength
     }
