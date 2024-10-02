@@ -10,7 +10,7 @@ export const HummingTable = (props) => {
   /* variable */
   //let widthChangeX = 0;
   let defaultDisplayedRowNum = 10;
-  let defaultHeaderColor = "#efefef";
+  let defaultHeaderColor = "#eee";
   let clickedRowColor = "#999";
   let defaultRowHeight = "27px"
   /* useState */
@@ -275,7 +275,7 @@ export const HummingTable = (props) => {
                 >
                   {column.label}
                 </div>
-                <div style={{ display: "flex" }}>
+                <div style={{ display: "flex", marginRight:"5px" }}>
                   {column.sortable === true ? (
                     <div
                       style={{cursor:"pointer"}}
@@ -1324,6 +1324,7 @@ export const HummingTable = (props) => {
               id="humming-table"
               style={{
                 width: hummingTableWidth,
+                
                 //fontSize: "70%",
                 //fontFamily: "monospace, sans-serif, serif",
               }}

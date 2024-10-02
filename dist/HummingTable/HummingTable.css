@@ -61,9 +61,9 @@
   /* padding: 10px;  */
   /* border: 1px solid #bbb; */
   box-sizing: border-box;
-  border-bottom: 1px solid #aaa;
-
-  color:#999
+  /* border-bottom: 1px solid #aaa; */
+  color:#999;
+  border: 1px solid rgba(255, 255, 255, 0.1)
 } 
 
 #hummingbird #humming-table{

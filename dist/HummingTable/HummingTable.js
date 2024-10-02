@@ -219,7 +219,6 @@ const HummingTable = props => {
         
         
       }*/
-
     const depthMap = generateHeader(columnData);
     const headers = [];
     let filterLists = [];
