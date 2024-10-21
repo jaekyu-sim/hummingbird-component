@@ -111,7 +111,7 @@ const columnConfig2 = [
   {
     dataKey:"name",
     label:"이름",
-    width:"120px",
+    width:"0px",
     //width:"12%",
     sortable: true,
   },
@@ -252,14 +252,14 @@ let tmpData = []
 for(let i = 0 ; i < dataLength ; i++)
 {
   
-  if(i === 3)
+  if(i === 3 || i === 4)
   {
     tmpData.push({
       key: i,
       id : "n"+i,
       name : "sim"+i,
       age: i,
-      street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf",
+      street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf",
       building: i+"824",
       doorNo: (i+1)+"503",
       companyAddress: "suwon-si",

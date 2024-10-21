@@ -234,9 +234,6 @@ export const HummingTable = (props) => {
               key={depth + "." + index}
               rowSpan={column.rowSpanCount}
               colSpan={column.childCount}
-              //onMouseDown={(e) => mouseDownTh(e, depth, index)}
-              //onMouseMove={(e) => mouseOnTh(e, depth, index)}
-              //onMouseUp  ={(e) => mouseUpTh(e, depth, index)}
               style={{
                 cursor:
                   JSON.stringify(hoverCell) ===
@@ -244,25 +241,19 @@ export const HummingTable = (props) => {
                     ? "col-resize"
                     : "default",
                 width: column.width,
-                // height:"10px",
-                //display:"flex",
                 textAlign: "center",
                 justifyContent: "center",
                 alignItems: "center",
-                //overflow: "hidden",
-                // textOverflow: "ellipsis",
-                // whiteSpace: "nowrap",
+                border:"0"
               }}
             >
-              {/* {column.label} */}
-              {/* <div style={{ flex: 1, textAlign: "center" }}>
-                    {column.label}
-                  </div> */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
+                  whiteSpace: "nowrap",
                   overflow: "hidden",
+                  width:column.width
                 }}
               >
                 <div
@@ -344,7 +335,6 @@ export const HummingTable = (props) => {
                       key={column.dataKey}
                       style={{}}
                     >
-                      {/* {"Column Filter"} */}
                       {column.label + " Filter"}
                       {activeFilteringDataLists.map((item, idx) => {
                         return (
@@ -608,14 +598,15 @@ export const HummingTable = (props) => {
                     colData: column,
                   });
               }}
-              onMouseOver={(e) => {
+              
+            >
+              <div style={{width:column.width}}  onMouseOver={(e) => {
                 getDetailValue(e);
                 //console.log("e", e);
               }}
-              onMouseOut={() => setShowTooltip(false)}
-            >
-              {row[column.dataKey]}
-              {showTooltip && (
+              onMouseOut={() => setShowTooltip(false)}>
+                {row[column.dataKey]}
+                {showTooltip && (
                 <div
                   id="hummingbird-tooltip"
                   style={{
@@ -628,12 +619,14 @@ export const HummingTable = (props) => {
                     borderRadius: "5px",
                     zIndex: 1000,
                     //fontSize: "12px",
-                    whiteSpace: "nowrap",
+                    // whiteSpace: "nowrap",
                   }}
                 >
                   {tooltipContent}
                 </div>
               )}
+              </div>
+              
               {/* <div
                 style={{
                   width: "100%",

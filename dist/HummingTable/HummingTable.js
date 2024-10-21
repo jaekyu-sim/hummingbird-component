@@ -745,7 +745,7 @@ const HummingTable = props => {
     }
   };
   const totalDataLength = () => {
-    if (paginationInfo) {
+    if (paginationInfo && paginationInfo.dataLength) {
       return "" + paginationInfo.dataLength;
     } else {
       return "" + data.length;

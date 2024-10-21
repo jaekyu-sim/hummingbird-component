@@ -44,7 +44,7 @@
   /* border-collapse: separate; */
   border-collapse: collapse;
   border-spacing: 0;
-  /* table-layout: fixed; */
+  table-layout: fixed;
   /* border: 1px solid #bbb; */
   box-sizing: border-box;
   text-align:center;
@@ -64,8 +64,10 @@
   box-sizing: border-box;
   /* border-bottom: 1px solid #aaa; */
   color:#999;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-
+  /* border: 2px solid rgba(255, 255, 255, 0.1); */
+  padding:0;
+  border:0;
+  margin:0;
 } 
 
 #hummingbird #humming-table{
@@ -104,6 +106,9 @@
   /* border: 1px solid #bbb; */
   border-bottom: 1px solid #ccc;
   box-sizing: border-box;
+  padding:0;
+  /* border:0; */
+  margin:0;
 }
 #hummingbird td + td {
   width: auto;
