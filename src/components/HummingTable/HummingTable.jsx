@@ -1214,6 +1214,7 @@ export const HummingTable = (props) => {
     setData(tmpData);
     ////console.log("data : ", dataSource);
     setClickedRowIdx();
+    setSelectedPage(1);
   }, [props.dataSource]);
 
   useEffect(() => {
