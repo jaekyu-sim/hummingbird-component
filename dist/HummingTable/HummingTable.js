@@ -234,31 +234,25 @@ const HummingTable = props => {
         id: "humming-table-th",
         key: depth + "." + index,
         rowSpan: column.rowSpanCount,
-        colSpan: column.childCount
-        //onMouseDown={(e) => mouseDownTh(e, depth, index)}
-        //onMouseMove={(e) => mouseOnTh(e, depth, index)}
-        //onMouseUp  ={(e) => mouseUpTh(e, depth, index)}
-        ,
+        colSpan: column.childCount,
         style: {
           cursor: JSON.stringify(hoverCell) === JSON.stringify({
             row: depth,
             idx: index
           }) ? "col-resize" : "default",
           width: column.width,
-          // height:"10px",
-          //display:"flex",
           textAlign: "center",
           justifyContent: "center",
-          alignItems: "center"
-          //overflow: "hidden",
-          // textOverflow: "ellipsis",
-          // whiteSpace: "nowrap",
+          alignItems: "center",
+          border: "0"
         }
       }, /*#__PURE__*/_react.default.createElement("div", {
         style: {
           display: "flex",
           alignItems: "center",
-          overflow: "hidden"
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          width: column.width
         }
       }, /*#__PURE__*/_react.default.createElement("div", {
         style: {
@@ -515,12 +509,21 @@ const HummingTable = props => {
                 rowData: row,
                 colData: column
               });
+            }
+          }, /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              width: column.width,
+              paddingLeft: "2px",
+              paddingRight: "2px"
             },
             onMouseOver: e => {
               getDetailValue(e);
               //console.log("e", e);
             },
-            onMouseOut: () => setShowTooltip(false)
+            onMouseOut: () => {
+              setShowTooltip(false);
+              setTooltipContent("");
+            }
           }, row[column.dataKey], showTooltip && /*#__PURE__*/_react.default.createElement("div", {
             id: "hummingbird-tooltip",
             style: {
@@ -531,11 +534,11 @@ const HummingTable = props => {
               color: "#fff",
               padding: "5px",
               borderRadius: "5px",
-              zIndex: 1000,
+              zIndex: 1000
               //fontSize: "12px",
-              whiteSpace: "nowrap"
+              // whiteSpace: "nowrap",
             }
-          }, tooltipContent));
+          }, tooltipContent)));
         }
       }
     });

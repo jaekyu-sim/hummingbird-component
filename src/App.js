@@ -259,8 +259,8 @@ for(let i = 0 ; i < dataLength ; i++)
       id : "n"+i,
       name : "sim"+i,
       age: i,
-      street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdasfasdfasdfasdfasdfasdfasdfasdf",
-      building: i+"824",
+      street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdfasdf",
+      building: i+"824dsafasdf",
       doorNo: (i+1)+"503",
       companyAddress: "suwon-si",
       companyName: <button>{"SK"+i}</button>//"SK"+i

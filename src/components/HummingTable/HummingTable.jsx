@@ -244,7 +244,10 @@ export const HummingTable = (props) => {
                 textAlign: "center",
                 justifyContent: "center",
                 alignItems: "center",
-                border:"0"
+                border:"0",
+                // display:"flex",
+                // justifyItem:"center",
+                // flexDirection:"row"
               }}
             >
               <div
@@ -253,7 +256,7 @@ export const HummingTable = (props) => {
                   alignItems: "center",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
-                  width:column.width
+                  width:"100%"
                 }}
               >
                 <div
@@ -261,16 +264,18 @@ export const HummingTable = (props) => {
                     flex: 1,
                     textAlign: "center",
                     height: "100%",
-                    padding: "10px",
+                    padding: "0px",
+                    justifyContent:"center",
                     overflow: "hidden",
+                    display:"flex"
                   }}
                 >
                   {column.label}
                 </div>
-                <div style={{ display: "flex", marginRight:"5px" }}>
+                <div style={{ display: "flex",  }}>
                   {column.sortable === true ? (
                     <div
-                      style={{cursor:"pointer"}}
+                      style={{cursor:"pointer", marginRight:"5px"}}
                       onClick={() => {
                         const sortedData = [...data].sort((a, b) => {
                           if (a[column.dataKey] < b[column.dataKey]) {
@@ -600,11 +605,13 @@ export const HummingTable = (props) => {
               }}
               
             >
-              <div style={{width:column.width}}  onMouseOver={(e) => {
+              <div style={{width:"100%", paddingLeft:"2px", paddingRight:"2px"}}  onMouseOver={(e) => {
                 getDetailValue(e);
                 //console.log("e", e);
               }}
-              onMouseOut={() => setShowTooltip(false)}>
+              onMouseOut={() => {setShowTooltip(false);
+                setTooltipContent("");
+              }}>
                 {row[column.dataKey]}
                 {showTooltip && (
                 <div
