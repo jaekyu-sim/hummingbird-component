@@ -48,6 +48,10 @@ export const HummingTable = (props) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipContent, setTooltipContent] = useState("");
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [showHeaderTooltip, setShowHeaderTooltip] = useState(false);
+  const [headerTooltipContent, setHeaderTooltipContent] = useState("");
+  const [headerTooltipPosition, setHeaderTooltipPosition] = useState({ x: 0, y: 0 });
+  
   
 
   /* useRef */
@@ -72,11 +76,24 @@ export const HummingTable = (props) => {
       const rect = e.target.getBoundingClientRect();
       setTooltipPosition({ x: rect.left, y: rect.bottom }); // 툴팁 위치 설정
       setShowTooltip(true); // 툴팁 표시
-      console.log("true~", e.target.textContent);
+      
+    }
+  };
+  const getHeaderDetailValue = (e) => {
+    if (checkTextOveflow(e) === false) {
+      setShowHeaderTooltip(false);
+      return;
+    } else {
+      setHeaderTooltipContent(e.target.textContent);
+      const rect = e.target.getBoundingClientRect();
+      //debugger;
+      setHeaderTooltipPosition({ x: rect.left, y: rect.bottom }); // 툴팁 위치 설정
+      setShowHeaderTooltip(true); // 툴팁 표시
+      
     }
   };
   const makeAlldataCheckState = (value) => {
-    console.log("data : ", data);
+    
     let tmpData = [...data];
     let tmpSelectedRows = [...selectedRows];
     //debugger;
@@ -180,45 +197,7 @@ export const HummingTable = (props) => {
       return depthMap;
     }
 
-    // Example usage:
-
-    //let tmpColumnData = columnData
-
-    //debugger;
-    /*
-      let totalWidth = 0;
-      let windowWidth = window.innerWidth;
-      
-      if(columnData.length !== 0)
-      {
-        // debugger;
-        columnData.forEach((item, idx)=>{
-          if(typeof item.width == "string")
-          {
-            //debugger;
-            if(item.dataKey === "_hummingRowSelection" || item.dataKey === "_hummingRowNums")
-            {
-              totalWidth = totalWidth + 30;
-            }
-          }
-          
-        })
-
-        let tmpTotalWidth = totalWidth + document.getElementById("humming-table").clientWidth;//totalWidth;//column 너비 다 합친 값.
-        //이제 humming-table-area 의 너비 필요.
-        let tmpTableWidth = document.getElementById("tableArea").clientWidth;
-        let tmpTableRatio = tmpTableWidth / tmpTotalWidth;
-        setHummingTableWidth(tmpTotalWidth * tmpTableRatio * 0.9)
-        columnData.forEach((item, idx)=>{
-          //item.width = (item.width * tmpTableRatio) + "px";
-          
-          item.width = Number(item.width.split("px")[0])*tmpTableRatio + "px";
-          
-          
-        })
-        
-        
-      }*/
+    
     const depthMap = generateHeader(columnData);
     const headers = [];
     let filterLists = [];
@@ -227,9 +206,15 @@ export const HummingTable = (props) => {
     depthMap.forEach((columns, depth) => {
       //debugger;
       headers.push(
-        <tr id="humming-table-header-row" key={depth} style={{/*height:rowHeight*/}}>
-          {columns.map((column, index) => (
-            <th
+        <tr id="humming-table-header-row" key={depth} style={{height:"32px",}}>
+          {columns.map((column, index) => {
+            if(!column.visibility && column.visibility === false)
+            {
+              
+            }
+            else
+            {
+              return <th
               id="humming-table-th"
               key={depth + "." + index}
               rowSpan={column.rowSpanCount}
@@ -244,38 +229,73 @@ export const HummingTable = (props) => {
                 textAlign: "center",
                 justifyContent: "center",
                 alignItems: "center",
-                border:"0",
-                // display:"flex",
-                // justifyItem:"center",
-                // flexDirection:"row"
+                // borderLeft:"1px solid #aaa",
+                //borderRadius:"15px",
+                paddingLeft:"5px",
+                paddingRight:"5px",
+                
+                // border:"3px solid black",
+                // borderCollapse:"collapse",
+                // boxSizing:"border-box"
               }}
             >
               <div
                 style={{
-                  display: "flex",
+                  width:"100%",
                   alignItems: "center",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
-                  width:"100%"
+                  display: "flex",
+                  // border:"1px solid black"
+                  //borderRight:"1px solid #ccc",
+                  
                 }}
               >
                 <div
+                  id="column-label-div"
                   style={{
-                    flex: 1,
+                    // flex: 1,
                     textAlign: "center",
                     height: "100%",
                     padding: "0px",
                     justifyContent:"center",
-                    overflow: "hidden",
-                    display:"flex"
+                    // display:"flex",
+                    width:"100%",
+                    textOverflow:"ellipsis",
+                    overflow:"hidden",
+                    whiteSpace:"nowrap",
+                    //padding:"2px"//width 0 일 경우 주의할 포인트.
+                    //position:"relative"
+                  }}
+                  onMouseOver={(e)=>{
+                    //debugger;
+                    getHeaderDetailValue(e);
+                    //setShowHeaderTooltip(true);
+                  }}
+                  onMouseOut={()=>{
+                    setShowHeaderTooltip(false);
                   }}
                 >
                   {column.label}
+                  {showHeaderTooltip&&<div style={{
+                    top: `${headerTooltipPosition.y}px`, // 부모의 아래쪽에 표시
+                    left: `${headerTooltipPosition.x}px`, // 가운데 정렬
+                    //transform: "translateX(-50%)",
+                    backgroundColor:"#333",
+                    borderRadius:"5px",
+                    color:"#fff",
+                    padding:"5px",
+                    //width:"100px", 
+                    height:"24px", 
+                    position:"fixed", 
+                    }}>
+                    <div>{headerTooltipContent}</div>
+                  </div>}
                 </div>
                 <div style={{ display: "flex",  }}>
                   {column.sortable === true ? (
                     <div
-                      style={{cursor:"pointer", marginRight:"5px"}}
+                      style={{cursor:"pointer", marginRight:"1px"}}
                       onClick={() => {
                         const sortedData = [...data].sort((a, b) => {
                           if (a[column.dataKey] < b[column.dataKey]) {
@@ -401,8 +421,9 @@ export const HummingTable = (props) => {
                   )}
                 </div>
               </div>
-            </th>
-          ))}
+              
+            </th>}
+    })}
         </tr>
       );
     });
@@ -570,7 +591,13 @@ export const HummingTable = (props) => {
           );
         } else {
           //////console.log(column.label, column.width)
+          if(!column.visibility && column.visibility === false)
+          {
+            
+          }
+          else
           return (
+            
             <td
               key={index}
               style={{
@@ -1313,7 +1340,7 @@ export const HummingTable = (props) => {
           overflow: "auto",
         }}
       >
-        <div style={{ borderCollapse: "collapse" }}>
+        <div style={{  }}>
           <div
             id="tableArea"
             style={{
@@ -1326,7 +1353,7 @@ export const HummingTable = (props) => {
               id="humming-table"
               style={{
                 width: hummingTableWidth,
-                
+                //border:"1px solid #aaa"
                 //fontSize: "70%",
                 //fontFamily: "monospace, sans-serif, serif",
               }}

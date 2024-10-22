@@ -5,6 +5,7 @@
 #hummingbird{
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
+  
 }
 #hummingbird-filter-div{
 
@@ -58,16 +59,18 @@
 
 #hummingbird th {
   position: relative; 
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
   /* padding: 10px;  */
-  /* border: 1px solid #bbb; */
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   box-sizing: border-box;
   /* border-bottom: 1px solid #aaa; */
   color:#999;
   /* border: 2px solid rgba(255, 255, 255, 0.1); */
   padding:0;
-  border:0;
   margin:0;
+  
+  /* border:1px solid black; */
 } 
 
 #hummingbird #humming-table{
@@ -91,8 +94,9 @@
   border-collapse: collapse;
   content: "";
   position: absolute;
-  top: 0%; 
-  bottom: 0%; 
+
+  top: 20%; 
+  bottom: 20%; 
   right: 0;
   /* width: 1px;  */
   background-color: #bbb; 
@@ -118,6 +122,7 @@
 }
 #hummingbird table tr:first-child th:first-child {
   border-top-left-radius: 5px;
+  border-left: 0;
   /* border-top: 1px solid #bbb;
   border-left: 1px; */
 }

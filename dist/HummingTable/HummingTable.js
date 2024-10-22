@@ -64,6 +64,12 @@ const HummingTable = props => {
     x: 0,
     y: 0
   });
+  const [showHeaderTooltip, setShowHeaderTooltip] = (0, _react.useState)(false);
+  const [headerTooltipContent, setHeaderTooltipContent] = (0, _react.useState)("");
+  const [headerTooltipPosition, setHeaderTooltipPosition] = (0, _react.useState)({
+    x: 0,
+    y: 0
+  });
 
   /* useRef */
   const filterPopupRef = (0, _react.useRef)();
@@ -89,11 +95,24 @@ const HummingTable = props => {
         y: rect.bottom
       }); // 툴팁 위치 설정
       setShowTooltip(true); // 툴팁 표시
-      console.log("true~", e.target.textContent);
+    }
+  };
+  const getHeaderDetailValue = e => {
+    if (checkTextOveflow(e) === false) {
+      setShowHeaderTooltip(false);
+      return;
+    } else {
+      setHeaderTooltipContent(e.target.textContent);
+      const rect = e.target.getBoundingClientRect();
+      //debugger;
+      setHeaderTooltipPosition({
+        x: rect.left,
+        y: rect.bottom
+      }); // 툴팁 위치 설정
+      setShowHeaderTooltip(true); // 툴팁 표시
     }
   };
   const makeAlldataCheckState = value => {
-    console.log("data : ", data);
     let tmpData = [...data];
     let tmpSelectedRows = [...selectedRows];
     //debugger;
@@ -180,45 +199,6 @@ const HummingTable = props => {
       }
       return depthMap;
     }
-
-    // Example usage:
-
-    //let tmpColumnData = columnData
-
-    //debugger;
-    /*
-      let totalWidth = 0;
-      let windowWidth = window.innerWidth;
-      
-      if(columnData.length !== 0)
-      {
-        // debugger;
-        columnData.forEach((item, idx)=>{
-          if(typeof item.width == "string")
-          {
-            //debugger;
-            if(item.dataKey === "_hummingRowSelection" || item.dataKey === "_hummingRowNums")
-            {
-              totalWidth = totalWidth + 30;
-            }
-          }
-          
-        })
-          let tmpTotalWidth = totalWidth + document.getElementById("humming-table").clientWidth;//totalWidth;//column 너비 다 합친 값.
-        //이제 humming-table-area 의 너비 필요.
-        let tmpTableWidth = document.getElementById("tableArea").clientWidth;
-        let tmpTableRatio = tmpTableWidth / tmpTotalWidth;
-        setHummingTableWidth(tmpTotalWidth * tmpTableRatio * 0.9)
-        columnData.forEach((item, idx)=>{
-          //item.width = (item.width * tmpTableRatio) + "px";
-          
-          item.width = Number(item.width.split("px")[0])*tmpTableRatio + "px";
-          
-          
-        })
-        
-        
-      }*/
     const depthMap = generateHeader(columnData);
     const headers = [];
     let filterLists = [];
@@ -229,135 +209,176 @@ const HummingTable = props => {
       headers.push( /*#__PURE__*/_react.default.createElement("tr", {
         id: "humming-table-header-row",
         key: depth,
-        style: {/*height:rowHeight*/}
-      }, columns.map((column, index) => /*#__PURE__*/_react.default.createElement("th", {
-        id: "humming-table-th",
-        key: depth + "." + index,
-        rowSpan: column.rowSpanCount,
-        colSpan: column.childCount,
         style: {
-          cursor: JSON.stringify(hoverCell) === JSON.stringify({
-            row: depth,
-            idx: index
-          }) ? "col-resize" : "default",
-          width: column.width,
-          textAlign: "center",
-          justifyContent: "center",
-          alignItems: "center",
-          border: "0"
-          // display:"flex",
-          // justifyItem:"center",
-          // flexDirection:"row"
+          height: "32px"
         }
-      }, /*#__PURE__*/_react.default.createElement("div", {
-        style: {
-          display: "flex",
-          alignItems: "center",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          width: "100%"
-        }
-      }, /*#__PURE__*/_react.default.createElement("div", {
-        style: {
-          flex: 1,
-          textAlign: "center",
-          height: "100%",
-          padding: "0px",
-          justifyContent: "center",
-          overflow: "hidden",
-          display: "flex"
-        }
-      }, column.label), /*#__PURE__*/_react.default.createElement("div", {
-        style: {
-          display: "flex"
-        }
-      }, column.sortable === true ? /*#__PURE__*/_react.default.createElement("div", {
-        style: {
-          cursor: "pointer",
-          marginRight: "5px"
-        },
-        onClick: () => {
-          const sortedData = [...data].sort((a, b) => {
-            if (a[column.dataKey] < b[column.dataKey]) {
-              return -1;
-            }
-            return 0;
-          });
-          setData(sortedData);
-        }
-      }, "▲") : "", column.sortable === true ? /*#__PURE__*/_react.default.createElement("div", {
-        style: {
-          cursor: "pointer"
-        },
-        onClick: () => {
-          const sortedData = [...data].sort((a, b) => {
-            if (a[column.dataKey] > b[column.dataKey]) {
-              return -1;
-            }
-            return 0;
-          });
-          setData(sortedData);
-        }
-      }, "▼") : "", column.filter === true ? /*#__PURE__*/_react.default.createElement("div", {
-        style: {
-          cursor: "pointer"
-        },
-        onClick: () => {
-          setActiveFilterColumn(column.dataKey);
-          data.forEach(item => {
-            if (filterLists.indexOf(item[column.dataKey]) === -1) {
-              filterLists.push(item[column.dataKey]);
-            }
-          });
-          setActiveFilteringDataLists(prev => {
-            return filterLists;
-          });
-          ////console.log(filterLists)
-        }
-      }, /*#__PURE__*/_react.default.createElement(_SearchIcon.default, null)) : "", activeFilterColumn === column.dataKey && /*#__PURE__*/_react.default.createElement("div", {
-        id: "hummingbird-filter-div",
-        ref: filterPopupRef,
-        key: column.dataKey,
-        style: {}
-      }, column.label + " Filter", activeFilteringDataLists.map((item, idx) => {
-        return /*#__PURE__*/_react.default.createElement("div", {
-          key: item + idx,
-          style: {
-            textAlign: "left",
-            paddingLeft: "5px",
-            display: "flex"
-          }
-        }, /*#__PURE__*/_react.default.createElement("input", {
-          key: item + idx,
-          type: "checkbox",
-          checked: activeFilterCheckedData[column.dataKey] && activeFilterCheckedData[column.dataKey].includes(item) ? true : false,
-          onChange: values => {
-            let checkedLists = {
-              ...activeFilterCheckedData
-            }; //state 변수를 직접 때려박아서 업데이트 하면 안됨. 복사해서 업데이트 해야함.
-            //debugger;
-            if (checkedLists[column.dataKey]) {
-              if (checkedLists[column.dataKey].includes(item)) {
-                let tmpCheckedLists = checkedLists[column.dataKey].filter(function (data) {
-                  return data !== item;
-                });
-                if (tmpCheckedLists.length === 0) {
-                  delete checkedLists[column.dataKey];
-                } else {
-                  checkedLists[column.dataKey] = tmpCheckedLists;
-                }
-              } else {
-                checkedLists[column.dataKey].push(item);
-              }
-            } else {
-              checkedLists[column.dataKey] = [item];
-            }
-            //console.log( checkedLists)
+      }, columns.map((column, index) => {
+        if (!column.visibility && column.visibility === false) {} else {
+          return /*#__PURE__*/_react.default.createElement("th", {
+            id: "humming-table-th",
+            key: depth + "." + index,
+            rowSpan: column.rowSpanCount,
+            colSpan: column.childCount,
+            style: {
+              cursor: JSON.stringify(hoverCell) === JSON.stringify({
+                row: depth,
+                idx: index
+              }) ? "col-resize" : "default",
+              width: column.width,
+              textAlign: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              // borderLeft:"1px solid #aaa",
+              //borderRadius:"15px",
+              paddingLeft: "5px",
+              paddingRight: "5px"
 
-            setActiveFilterCheckedData(checkedLists);
-          }
-        }), item);
-      }))))))));
+              // border:"3px solid black",
+              // borderCollapse:"collapse",
+              // boxSizing:"border-box"
+            }
+          }, /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              width: "100%",
+              alignItems: "center",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              display: "flex"
+              // border:"1px solid black"
+              //borderRight:"1px solid #ccc",
+            }
+          }, /*#__PURE__*/_react.default.createElement("div", {
+            id: "column-label-div",
+            style: {
+              // flex: 1,
+              textAlign: "center",
+              height: "100%",
+              padding: "0px",
+              justifyContent: "center",
+              // display:"flex",
+              width: "100%",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap"
+              //padding:"2px"//width 0 일 경우 주의할 포인트.
+              //position:"relative"
+            },
+            onMouseOver: e => {
+              //debugger;
+              getHeaderDetailValue(e);
+              //setShowHeaderTooltip(true);
+            },
+            onMouseOut: () => {
+              setShowHeaderTooltip(false);
+            }
+          }, column.label, showHeaderTooltip && /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              top: "".concat(headerTooltipPosition.y, "px"),
+              // 부모의 아래쪽에 표시
+              left: "".concat(headerTooltipPosition.x, "px"),
+              // 가운데 정렬
+              //transform: "translateX(-50%)",
+              backgroundColor: "#333",
+              borderRadius: "5px",
+              color: "#fff",
+              padding: "5px",
+              //width:"100px", 
+              height: "24px",
+              position: "fixed"
+            }
+          }, /*#__PURE__*/_react.default.createElement("div", null, headerTooltipContent))), /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              display: "flex"
+            }
+          }, column.sortable === true ? /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              cursor: "pointer",
+              marginRight: "1px"
+            },
+            onClick: () => {
+              const sortedData = [...data].sort((a, b) => {
+                if (a[column.dataKey] < b[column.dataKey]) {
+                  return -1;
+                }
+                return 0;
+              });
+              setData(sortedData);
+            }
+          }, "▲") : "", column.sortable === true ? /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              cursor: "pointer"
+            },
+            onClick: () => {
+              const sortedData = [...data].sort((a, b) => {
+                if (a[column.dataKey] > b[column.dataKey]) {
+                  return -1;
+                }
+                return 0;
+              });
+              setData(sortedData);
+            }
+          }, "▼") : "", column.filter === true ? /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              cursor: "pointer"
+            },
+            onClick: () => {
+              setActiveFilterColumn(column.dataKey);
+              data.forEach(item => {
+                if (filterLists.indexOf(item[column.dataKey]) === -1) {
+                  filterLists.push(item[column.dataKey]);
+                }
+              });
+              setActiveFilteringDataLists(prev => {
+                return filterLists;
+              });
+              ////console.log(filterLists)
+            }
+          }, /*#__PURE__*/_react.default.createElement(_SearchIcon.default, null)) : "", activeFilterColumn === column.dataKey && /*#__PURE__*/_react.default.createElement("div", {
+            id: "hummingbird-filter-div",
+            ref: filterPopupRef,
+            key: column.dataKey,
+            style: {}
+          }, column.label + " Filter", activeFilteringDataLists.map((item, idx) => {
+            return /*#__PURE__*/_react.default.createElement("div", {
+              key: item + idx,
+              style: {
+                textAlign: "left",
+                paddingLeft: "5px",
+                display: "flex"
+              }
+            }, /*#__PURE__*/_react.default.createElement("input", {
+              key: item + idx,
+              type: "checkbox",
+              checked: activeFilterCheckedData[column.dataKey] && activeFilterCheckedData[column.dataKey].includes(item) ? true : false,
+              onChange: values => {
+                let checkedLists = {
+                  ...activeFilterCheckedData
+                }; //state 변수를 직접 때려박아서 업데이트 하면 안됨. 복사해서 업데이트 해야함.
+                //debugger;
+                if (checkedLists[column.dataKey]) {
+                  if (checkedLists[column.dataKey].includes(item)) {
+                    let tmpCheckedLists = checkedLists[column.dataKey].filter(function (data) {
+                      return data !== item;
+                    });
+                    if (tmpCheckedLists.length === 0) {
+                      delete checkedLists[column.dataKey];
+                    } else {
+                      checkedLists[column.dataKey] = tmpCheckedLists;
+                    }
+                  } else {
+                    checkedLists[column.dataKey].push(item);
+                  }
+                } else {
+                  checkedLists[column.dataKey] = [item];
+                }
+                //console.log( checkedLists)
+
+                setActiveFilterCheckedData(checkedLists);
+              }
+            }), item);
+          })))));
+        }
+      })));
     });
     return headers;
   };
@@ -485,7 +506,7 @@ const HummingTable = props => {
           });
         } else {
           //////console.log(column.label, column.width)
-          return /*#__PURE__*/_react.default.createElement("td", {
+          if (!column.visibility && column.visibility === false) {} else return /*#__PURE__*/_react.default.createElement("td", {
             key: index,
             style: {
               minWidth: column.width,
@@ -1001,6 +1022,7 @@ const HummingTable = props => {
     setData(tmpData);
     ////console.log("data : ", dataSource);
     setClickedRowIdx();
+    setSelectedPage(1);
   }, [props.dataSource]);
   (0, _react.useEffect)(() => {
     //console.log("rowIdx : ", clickedRowIdx)
@@ -1080,9 +1102,7 @@ const HummingTable = props => {
       overflow: "auto"
     }
   }, /*#__PURE__*/_react.default.createElement("div", {
-    style: {
-      borderCollapse: "collapse"
-    }
+    style: {}
   }, /*#__PURE__*/_react.default.createElement("div", {
     id: "tableArea",
     style: {
@@ -1094,7 +1114,7 @@ const HummingTable = props => {
     id: "humming-table",
     style: {
       width: hummingTableWidth
-
+      //border:"1px solid #aaa"
       //fontSize: "70%",
       //fontFamily: "monospace, sans-serif, serif",
     }

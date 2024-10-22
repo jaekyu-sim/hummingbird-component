@@ -114,6 +114,7 @@ const columnConfig2 = [
     width:"0px",
     //width:"12%",
     sortable: true,
+    visibility: false
   },
   {
     dataKey:"age",
@@ -124,7 +125,7 @@ const columnConfig2 = [
   },
   {
     dataKey:"street",
-    label:"세부 주소1",
+    label:"세부 주소1asdfjl;kasdjfkl;sadkl;fjasdkl;f",
     //width:"12%",
     width:"120px",
     sortable: false,
