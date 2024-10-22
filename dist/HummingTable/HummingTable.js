@@ -245,6 +245,9 @@ const HummingTable = props => {
           justifyContent: "center",
           alignItems: "center",
           border: "0"
+          // display:"flex",
+          // justifyItem:"center",
+          // flexDirection:"row"
         }
       }, /*#__PURE__*/_react.default.createElement("div", {
         style: {
@@ -252,24 +255,26 @@ const HummingTable = props => {
           alignItems: "center",
           whiteSpace: "nowrap",
           overflow: "hidden",
-          width: column.width
+          width: "100%"
         }
       }, /*#__PURE__*/_react.default.createElement("div", {
         style: {
           flex: 1,
           textAlign: "center",
           height: "100%",
-          padding: "10px",
-          overflow: "hidden"
+          padding: "0px",
+          justifyContent: "center",
+          overflow: "hidden",
+          display: "flex"
         }
       }, column.label), /*#__PURE__*/_react.default.createElement("div", {
         style: {
-          display: "flex",
-          marginRight: "5px"
+          display: "flex"
         }
       }, column.sortable === true ? /*#__PURE__*/_react.default.createElement("div", {
         style: {
-          cursor: "pointer"
+          cursor: "pointer",
+          marginRight: "5px"
         },
         onClick: () => {
           const sortedData = [...data].sort((a, b) => {
@@ -512,7 +517,7 @@ const HummingTable = props => {
             }
           }, /*#__PURE__*/_react.default.createElement("div", {
             style: {
-              width: column.width,
+              width: "100%",
               paddingLeft: "2px",
               paddingRight: "2px"
             },
