@@ -605,9 +605,6 @@ export const HummingTable = (props) => {
                 maxWidth: column.width,
                 width: column.width,
                 cursor: "default",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
                 //zIndex: "1",
               }}
               onDoubleClick={(val) => {
@@ -632,7 +629,10 @@ export const HummingTable = (props) => {
               }}
               
             >
-              <div style={{width:"100%", paddingLeft:"2px", paddingRight:"2px"}}  onMouseOver={(e) => {
+              <div style={{width:"100%", paddingLeft:"2px", paddingRight:"2px",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",}}  onMouseOver={(e) => {
                 getDetailValue(e);
                 //console.log("e", e);
               }}
