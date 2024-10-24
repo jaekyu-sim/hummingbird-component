@@ -259,7 +259,7 @@ for(let i = 0 ; i < dataLength ; i++)
       key: i,
       id : "n"+i,
       name : "sim"+i,
-      age: i,
+      age: i+"jkafsjkalf;jasdfjfdkl;;akjlfdsadfsj;lkjl;kdfas",
       street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdfasdf",
       building: i+"824dsafasdf",
       doorNo: (i+1)+"503",

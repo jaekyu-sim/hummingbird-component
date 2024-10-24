@@ -629,36 +629,40 @@ export const HummingTable = (props) => {
               }}
               
             >
-              <div style={{width:"100%", paddingLeft:"2px", paddingRight:"2px",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",}}  onMouseOver={(e) => {
-                getDetailValue(e);
-                //console.log("e", e);
-              }}
-              onMouseOut={() => {setShowTooltip(false);
-                setTooltipContent("");
-              }}>
-                {row[column.dataKey]}
-                {showTooltip && (
-                <div
-                  id="hummingbird-tooltip"
-                  style={{
-                    position: "fixed",
-                    top: `${tooltipPosition.y}px`,
-                    left: `${tooltipPosition.x}px`,
-                    backgroundColor: "#333",
-                    color: "#fff",
-                    padding: "5px",
-                    borderRadius: "5px",
-                    zIndex: 1000,
-                    //fontSize: "12px",
-                    // whiteSpace: "nowrap",
-                  }}
-                >
-                  {tooltipContent}
+              <div style={{width:"100%", display:"flex", justifyContent:"center", alignContent:"center"}}>
+                <div style={{width:"90%", marginLeft:"5px", marginRight:"5px",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}  onMouseOver={(e) => {
+                  getDetailValue(e);
+                  //console.log("e", e);
+                }}
+                onMouseOut={() => {
+                  setShowTooltip(false);
+                  setTooltipContent("");
+                }}>
+                  {row[column.dataKey]}
+                  {showTooltip && (
+                  <div
+                    id="hummingbird-tooltip"
+                    style={{
+                      position: "fixed",
+                      top: `${tooltipPosition.y}px`,
+                      left: `${tooltipPosition.x}px`,
+                      backgroundColor: "#333",
+                      color: "#fff",
+                      padding: "5px",
+                      borderRadius: "5px",
+                      zIndex: 1000,
+                      //fontSize: "12px",
+                      // whiteSpace: "nowrap",
+                    }}
+                  >
+                    {tooltipContent}
+                  </div>
+                )}
                 </div>
-              )}
               </div>
               
               {/* <div

@@ -512,10 +512,7 @@ const HummingTable = props => {
               minWidth: column.width,
               maxWidth: column.width,
               width: column.width,
-              cursor: "default",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis"
+              cursor: "default"
               //zIndex: "1",
             },
             onDoubleClick: val => {
@@ -539,8 +536,18 @@ const HummingTable = props => {
           }, /*#__PURE__*/_react.default.createElement("div", {
             style: {
               width: "100%",
-              paddingLeft: "2px",
-              paddingRight: "2px"
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center"
+            }
+          }, /*#__PURE__*/_react.default.createElement("div", {
+            style: {
+              width: "90%",
+              marginLeft: "5px",
+              marginRight: "5px",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis"
             },
             onMouseOver: e => {
               getDetailValue(e);
@@ -564,7 +571,7 @@ const HummingTable = props => {
               //fontSize: "12px",
               // whiteSpace: "nowrap",
             }
-          }, tooltipContent)));
+          }, tooltipContent))));
         }
       }
     });
