@@ -379,6 +379,7 @@ const clickButton4 = () => {
         sizeChanger={[5, 10, 20, 40]}
         rowHeight="40px"
         //zebra
+        
         rowSelection={{
           type: rowSelectionType,
           onChange: (selectedRows) => {
@@ -386,6 +387,7 @@ const clickButton4 = () => {
           }
         }}
         rowClick={{
+          enable: false,
           onClick:(value)=>{
             console.log("here is clicked row values :", value)
           },

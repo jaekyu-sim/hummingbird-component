@@ -525,7 +525,7 @@ const HummingTable = props => {
             onClick: val => {
               var _props$rowClick2;
               // debugger;
-              if (row["_hummingRowNums"]) {
+              if (row["_hummingRowNums"] && props.rowClick.enable !== false) {
                 setClickedRowIdx(rowIndex % rowNum);
               }
               if (props.rowClick && props.rowClick.onClick) (_props$rowClick2 = props.rowClick) === null || _props$rowClick2 === void 0 || _props$rowClick2.onClick({
