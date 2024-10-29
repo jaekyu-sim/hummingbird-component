@@ -1231,7 +1231,7 @@ export const HummingTable = (props) => {
     setRowHeight(tmpRowHeight);
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
-  }, [props]);
+  }, []);
 
   useEffect(() => {
     let tmpTableWidth = props.width ? props.width : "100%";

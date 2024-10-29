@@ -287,6 +287,7 @@ for(let i = 0 ; i < dataLength ; i++)
 const [data, setData] = useState(tmpData)
 const [rowShowFlag, setRowShowFlag] = useState(true)
 const [rowSelectionType, setRowSelectionType] = useState("checkbox")
+const [tmpInput, setTmpInput] = useState("");
 
 useEffect(() => {
   //console.log(data)
@@ -424,6 +425,10 @@ const clickButton4 = () => {
           </tr>
         </tbody>
       </table>
+      <input value={tmpInput}
+      onChange={(e)=>{
+        setTmpInput(e.target.value);
+      }}></input>
     </div>
     
     );
