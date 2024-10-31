@@ -366,7 +366,9 @@ const clickButton4 = () => {
     <div className="App" style={{}}>
       TEST
       <div style={{display:"flex", justifyContent:"center"}}>
-      <div id="3" style={{height:"550px", width:"95%"}}>
+      <div id="3" style={{height:"550px", width:"95%", backgroundColor:"green"}}>
+        
+      <div id="3" style={{height:"450px", width:"95%", backgroundColor:"red"}}>
       <HummingTable 
         width={"100%"}
         height={"100%"}
@@ -379,7 +381,7 @@ const clickButton4 = () => {
         displayRowNumsYn={rowShowFlag}
         sizeChanger={[5, 10, 20, 40]}
         rowHeight="40px"
-        //zebra
+        zebra
         
         rowSelection={{
           type: rowSelectionType,
@@ -405,6 +407,7 @@ const clickButton4 = () => {
         }}
         //zebra, ...
       ></HummingTable>
+      </div>
       </div>
       </div>
       <button onClick={clickButton1}>data1</button>

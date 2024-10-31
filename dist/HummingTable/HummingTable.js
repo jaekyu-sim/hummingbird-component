@@ -47,7 +47,8 @@ const HummingTable = props => {
   const [activeFilterCheckedData, setActiveFilterCheckedData] = (0, _react.useState)({});
   const [clickedRowIdx, setClickedRowIdx] = (0, _react.useState)();
   const [rowHeight, setRowHeight] = (0, _react.useState)(defaultRowHeight);
-  const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("100%");
+  const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("fit-content");
+  const [paginationComponentWidth, setPaginationComponentWidth] = (0, _react.useState)();
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -226,6 +227,8 @@ const HummingTable = props => {
               }) ? "col-resize" : "default",
               width: column.width,
               maxWidth: column.maxWidth ? column.maxWidth : null,
+              flexShrink: column.independent ? 0 : 0,
+              flexGrow: column.independent ? 0 : 0,
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
@@ -808,8 +811,15 @@ const HummingTable = props => {
 
     // Get the current range of pages to display
     const currentPageRange = pageNumList.slice(startPage - 1, endPage);
+    let componentWidth;
+    if (document.getElementById("humming-table")) {
+      componentWidth = document.getElementById("humming-table").offsetWidth;
+    }
     return /*#__PURE__*/_react.default.createElement("div", {
+      id: "hummingbird-component-pagination-area",
       style: {
+        backgroundColor: "white",
+        width: "100%",
         position: "relative",
         paddingTop: "10px"
       }
@@ -994,6 +1004,7 @@ const HummingTable = props => {
           tmpWidth = Number(tmpWidth.substr(0, tmpWidth.length - 1)) / 100 * tableWidth;
           tmpColumnData[index].width = tmpWidth + "px"; //""//tmpWidth
         }
+        //debugger;
       }
     });
     setColumnData(tmpColumnData);
@@ -1064,7 +1075,8 @@ const HummingTable = props => {
         label: "No",
         width: "30px",
         maxWidth: "30px",
-        sortable: "false"
+        sortable: "false",
+        independent: true
       };
       //debugger;
       if (showRowNumYn === true || props.rowSelection !== undefined) {
@@ -1104,17 +1116,22 @@ const HummingTable = props => {
   }, /*#__PURE__*/_react.default.createElement("div", {
     style: {
       // textAlign: "center",
-      // display: "flex",
-      // justifyContent: "center",
-      // alignItems: "center",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
       height: tableHeight,
       overflow: "auto"
     }
   }, /*#__PURE__*/_react.default.createElement("div", {
-    style: {}
+    style: {
+      width: "fit-content"
+    }
   }, /*#__PURE__*/_react.default.createElement("div", {
     id: "tableArea",
     style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
       overflowY: "auto",
       maxHeight: "calc(" + tableHeight + " - 33px)"
       // width: tableWidth,
@@ -1122,7 +1139,8 @@ const HummingTable = props => {
   }, /*#__PURE__*/_react.default.createElement("table", {
     id: "humming-table",
     style: {
-      width: hummingTableWidth
+      width: hummingTableWidth,
+      backgroundColor: "white"
       //border:"1px solid #aaa"
       //fontSize: "70%",
       //fontFamily: "monospace, sans-serif, serif",
@@ -1134,7 +1152,12 @@ const HummingTable = props => {
     id: "table-row-area",
     className: rowZebraYn ? "zebra" : ""
   }, renderData(data, columnData, selectedPage)))), /*#__PURE__*/_react.default.createElement("div", {
-    id: "paginationArea"
+    id: "paginationArea",
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    }
   }, paginationComponent()))));
 };
 exports.HummingTable = HummingTable;

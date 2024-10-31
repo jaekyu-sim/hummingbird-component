@@ -35,7 +35,8 @@ export const HummingTable = (props) => {
   const [activeFilterCheckedData, setActiveFilterCheckedData] = useState({});
   const [clickedRowIdx, setClickedRowIdx] = useState();
   const [rowHeight, setRowHeight] = useState(defaultRowHeight);
-  const [hummingTableWidth, setHummingTableWidth] = useState("100%");
+  const [hummingTableWidth, setHummingTableWidth] = useState("fit-content");
+  const [paginationComponentWidth, setPaginationComponentWidth] = useState();
 
   const [hoverCell, setHoverCell] = useState({ row: "", idx: "" });
   const [mouseDownFlag, setMouseDownFlag] = useState(false);
@@ -227,6 +228,8 @@ export const HummingTable = (props) => {
                     : "default",
                 width: column.width,
                 maxWidth: column.maxWidth?column.maxWidth:null,
+                flexShrink:column.independent?0:0,
+                flexGrow:column.independent?0:0,
                 textAlign: "center",
                 justifyContent: "center",
                 alignItems: "center",
@@ -970,8 +973,16 @@ export const HummingTable = (props) => {
     // Get the current range of pages to display
     const currentPageRange = pageNumList.slice(startPage - 1, endPage);
 
+    
+    let componentWidth;
+    if(document.getElementById("humming-table"))
+    {
+      componentWidth = document.getElementById("humming-table").offsetWidth;
+      
+    }
+    
     return (
-      <div style={{ position: "relative", paddingTop: "10px" }}>
+      <div id="hummingbird-component-pagination-area" style={{ backgroundColor:"white", width:"100%", position: "relative", paddingTop: "10px" }}>
         
         <div
           style={{
@@ -1206,6 +1217,7 @@ export const HummingTable = (props) => {
             tableWidth;
           tmpColumnData[index].width = tmpWidth + "px"; //""//tmpWidth
         }
+        //debugger;
       }
     });
     setColumnData(tmpColumnData);
@@ -1289,6 +1301,7 @@ export const HummingTable = (props) => {
         width: "30px",
         maxWidth: "30px",
         sortable: "false",
+        independent: true
       };
       //debugger;
       if (showRowNumYn === true || props.rowSelection !== undefined) {
@@ -1339,17 +1352,21 @@ export const HummingTable = (props) => {
       <div
         style={{
           // textAlign: "center",
-          // display: "flex",
-          // justifyContent: "center",
-          // alignItems: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           height: tableHeight,
           overflow: "auto",
+          
         }}
       >
-        <div style={{  }}>
+        <div  style={{ width:"fit-content" }}>
           <div
             id="tableArea"
             style={{
+              display:"flex",
+              justifyContent:"center",
+              alignItems:"center",
               overflowY: "auto",
               maxHeight: "calc(" + tableHeight + " - 33px)",
               // width: tableWidth,
@@ -1359,6 +1376,7 @@ export const HummingTable = (props) => {
               id="humming-table"
               style={{
                 width: hummingTableWidth,
+                backgroundColor:"white"
                 //border:"1px solid #aaa"
                 //fontSize: "70%",
                 //fontFamily: "monospace, sans-serif, serif",
@@ -1373,7 +1391,7 @@ export const HummingTable = (props) => {
               </tbody>
             </table>
           </div>
-          <div id="paginationArea">
+          <div id="paginationArea" style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
             {/* {paginationYn?paginationComponent():null}
             {sizeChanger?<div>있음2</div>:null} */}
             {paginationComponent()}
