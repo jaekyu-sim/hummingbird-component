@@ -35,7 +35,7 @@ export const HummingTable = (props) => {
   const [activeFilterCheckedData, setActiveFilterCheckedData] = useState({});
   const [clickedRowIdx, setClickedRowIdx] = useState();
   const [rowHeight, setRowHeight] = useState(defaultRowHeight);
-  const [hummingTableWidth, setHummingTableWidth] = useState("fit-content");
+  const [hummingTableWidth, setHummingTableWidth] = useState("100%");
 
   const [hoverCell, setHoverCell] = useState({ row: "", idx: "" });
   const [mouseDownFlag, setMouseDownFlag] = useState(false);
@@ -227,8 +227,6 @@ export const HummingTable = (props) => {
                     : "default",
                 width: column.width,
                 maxWidth: column.maxWidth?column.maxWidth:null,
-                flexShrink:column.independent?0:0,
-                flexGrow:column.independent?0:0,
                 textAlign: "center",
                 justifyContent: "center",
                 alignItems: "center",
@@ -980,7 +978,7 @@ export const HummingTable = (props) => {
     }
     
     return (
-      <div id="hummingbird-component-pagination-area" style={{ width:componentWidth, position: "relative", paddingTop: "10px" }}>
+      <div id="hummingbird-component-pagination-area" style={{ position: "relative", paddingTop: "10px" }}>
         
         <div
           style={{
