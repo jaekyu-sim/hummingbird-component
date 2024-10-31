@@ -225,6 +225,7 @@ const HummingTable = props => {
                 idx: index
               }) ? "col-resize" : "default",
               width: column.width,
+              maxWidth: column.maxWidth ? column.maxWidth : null,
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
@@ -1060,8 +1061,9 @@ const HummingTable = props => {
       }
       let rowNumColumnConfig = {
         dataKey: "_hummingRowNums",
-        label: "No.",
+        label: "No",
         width: "30px",
+        maxWidth: "30px",
         sortable: "false"
       };
       //debugger;
