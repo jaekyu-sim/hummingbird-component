@@ -35,7 +35,7 @@ export const HummingTable = (props) => {
   const [activeFilterCheckedData, setActiveFilterCheckedData] = useState({});
   const [clickedRowIdx, setClickedRowIdx] = useState();
   const [rowHeight, setRowHeight] = useState(defaultRowHeight);
-  const [hummingTableWidth, setHummingTableWidth] = useState("100%");
+  const [hummingTableWidth, setHummingTableWidth] = useState("fit-content");
 
   const [hoverCell, setHoverCell] = useState({ row: "", idx: "" });
   const [mouseDownFlag, setMouseDownFlag] = useState(false);
@@ -51,8 +51,8 @@ export const HummingTable = (props) => {
   const [showHeaderTooltip, setShowHeaderTooltip] = useState(false);
   const [headerTooltipContent, setHeaderTooltipContent] = useState("");
   const [headerTooltipPosition, setHeaderTooltipPosition] = useState({ x: 0, y: 0 });
-  
-  
+
+
 
   /* useRef */
   const filterPopupRef = useRef();
@@ -76,7 +76,7 @@ export const HummingTable = (props) => {
       const rect = e.target.getBoundingClientRect();
       setTooltipPosition({ x: rect.left, y: rect.bottom }); // 툴팁 위치 설정
       setShowTooltip(true); // 툴팁 표시
-      
+
     }
   };
   const getHeaderDetailValue = (e) => {
@@ -89,11 +89,11 @@ export const HummingTable = (props) => {
       //debugger;
       setHeaderTooltipPosition({ x: rect.left, y: rect.bottom }); // 툴팁 위치 설정
       setShowHeaderTooltip(true); // 툴팁 표시
-      
+
     }
   };
   const makeAlldataCheckState = (value) => {
-    
+
     let tmpData = [...data];
     let tmpSelectedRows = [...selectedRows];
     //debugger;
@@ -197,7 +197,7 @@ export const HummingTable = (props) => {
       return depthMap;
     }
 
-    
+
     const depthMap = generateHeader(columnData);
     const headers = [];
     let filterLists = [];
@@ -210,7 +210,7 @@ export const HummingTable = (props) => {
           {columns.map((column, index) => {
             if(!column.visibility && column.visibility === false)
             {
-              
+
             }
             else
             {
@@ -227,6 +227,8 @@ export const HummingTable = (props) => {
                     : "default",
                 width: column.width,
                 maxWidth: column.maxWidth?column.maxWidth:null,
+                flexShrink:column.independent?0:0,
+                flexGrow:column.independent?0:0,
                 textAlign: "center",
                 justifyContent: "center",
                 alignItems: "center",
@@ -234,7 +236,7 @@ export const HummingTable = (props) => {
                 //borderRadius:"15px",
                 paddingLeft:"5px",
                 paddingRight:"5px",
-                
+
                 // border:"3px solid black",
                 // borderCollapse:"collapse",
                 // boxSizing:"border-box"
@@ -249,7 +251,7 @@ export const HummingTable = (props) => {
                   display: "flex",
                   // border:"1px solid black"
                   //borderRight:"1px solid #ccc",
-                  
+
                 }}
               >
                 <div
@@ -422,7 +424,7 @@ export const HummingTable = (props) => {
                   )}
                 </div>
               </div>
-              
+
             </th>}
     })}
         </tr>
@@ -501,7 +503,7 @@ export const HummingTable = (props) => {
                 overflow: "hidden",
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
-                
+
               }}
             >
               <input
@@ -594,11 +596,11 @@ export const HummingTable = (props) => {
           //////console.log(column.label, column.width)
           if(!column.visibility && column.visibility === false)
           {
-            
+
           }
           else
           return (
-            
+
             <td
               key={index}
               style={{
@@ -621,14 +623,14 @@ export const HummingTable = (props) => {
                 {
                   setClickedRowIdx(rowIndex%rowNum);
                 }
-                
+
                 if (props.rowClick && props.rowClick.onClick)
                   props.rowClick?.onClick({
                     rowData: row,
                     colData: column,
                   });
               }}
-              
+
             >
               <div style={{width:"100%", display:"flex", justifyContent:"center", alignContent:"center"}}>
                 <div style={{width:"90%", marginLeft:"5px", marginRight:"5px",
@@ -665,7 +667,7 @@ export const HummingTable = (props) => {
                 )}
                 </div>
               </div>
-              
+
               {/* <div
                 style={{
                   width: "100%",
@@ -875,7 +877,7 @@ export const HummingTable = (props) => {
     }
   }
   const goNextPage = () => {
-    
+
     if(paginationInfo)
     {
       let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
@@ -911,7 +913,7 @@ export const HummingTable = (props) => {
     else
     {
 
-      
+
       let tmpValue = Math.ceil(data.length / Number(rowNum));
       if (selectedPage < tmpValue) {
         renderData(data, columnData, tmpValue);
@@ -970,16 +972,16 @@ export const HummingTable = (props) => {
     // Get the current range of pages to display
     const currentPageRange = pageNumList.slice(startPage - 1, endPage);
 
-    
+
     let componentWidth;
-    if(document.getElementById("tableArea"))
+    if(document.getElementById("humming-table"))
     {
-      componentWidth = document.getElementById("tableArea").offsetWidth;
+      componentWidth = document.getElementById("humming-table").offsetWidth;
     }
-    
+
     return (
-      <div id="hummingbird-component-pagination-area" style={{ position: "relative", paddingTop: "10px" }}>
-        
+      <div id="hummingbird-component-pagination-area" style={{ width:componentWidth, position: "relative", paddingTop: "10px" }}>
+
         <div
           style={{
             display: "flex",
@@ -998,7 +1000,7 @@ export const HummingTable = (props) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                
+
               }}
             >
               <div
@@ -1039,7 +1041,7 @@ export const HummingTable = (props) => {
                             );
 
                           }
-                          
+
                         }}
                       >
                         {value}
@@ -1053,7 +1055,7 @@ export const HummingTable = (props) => {
                 onClick={goNextPage}
                 style={{
                   cursor:
-                  
+
                   isLastPage()
                       ? 
                       "not-allowed":
@@ -1227,7 +1229,7 @@ export const HummingTable = (props) => {
     setTableHeight(tmpTableHeight);
     setRowZebraYn(tmpZebra);
     ////console.log(tmpData.length, tmpDisplayedRowNum)
-    
+
     if (props.paginationUseYn === "Y" || props.paginationUseYn === undefined) {
       setPaginationUseYn(true);
     } else if(props.paginationUseYn === "N") {
@@ -1385,7 +1387,7 @@ export const HummingTable = (props) => {
               </tbody>
             </table>
           </div>
-          <div id="paginationArea">
+          <div id="paginationArea" style={{justifyContent:"center", alignItems:"center", display:"flex"}}>
             {/* {paginationYn?paginationComponent():null}
             {sizeChanger?<div>있음2</div>:null} */}
             {paginationComponent()}

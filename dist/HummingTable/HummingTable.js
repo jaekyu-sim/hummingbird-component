@@ -47,7 +47,7 @@ const HummingTable = props => {
   const [activeFilterCheckedData, setActiveFilterCheckedData] = (0, _react.useState)({});
   const [clickedRowIdx, setClickedRowIdx] = (0, _react.useState)();
   const [rowHeight, setRowHeight] = (0, _react.useState)(defaultRowHeight);
-  const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("100%");
+  const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("fit-content");
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -226,6 +226,8 @@ const HummingTable = props => {
               }) ? "col-resize" : "default",
               width: column.width,
               maxWidth: column.maxWidth ? column.maxWidth : null,
+              flexShrink: column.independent ? 0 : 0,
+              flexGrow: column.independent ? 0 : 0,
               textAlign: "center",
               justifyContent: "center",
               alignItems: "center",
@@ -809,12 +811,13 @@ const HummingTable = props => {
     // Get the current range of pages to display
     const currentPageRange = pageNumList.slice(startPage - 1, endPage);
     let componentWidth;
-    if (document.getElementById("tableArea")) {
-      componentWidth = document.getElementById("tableArea").offsetWidth;
+    if (document.getElementById("humming-table")) {
+      componentWidth = document.getElementById("humming-table").offsetWidth;
     }
     return /*#__PURE__*/_react.default.createElement("div", {
       id: "hummingbird-component-pagination-area",
       style: {
+        width: componentWidth,
         position: "relative",
         paddingTop: "10px"
       }
@@ -1144,7 +1147,12 @@ const HummingTable = props => {
     id: "table-row-area",
     className: rowZebraYn ? "zebra" : ""
   }, renderData(data, columnData, selectedPage)))), /*#__PURE__*/_react.default.createElement("div", {
-    id: "paginationArea"
+    id: "paginationArea",
+    style: {
+      justifyContent: "center",
+      alignItems: "center",
+      display: "flex"
+    }
   }, paginationComponent()))));
 };
 exports.HummingTable = HummingTable;
