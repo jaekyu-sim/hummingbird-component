@@ -1125,7 +1125,7 @@ const HummingTable = props => {
   }, /*#__PURE__*/_react.default.createElement("div", {
     id: "tableArea",
     style: {
-      display: "flex",
+      // display:"flex",
       justifyContent: "center",
       alignItems: "center",
       overflowY: "auto",

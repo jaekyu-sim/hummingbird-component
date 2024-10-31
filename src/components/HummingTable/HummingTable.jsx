@@ -1361,7 +1361,7 @@ export const HummingTable = (props) => {
           <div
             id="tableArea"
             style={{
-              display:"flex",
+              // display:"flex",
               justifyContent:"center",
               alignItems:"center",
               overflowY: "auto",
