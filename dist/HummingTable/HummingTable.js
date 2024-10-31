@@ -48,7 +48,6 @@ const HummingTable = props => {
   const [clickedRowIdx, setClickedRowIdx] = (0, _react.useState)();
   const [rowHeight, setRowHeight] = (0, _react.useState)(defaultRowHeight);
   const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("fit-content");
-  const [paginationComponentWidth, setPaginationComponentWidth] = (0, _react.useState)();
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -812,14 +811,13 @@ const HummingTable = props => {
     // Get the current range of pages to display
     const currentPageRange = pageNumList.slice(startPage - 1, endPage);
     let componentWidth;
-    if (document.getElementById("humming-table")) {
-      componentWidth = document.getElementById("humming-table").offsetWidth;
+    if (document.getElementById("tableArea")) {
+      componentWidth = document.getElementById("tableArea").offsetWidth;
     }
     return /*#__PURE__*/_react.default.createElement("div", {
       id: "hummingbird-component-pagination-area",
       style: {
-        backgroundColor: "white",
-        width: "100%",
+        width: componentWidth,
         position: "relative",
         paddingTop: "10px"
       }
@@ -1116,16 +1114,14 @@ const HummingTable = props => {
   }, /*#__PURE__*/_react.default.createElement("div", {
     style: {
       // textAlign: "center",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
+      // display: "flex",
+      // justifyContent: "center",
+      // alignItems: "center",
       height: tableHeight,
       overflow: "auto"
     }
   }, /*#__PURE__*/_react.default.createElement("div", {
-    style: {
-      width: "fit-content"
-    }
+    style: {}
   }, /*#__PURE__*/_react.default.createElement("div", {
     id: "tableArea",
     style: {
@@ -1139,8 +1135,7 @@ const HummingTable = props => {
   }, /*#__PURE__*/_react.default.createElement("table", {
     id: "humming-table",
     style: {
-      width: hummingTableWidth,
-      backgroundColor: "white"
+      width: hummingTableWidth
       //border:"1px solid #aaa"
       //fontSize: "70%",
       //fontFamily: "monospace, sans-serif, serif",
@@ -1152,12 +1147,7 @@ const HummingTable = props => {
     id: "table-row-area",
     className: rowZebraYn ? "zebra" : ""
   }, renderData(data, columnData, selectedPage)))), /*#__PURE__*/_react.default.createElement("div", {
-    id: "paginationArea",
-    style: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center"
-    }
+    id: "paginationArea"
   }, paginationComponent()))));
 };
 exports.HummingTable = HummingTable;

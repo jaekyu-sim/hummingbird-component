@@ -36,7 +36,6 @@ export const HummingTable = (props) => {
   const [clickedRowIdx, setClickedRowIdx] = useState();
   const [rowHeight, setRowHeight] = useState(defaultRowHeight);
   const [hummingTableWidth, setHummingTableWidth] = useState("fit-content");
-  const [paginationComponentWidth, setPaginationComponentWidth] = useState();
 
   const [hoverCell, setHoverCell] = useState({ row: "", idx: "" });
   const [mouseDownFlag, setMouseDownFlag] = useState(false);
@@ -975,14 +974,13 @@ export const HummingTable = (props) => {
 
     
     let componentWidth;
-    if(document.getElementById("humming-table"))
+    if(document.getElementById("tableArea"))
     {
-      componentWidth = document.getElementById("humming-table").offsetWidth;
-      
+      componentWidth = document.getElementById("tableArea").offsetWidth;
     }
     
     return (
-      <div id="hummingbird-component-pagination-area" style={{ backgroundColor:"white", width:"100%", position: "relative", paddingTop: "10px" }}>
+      <div id="hummingbird-component-pagination-area" style={{ width:componentWidth, position: "relative", paddingTop: "10px" }}>
         
         <div
           style={{
@@ -1352,15 +1350,14 @@ export const HummingTable = (props) => {
       <div
         style={{
           // textAlign: "center",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          // display: "flex",
+          // justifyContent: "center",
+          // alignItems: "center",
           height: tableHeight,
           overflow: "auto",
-          
         }}
       >
-        <div  style={{ width:"fit-content" }}>
+        <div style={{  }}>
           <div
             id="tableArea"
             style={{
@@ -1376,7 +1373,6 @@ export const HummingTable = (props) => {
               id="humming-table"
               style={{
                 width: hummingTableWidth,
-                backgroundColor:"white"
                 //border:"1px solid #aaa"
                 //fontSize: "70%",
                 //fontFamily: "monospace, sans-serif, serif",
@@ -1391,7 +1387,7 @@ export const HummingTable = (props) => {
               </tbody>
             </table>
           </div>
-          <div id="paginationArea" style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+          <div id="paginationArea">
             {/* {paginationYn?paginationComponent():null}
             {sizeChanger?<div>있음2</div>:null} */}
             {paginationComponent()}

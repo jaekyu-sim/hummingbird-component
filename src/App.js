@@ -249,6 +249,71 @@ const columnConfig3 = [
   }
 ]
 
+const columnConfig4 = [
+  {
+      dataKey:"id",
+      label:"아이디",
+      //width:"120px",
+      width:"12%",
+      sortable: true,
+      filter: true,
+  },
+  {
+    dataKey:"name",
+    label:"이름",
+    width:"0px",
+    //width:"12%",
+    sortable: true,
+    visibility: false
+  },
+  {
+    dataKey:"age",
+    label:"나이",
+    //width:"120px",
+    width:"12%",
+    sortable: true,
+  },
+  {
+    dataKey:"street",
+    label:"세부 주소1asdfjl;kasdjfkl;sadkl;fjasdkl;f",
+    width:"12%",
+    // width:"120px",
+    sortable: false,
+    filter: true,
+  },
+  {
+    dataKey:"building",
+    label:"동",
+    // width:"120px",
+    width:"12%",
+    sortable: false,
+  },
+  {
+    dataKey:"doorNo",
+    label:"호수",
+    // width:"120px",
+    width:"12%",
+    sortable: false,
+    
+  },
+  {
+    dataKey:"companyAddress",
+    label:"회사 주소",
+    // width:"180px",
+    width:"18%",
+    sortable: false,
+    filter: true,
+  },
+  {
+    dataKey:"companyName",
+    label:"회사 명",
+    // width:"120px",
+    width:"12%",
+    sortable: false,
+  }
+
+
+]
 let tmpData = []
 for(let i = 0 ; i < dataLength ; i++)
 {
@@ -368,11 +433,11 @@ const clickButton4 = () => {
       <div style={{display:"flex", justifyContent:"center"}}>
       <div id="3" style={{height:"550px", width:"95%", backgroundColor:"green"}}>
         
-      <div id="3" style={{height:"450px", width:"95%", backgroundColor:"red"}}>
+      <div id="5" style={{height:"450px", width:"95%", backgroundColor:"red"}}>
       <HummingTable 
         width={"100%"}
         height={"100%"}
-        columns={columnConfig2}
+        columns={columnConfig4}
         // dataSource={[]}
         dataSource={data}
         //headerStyle={headerStyle}
@@ -381,7 +446,7 @@ const clickButton4 = () => {
         displayRowNumsYn={rowShowFlag}
         sizeChanger={[5, 10, 20, 40]}
         rowHeight="40px"
-        zebra
+        //zebra
         
         rowSelection={{
           type: rowSelectionType,
