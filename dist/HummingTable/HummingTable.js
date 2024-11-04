@@ -26,6 +26,7 @@ const HummingTable = props => {
   let clickedRowColor = "#999";
   let defaultRowHeight = "27px";
   /* useState */
+  const [isClient, setIsClient] = (0, _react.useState)(false);
   const [data, setData] = (0, _react.useState)([]);
   const [columnData, setColumnData] = (0, _react.useState)([]);
   const [headerStyleData, setHeaderStyleData] = (0, _react.useState)({});
@@ -996,7 +997,7 @@ const HummingTable = props => {
     tmpColumnData.forEach((item, index) => {
       let tmpWidth = item.width;
       if (tmpWidth) {
-        if (tmpWidth.charAt(tmpWidth.length - 1) === "%") {
+        if (tmpWidth.charAt(tmpWidth.length - 1) === "%" && document.getElementById("tableArea")) {
           ////console.log(tmpWidth)
           let tableWidth = Number(document.getElementById("tableArea").offsetWidth);
           tmpWidth = Number(tmpWidth.substr(0, tmpWidth.length - 1)) / 100 * tableWidth;
@@ -1027,6 +1028,7 @@ const HummingTable = props => {
     setRowHeight(tmpRowHeight);
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
+    setIsClient(true);
   }, []);
   (0, _react.useEffect)(() => {
     let tmpTableWidth = props.width ? props.width : "100%";
@@ -1109,6 +1111,9 @@ const HummingTable = props => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  if (!isClient) {
+    return null;
+  }
   return /*#__PURE__*/_react.default.createElement("div", {
     id: "hummingbird"
   }, /*#__PURE__*/_react.default.createElement("div", {

@@ -14,6 +14,7 @@ export const HummingTable = (props) => {
   let clickedRowColor = "#999";
   let defaultRowHeight = "27px"
   /* useState */
+  const [isClient, setIsClient] = useState(false);
   const [data, setData] = useState([]);
   const [columnData, setColumnData] = useState([]);
   const [headerStyleData, setHeaderStyleData] = useState({});
@@ -974,7 +975,7 @@ export const HummingTable = (props) => {
 
 
     let componentWidth;
-    if(document.getElementById("humming-table"))
+    if(document.getElementById("humming-table") )
     {
       componentWidth = document.getElementById("humming-table").offsetWidth;
     }
@@ -1205,7 +1206,7 @@ export const HummingTable = (props) => {
       let tmpWidth = item.width;
 
       if (tmpWidth) {
-        if (tmpWidth.charAt(tmpWidth.length - 1) === "%") {
+        if (tmpWidth.charAt(tmpWidth.length - 1) === "%" && document.getElementById("tableArea")) {
           ////console.log(tmpWidth)
           let tableWidth = Number(
             document.getElementById("tableArea").offsetWidth
@@ -1242,6 +1243,7 @@ export const HummingTable = (props) => {
     setRowHeight(tmpRowHeight);
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
+    setIsClient(true);
   }, []);
 
   useEffect(() => {
@@ -1345,6 +1347,10 @@ export const HummingTable = (props) => {
     };
   }, []);
 
+  if(!isClient)
+  {
+    return null;
+  }
   return (
     <div id="hummingbird">
       <div
