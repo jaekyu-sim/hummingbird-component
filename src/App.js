@@ -431,9 +431,9 @@ const clickButton4 = () => {
     <div className="App" style={{}}>
       TEST
       <div style={{display:"flex", justifyContent:"center"}}>
-      <div id="3" style={{height:"550px", width:"95%", backgroundColor:"green"}}>
+      <div id="3" style={{height:"550px", width:"95%", backgroundColor:"none"}}>
         
-      <div id="5" style={{height:"450px", width:"95%", backgroundColor:"red"}}>
+      <div id="5" style={{height:"450px", width:"95%", backgroundColor:"none"}}>
       <HummingTable 
         width={"100%"}
         height={"100%"}
