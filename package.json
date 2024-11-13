@@ -38,7 +38,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://jaekyu-sim.github.io/hummingbird-component/",
+  "homepage": "https://jaekyu-sim.github.io/hummingbird-component",
   "eslintConfig": {
     "extends": [
       "react-app",
