@@ -429,7 +429,12 @@ const clickButton4 = () => {
 }
   return (
     <div className="App" style={{}}>
-      TEST
+      <h1 style={{marginLeft:"30px"}}>
+        Welcome to HummingBird Component
+      </h1>
+      <h2 style={{marginLeft:"60px"}}>
+        Sample Table Usage case
+      </h2>
       <div style={{display:"flex", justifyContent:"center"}}>
       <div id="3" style={{height:"550px", width:"95%", backgroundColor:"none"}}>
         
@@ -475,28 +480,23 @@ const clickButton4 = () => {
       </div>
       </div>
       </div>
-      <button onClick={clickButton1}>data1</button>
-      <button onClick={clickButton2}>data2</button>
-      <button onClick={clickButton3}>show rownum</button>
-      <button onClick={clickButton4}>switchCheckbox/Radio</button>
-      <table>
-        <thead>
-          <tr>
-            <th>1</th>
-            <th>2</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1234</td>
-            <td>24234</td>
-          </tr>
-        </tbody>
-      </table>
-      <input value={tmpInput}
-      onChange={(e)=>{
-        setTmpInput(e.target.value);
-      }}></input>
+      <h3 style={{marginLeft:"60px"}}>
+        Click Button -- Change Data(Data Length could be 2)
+      </h3>
+        <button style={{ marginLeft:"80px" }} onClick={clickButton1}>Data Case1</button>
+      <h3 style={{marginLeft:"60px"}}>
+        Click Button -- Change Data(Some Data Length will be samller)
+      </h3>
+      <button style={{ marginLeft:"80px" }} onClick={clickButton2}>Data Case2</button>
+      <h3 style={{marginLeft:"60px"}}>
+        Click Button -- Show RowNum Column
+      </h3>
+      <button style={{ marginLeft:"80px" }} onClick={clickButton3}>Show Rownum</button>
+      <h3 style={{marginLeft:"60px"}}>
+        Click Button -- Switch RowSelection ColumnType Checkbox to Radio
+      </h3>
+      <button style={{ marginLeft:"80px" }} onClick={clickButton4}>Switch Checkbox/Radio</button>
+      <div style={{height:"50px"}}></div>
     </div>
     
     );
