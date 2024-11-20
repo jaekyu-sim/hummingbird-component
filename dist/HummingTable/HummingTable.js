@@ -999,18 +999,26 @@ const HummingTable = props => {
     }
     setData(tmpData);
     //debugger;
-    tmpColumnData.forEach((item, index) => {
-      let tmpWidth = item.width;
-      if (tmpWidth) {
-        if (tmpWidth.charAt(tmpWidth.length - 1) === "%" && document.getElementById("tableArea")) {
-          ////console.log(tmpWidth)
-          let tableWidth = Number(document.getElementById("tableArea").offsetWidth);
-          tmpWidth = Number(tmpWidth.substr(0, tmpWidth.length - 1)) / 100 * tableWidth;
-          tmpColumnData[index].width = tmpWidth + "px"; //""//tmpWidth
-        }
-        //debugger;
-      }
-    });
+    // tmpColumnData.forEach((item, index) => {
+    //   let tmpWidth = item.width;
+
+    //   if (tmpWidth) {
+    //     if (
+    //       tmpWidth.charAt(tmpWidth.length - 1) === "%" &&
+    //       document.getElementById("tableArea")
+    //     ) {
+    //       ////console.log(tmpWidth)
+    //       let tableWidth = Number(
+    //         document.getElementById("tableArea").offsetWidth
+    //       );
+    //       tmpWidth =
+    //         (Number(tmpWidth.substr(0, tmpWidth.length - 1)) / 100) *
+    //         tableWidth;
+    //       tmpColumnData[index].width = tmpWidth + "px"; //""//tmpWidth
+    //     }
+    //     //debugger;
+    //   }
+    // });
     setColumnData(tmpColumnData);
     setHeaderStyleData(tmpHeaderStyleData);
     setTableTitle(tmpTableTitle);
@@ -1130,18 +1138,49 @@ const HummingTable = props => {
 
   // parent width observer
   (0, _react.useEffect)(() => {
-    if (parentWidth > 0) {
-      let tmpColumnData = [...props.columns];
-      tmpColumnData.forEach((item, index) => {
-        let tmpWidth = item.width;
-        if (tmpWidth && tmpWidth.charAt(tmpWidth.length - 1) === "%") {
-          tmpWidth = Number(tmpWidth.slice(0, -1)) / 100 * parentWidth;
-          tmpColumnData[index].width = tmpWidth + "px"; // px 단위로 설정
+    if (tableContainerRef.current) {
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          const newWidth = entry.contentRect.width;
+          if (newWidth !== parentWidth) {
+            setParentWidth(newWidth);
+          }
         }
       });
-      setColumnData(tmpColumnData);
+      resizeObserver.observe(tableContainerRef.current);
+      return () => resizeObserver.disconnect();
     }
-  }, [props.columns, parentWidth]);
+  }, [parentWidth]);
+  (0, _react.useEffect)(() => {
+    if (tableContainerRef.current) {
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          setParentWidth(entry.contentRect.width); // 부모 요소의 너비 업데이트
+        }
+      });
+      resizeObserver.observe(tableContainerRef.current);
+      return () => {
+        resizeObserver.disconnect(); // 컴포넌트 언마운트 시 옵저버 해제
+      };
+    }
+    console.log("test : ", props.columns);
+  }, [props.columns]);
+  // useEffect(() => {
+  //   if (parentWidth > 0) {
+  //     setColumnData(initializeColumns(props.columns, parentWidth));
+  //   }
+  // }, [props.columns, parentWidth]);
+  // const initializeColumns = (columns, containerWidth) => {
+  //   return columns.map((item) => {
+  //     if (item.width && item.width.endsWith("%")) {
+  //       const calculatedWidth =
+  //         (Number(item.width.slice(0, -1)) / 100) * containerWidth;
+  //       return { ...item, width: `${calculatedWidth}px` };
+  //     }
+  //     return item;
+  //   });
+  // };
+
   if (!isClient) {
     return null;
   }
