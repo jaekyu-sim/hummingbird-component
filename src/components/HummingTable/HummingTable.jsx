@@ -12,7 +12,9 @@ export const HummingTable = (props) => {
   let defaultDisplayedRowNum = 10;
   let defaultHeaderColor = "#eee";
   let clickedRowColor = "#999";
-  let defaultRowHeight = "27px"
+  let defaultRowHeight = "27px";
+  // parent width observer
+  const tableContainerRef = useRef(null);
   /* useState */
   const [isClient, setIsClient] = useState(false);
   const [data, setData] = useState([]);
@@ -51,9 +53,13 @@ export const HummingTable = (props) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [showHeaderTooltip, setShowHeaderTooltip] = useState(false);
   const [headerTooltipContent, setHeaderTooltipContent] = useState("");
-  const [headerTooltipPosition, setHeaderTooltipPosition] = useState({ x: 0, y: 0 });
+  const [headerTooltipPosition, setHeaderTooltipPosition] = useState({
+    x: 0,
+    y: 0,
+  });
 
-
+  // parent width observer
+  const [parentWidth, setParentWidth] = useState(0);
 
   /* useRef */
   const filterPopupRef = useRef();
@@ -77,7 +83,6 @@ export const HummingTable = (props) => {
       const rect = e.target.getBoundingClientRect();
       setTooltipPosition({ x: rect.left, y: rect.bottom }); // 툴팁 위치 설정
       setShowTooltip(true); // 툴팁 표시
-
     }
   };
   const getHeaderDetailValue = (e) => {
@@ -90,11 +95,9 @@ export const HummingTable = (props) => {
       //debugger;
       setHeaderTooltipPosition({ x: rect.left, y: rect.bottom }); // 툴팁 위치 설정
       setShowHeaderTooltip(true); // 툴팁 표시
-
     }
   };
   const makeAlldataCheckState = (value) => {
-
     let tmpData = [...data];
     let tmpSelectedRows = [...selectedRows];
     //debugger;
@@ -198,7 +201,6 @@ export const HummingTable = (props) => {
       return depthMap;
     }
 
-
     const depthMap = generateHeader(columnData);
     const headers = [];
     let filterLists = [];
@@ -207,227 +209,238 @@ export const HummingTable = (props) => {
     depthMap.forEach((columns, depth) => {
       //debugger;
       headers.push(
-        <tr id="humming-table-header-row" key={depth} style={{height:"32px",}}>
+        <tr
+          id="humming-table-header-row"
+          key={depth}
+          style={{ height: "32px" }}
+        >
           {columns.map((column, index) => {
-            if(!column.visibility && column.visibility === false)
-            {
-
-            }
-            else
-            {
-              return <th
-              id="humming-table-th"
-              key={depth + "." + index}
-              rowSpan={column.rowSpanCount}
-              colSpan={column.childCount}
-              style={{
-                cursor:
-                  JSON.stringify(hoverCell) ===
-                  JSON.stringify({ row: depth, idx: index })
-                    ? "col-resize"
-                    : "default",
-                width: column.width,
-                maxWidth: column.maxWidth?column.maxWidth:null,
-                flexShrink:column.independent?0:0,
-                flexGrow:column.independent?0:0,
-                textAlign: "center",
-                justifyContent: "center",
-                alignItems: "center",
-                // borderLeft:"1px solid #aaa",
-                //borderRadius:"15px",
-                paddingLeft:"5px",
-                paddingRight:"5px",
-
-                // border:"3px solid black",
-                // borderCollapse:"collapse",
-                // boxSizing:"border-box"
-              }}
-            >
-              <div
-                style={{
-                  width:"100%",
-                  alignItems: "center",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  display: "flex",
-                  // border:"1px solid black"
-                  //borderRight:"1px solid #ccc",
-
-                }}
-              >
-                <div
-                  id="column-label-div"
+            if (!column.visibility && column.visibility === false) {
+            } else {
+              return (
+                <th
+                  id="humming-table-th"
+                  key={depth + "." + index}
+                  rowSpan={column.rowSpanCount}
+                  colSpan={column.childCount}
                   style={{
-                    // flex: 1,
+                    cursor:
+                      JSON.stringify(hoverCell) ===
+                      JSON.stringify({ row: depth, idx: index })
+                        ? "col-resize"
+                        : "default",
+                    width: column.width,
+                    maxWidth: column.maxWidth ? column.maxWidth : null,
+                    flexShrink: column.independent ? 0 : 0,
+                    flexGrow: column.independent ? 0 : 0,
                     textAlign: "center",
-                    height: "100%",
-                    padding: "0px",
-                    justifyContent:"center",
-                    // display:"flex",
-                    width:"100%",
-                    textOverflow:"ellipsis",
-                    overflow:"hidden",
-                    whiteSpace:"nowrap",
-                    //padding:"2px"//width 0 일 경우 주의할 포인트.
-                    //position:"relative"
-                  }}
-                  onMouseOver={(e)=>{
-                    //debugger;
-                    getHeaderDetailValue(e);
-                    //setShowHeaderTooltip(true);
-                  }}
-                  onMouseOut={()=>{
-                    setShowHeaderTooltip(false);
+                    justifyContent: "center",
+                    alignItems: "center",
+                    // borderLeft:"1px solid #aaa",
+                    //borderRadius:"15px",
+                    paddingLeft: "5px",
+                    paddingRight: "5px",
+
+                    // border:"3px solid black",
+                    // borderCollapse:"collapse",
+                    // boxSizing:"border-box"
                   }}
                 >
-                  {column.label}
-                  {showHeaderTooltip&&<div style={{
-                    top: `${headerTooltipPosition.y}px`, // 부모의 아래쪽에 표시
-                    left: `${headerTooltipPosition.x}px`, // 가운데 정렬
-                    //transform: "translateX(-50%)",
-                    backgroundColor:"#333",
-                    borderRadius:"5px",
-                    color:"#fff",
-                    padding:"5px",
-                    //width:"100px", 
-                    height:"24px", 
-                    position:"fixed", 
-                    }}>
-                    <div>{headerTooltipContent}</div>
-                  </div>}
-                </div>
-                <div style={{ display: "flex",  }}>
-                  {column.sortable === true ? (
+                  <div
+                    style={{
+                      width: "100%",
+                      alignItems: "center",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      display: "flex",
+                      // border:"1px solid black"
+                      //borderRight:"1px solid #ccc",
+                    }}
+                  >
                     <div
-                      style={{cursor:"pointer", marginRight:"1px"}}
-                      onClick={() => {
-                        const sortedData = [...data].sort((a, b) => {
-                          if (a[column.dataKey] < b[column.dataKey]) {
-                            return -1;
-                          }
-                          return 0;
-                        });
-                        setData(sortedData);
+                      id="column-label-div"
+                      style={{
+                        // flex: 1,
+                        textAlign: "center",
+                        height: "100%",
+                        padding: "0px",
+                        justifyContent: "center",
+                        // display:"flex",
+                        width: "100%",
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        //padding:"2px"//width 0 일 경우 주의할 포인트.
+                        //position:"relative"
+                      }}
+                      onMouseOver={(e) => {
+                        //debugger;
+                        getHeaderDetailValue(e);
+                        //setShowHeaderTooltip(true);
+                      }}
+                      onMouseOut={() => {
+                        setShowHeaderTooltip(false);
                       }}
                     >
-                      {"▲"}
+                      {column.label}
+                      {showHeaderTooltip && (
+                        <div
+                          style={{
+                            top: `${headerTooltipPosition.y}px`, // 부모의 아래쪽에 표시
+                            left: `${headerTooltipPosition.x}px`, // 가운데 정렬
+                            //transform: "translateX(-50%)",
+                            backgroundColor: "#333",
+                            borderRadius: "5px",
+                            color: "#fff",
+                            padding: "5px",
+                            //width:"100px",
+                            height: "24px",
+                            position: "fixed",
+                          }}
+                        >
+                          <div>{headerTooltipContent}</div>
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    ""
-                  )}
-                  {column.sortable === true ? (
-                    <div
-                      style={{cursor:"pointer"}}
-                      onClick={() => {
-                        const sortedData = [...data].sort((a, b) => {
-                          if (a[column.dataKey] > b[column.dataKey]) {
-                            return -1;
-                          }
-                          return 0;
-                        });
-                        setData(sortedData);
-                      }}
-                    >
-                      {"▼"}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  {column.filter === true ? (
-                    <div
-                      style={{cursor:"pointer"}}
-                      onClick={() => {
-                        setActiveFilterColumn(column.dataKey);
+                    <div style={{ display: "flex" }}>
+                      {column.sortable === true ? (
+                        <div
+                          style={{ cursor: "pointer", marginRight: "1px" }}
+                          onClick={() => {
+                            const sortedData = [...data].sort((a, b) => {
+                              if (a[column.dataKey] < b[column.dataKey]) {
+                                return -1;
+                              }
+                              return 0;
+                            });
+                            setData(sortedData);
+                          }}
+                        >
+                          {"▲"}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {column.sortable === true ? (
+                        <div
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            const sortedData = [...data].sort((a, b) => {
+                              if (a[column.dataKey] > b[column.dataKey]) {
+                                return -1;
+                              }
+                              return 0;
+                            });
+                            setData(sortedData);
+                          }}
+                        >
+                          {"▼"}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {column.filter === true ? (
+                        <div
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            setActiveFilterColumn(column.dataKey);
 
-                        data.forEach((item) => {
-                          if (
-                            filterLists.indexOf(item[column.dataKey]) === -1
-                          ) {
-                            filterLists.push(item[column.dataKey]);
-                          }
-                        });
-                        setActiveFilteringDataLists((prev) => {
-                          return filterLists;
-                        });
-                        ////console.log(filterLists)
-                      }}
-                    >
-                      <SearchIcon></SearchIcon>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  {activeFilterColumn === column.dataKey && (
-                    <div
-                      id="hummingbird-filter-div"
-                      ref={filterPopupRef}
-                      key={column.dataKey}
-                      style={{}}
-                    >
-                      {column.label + " Filter"}
-                      {activeFilteringDataLists.map((item, idx) => {
-                        return (
-                          <div
-                            key={item + idx}
-                            style={{ textAlign: "left", paddingLeft: "5px", display:"flex" }}
-                          >
-                            {
-                              <input
+                            data.forEach((item) => {
+                              if (
+                                filterLists.indexOf(item[column.dataKey]) === -1
+                              ) {
+                                filterLists.push(item[column.dataKey]);
+                              }
+                            });
+                            setActiveFilteringDataLists((prev) => {
+                              return filterLists;
+                            });
+                            ////console.log(filterLists)
+                          }}
+                        >
+                          <SearchIcon></SearchIcon>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {activeFilterColumn === column.dataKey && (
+                        <div
+                          id="hummingbird-filter-div"
+                          ref={filterPopupRef}
+                          key={column.dataKey}
+                          style={{}}
+                        >
+                          {column.label + " Filter"}
+                          {activeFilteringDataLists.map((item, idx) => {
+                            return (
+                              <div
                                 key={item + idx}
-                                type="checkbox"
-                                checked={
-                                  activeFilterCheckedData[column.dataKey] &&
-                                  activeFilterCheckedData[
-                                    column.dataKey
-                                  ].includes(item)
-                                    ? true
-                                    : false
-                                }
-                                onChange={(values) => {
-                                  let checkedLists = {
-                                    ...activeFilterCheckedData,
-                                  }; //state 변수를 직접 때려박아서 업데이트 하면 안됨. 복사해서 업데이트 해야함.
-                                  //debugger;
-                                  if (checkedLists[column.dataKey]) {
-                                    if (
-                                      checkedLists[column.dataKey].includes(
-                                        item
-                                      )
-                                    ) {
-                                      let tmpCheckedLists = checkedLists[
-                                        column.dataKey
-                                      ].filter(function (data) {
-                                        return data !== item;
-                                      });
-                                      if (tmpCheckedLists.length === 0) {
-                                        delete checkedLists[column.dataKey];
-                                      } else {
-                                        checkedLists[column.dataKey] =
-                                          tmpCheckedLists;
-                                      }
-                                    } else {
-                                      checkedLists[column.dataKey].push(item);
-                                    }
-                                  } else {
-                                    checkedLists[column.dataKey] = [item];
-                                  }
-                                  //console.log( checkedLists)
-
-                                  setActiveFilterCheckedData(checkedLists);
+                                style={{
+                                  textAlign: "left",
+                                  paddingLeft: "5px",
+                                  display: "flex",
                                 }}
-                              ></input>
-                            }
-                            {item}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
+                              >
+                                {
+                                  <input
+                                    key={item + idx}
+                                    type="checkbox"
+                                    checked={
+                                      activeFilterCheckedData[column.dataKey] &&
+                                      activeFilterCheckedData[
+                                        column.dataKey
+                                      ].includes(item)
+                                        ? true
+                                        : false
+                                    }
+                                    onChange={(values) => {
+                                      let checkedLists = {
+                                        ...activeFilterCheckedData,
+                                      }; //state 변수를 직접 때려박아서 업데이트 하면 안됨. 복사해서 업데이트 해야함.
+                                      //debugger;
+                                      if (checkedLists[column.dataKey]) {
+                                        if (
+                                          checkedLists[column.dataKey].includes(
+                                            item
+                                          )
+                                        ) {
+                                          let tmpCheckedLists = checkedLists[
+                                            column.dataKey
+                                          ].filter(function (data) {
+                                            return data !== item;
+                                          });
+                                          if (tmpCheckedLists.length === 0) {
+                                            delete checkedLists[column.dataKey];
+                                          } else {
+                                            checkedLists[column.dataKey] =
+                                              tmpCheckedLists;
+                                          }
+                                        } else {
+                                          checkedLists[column.dataKey].push(
+                                            item
+                                          );
+                                        }
+                                      } else {
+                                        checkedLists[column.dataKey] = [item];
+                                      }
+                                      //console.log( checkedLists)
 
-            </th>}
-    })}
+                                      setActiveFilterCheckedData(checkedLists);
+                                    }}
+                                  ></input>
+                                }
+                                {item}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </th>
+              );
+            }
+          })}
         </tr>
       );
     });
@@ -504,7 +517,6 @@ export const HummingTable = (props) => {
                 overflow: "hidden",
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
-
               }}
             >
               <input
@@ -595,81 +607,91 @@ export const HummingTable = (props) => {
           );
         } else {
           //////console.log(column.label, column.width)
-          if(!column.visibility && column.visibility === false)
-          {
-
-          }
-          else
-          return (
-
-            <td
-              key={index}
-              style={{
-                minWidth: column.width,
-                maxWidth: column.width,
-                width: column.width,
-                cursor: "default",
-                //zIndex: "1",
-              }}
-              onDoubleClick={(val) => {
-                if (props.rowClick && props.rowClick.onDoubleClick)
-                  props.rowClick?.onDoubleClick({
-                    rowData: row,
-                    colData: column,
-                  });
-              }}
-              onClick={(val) => {
-                // debugger;
-                if(row["_hummingRowNums"] && (props.rowClick.enable !== false))
-                {
-                  setClickedRowIdx(rowIndex%rowNum);
-                }
-
-                if (props.rowClick && props.rowClick.onClick)
-                  props.rowClick?.onClick({
-                    rowData: row,
-                    colData: column,
-                  });
-              }}
-
-            >
-              <div style={{width:"100%", display:"flex", justifyContent:"center", alignContent:"center"}}>
-                <div style={{width:"90%", marginLeft:"5px", marginRight:"5px",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}  onMouseOver={(e) => {
-                  getDetailValue(e);
-                  //console.log("e", e);
+          if (!column.visibility && column.visibility === false) {
+          } else
+            return (
+              <td
+                key={index}
+                style={{
+                  minWidth: column.width,
+                  maxWidth: column.width,
+                  width: column.width,
+                  cursor: "default",
+                  //zIndex: "1",
                 }}
-                onMouseOut={() => {
-                  setShowTooltip(false);
-                  setTooltipContent("");
-                }}>
-                  {row[column.dataKey]}
-                  {showTooltip && (
+                onDoubleClick={(val) => {
+                  if (props.rowClick && props.rowClick.onDoubleClick)
+                    props.rowClick?.onDoubleClick({
+                      rowData: row,
+                      colData: column,
+                    });
+                }}
+                onClick={(val) => {
+                  // debugger;
+                  if (
+                    row["_hummingRowNums"] &&
+                    props.rowClick.enable !== false
+                  ) {
+                    setClickedRowIdx(rowIndex % rowNum);
+                  }
+
+                  if (props.rowClick && props.rowClick.onClick)
+                    props.rowClick?.onClick({
+                      rowData: row,
+                      colData: column,
+                    });
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignContent: "center",
+                  }}
+                >
                   <div
-                    id="hummingbird-tooltip"
                     style={{
-                      position: "fixed",
-                      top: `${tooltipPosition.y}px`,
-                      left: `${tooltipPosition.x}px`,
-                      backgroundColor: "#333",
-                      color: "#fff",
-                      padding: "5px",
-                      borderRadius: "5px",
-                      zIndex: 1000,
-                      //fontSize: "12px",
-                      // whiteSpace: "nowrap",
+                      width: "90%",
+                      marginLeft: "5px",
+                      marginRight: "5px",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                    onMouseOver={(e) => {
+                      getDetailValue(e);
+                      //console.log("e", e);
+                    }}
+                    onMouseOut={() => {
+                      setShowTooltip(false);
+                      setTooltipContent("");
                     }}
                   >
-                    {tooltipContent}
+                    {row[column.dataKey]}
+                    {showTooltip && (
+                      <div
+                        id="hummingbird-tooltip"
+                        style={{
+                          position: "fixed",
+                          top: `${tooltipPosition.y}px`,
+                          left: `${tooltipPosition.x}px`,
+                          backgroundColor: "#333",
+                          color: "#fff",
+                          padding: "5px",
+                          borderRadius: "5px",
+                          zIndex: 1000,
+                          //fontSize: "12px",
+                          // whiteSpace: "nowrap",
+                        }}
+                      >
+                        {tooltipContent}
+                      </div>
+                    )}
                   </div>
-                )}
                 </div>
-              </div>
 
-              {/* <div
+                {/* <div
                 style={{
                   width: "100%",
                   display: "flex",
@@ -698,8 +720,8 @@ export const HummingTable = (props) => {
                   {row[column.dataKey]}
                 </div>
               </div> */}
-            </td>
-          );
+              </td>
+            );
         }
       }
     });
@@ -854,33 +876,24 @@ export const HummingTable = (props) => {
   };
 
   const isLastPage = () => {
-    if(paginationInfo)
-    {
-      if(selectedPage < Math.ceil(paginationInfo.dataLength / Number(rowNum)))
-      {
+    if (paginationInfo) {
+      if (
+        selectedPage < Math.ceil(paginationInfo.dataLength / Number(rowNum))
+      ) {
         return false;
+      } else {
+        return true;
       }
-      else
-      {
+    } else {
+      if (selectedPage < Math.ceil(data.length / Number(rowNum))) {
+        return false;
+      } else {
         return true;
       }
     }
-    else
-    {
-      if(selectedPage < Math.ceil(data.length / Number(rowNum)))
-        {
-          return false;
-        }
-        else
-        {
-          return true;
-        }
-    }
-  }
+  };
   const goNextPage = () => {
-
-    if(paginationInfo)
-    {
+    if (paginationInfo) {
       let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
       if (selectedPage < tmpValue) {
         renderData(data, columnData, selectedPage + 1);
@@ -888,9 +901,7 @@ export const HummingTable = (props) => {
           return prev + 1;
         });
       }
-    }
-    else
-    {
+    } else {
       let tmpValue = Math.ceil(data.length / Number(rowNum));
       if (selectedPage < tmpValue) {
         renderData(data, columnData, selectedPage + 1);
@@ -901,8 +912,7 @@ export const HummingTable = (props) => {
     }
   };
   const goLastPage = () => {
-    if(paginationInfo)
-    {
+    if (paginationInfo) {
       let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
       if (selectedPage < tmpValue) {
         renderData(data, columnData, selectedPage + 1);
@@ -910,11 +920,7 @@ export const HummingTable = (props) => {
           return tmpValue;
         });
       }
-    }
-    else
-    {
-
-
+    } else {
       let tmpValue = Math.ceil(data.length / Number(rowNum));
       if (selectedPage < tmpValue) {
         renderData(data, columnData, tmpValue);
@@ -941,15 +947,12 @@ export const HummingTable = (props) => {
     }
   };
   const totalDataLength = () => {
-    if(paginationInfo && paginationInfo.dataLength)
-    {
-      return ""+paginationInfo.dataLength
+    if (paginationInfo && paginationInfo.dataLength) {
+      return "" + paginationInfo.dataLength;
+    } else {
+      return "" + data.length;
     }
-    else
-    {
-      return ""+data.length
-    }
-  }
+  };
 
   const paginationComponent = () => {
     ////console.log(data)
@@ -973,27 +976,39 @@ export const HummingTable = (props) => {
     // Get the current range of pages to display
     const currentPageRange = pageNumList.slice(startPage - 1, endPage);
 
-
     let componentWidth;
-    if(document.getElementById("humming-table") )
-    {
+    if (document.getElementById("humming-table")) {
       componentWidth = document.getElementById("humming-table").offsetWidth;
     }
 
     return (
-      <div id="hummingbird-component-pagination-area" style={{ width:componentWidth, position: "relative", paddingTop: "10px" }}>
-
+      <div
+        id="hummingbird-component-pagination-area"
+        style={{
+          width: componentWidth,
+          position: "relative",
+          paddingTop: "10px",
+        }}
+      >
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            height:"40px"
+            height: "40px",
           }}
         >
-          {paginationUseYn ? (<div style={{position:"absolute", left:"10px"}}>
-            {`Showing ` + ((selectedPage-1)*rowNum +1) + " to " + ((selectedPage)*rowNum) + " of " +  totalDataLength() + " entries"}
-          </div>) : null}
+          {paginationUseYn ? (
+            <div style={{ position: "absolute", left: "10px" }}>
+              {`Showing ` +
+                ((selectedPage - 1) * rowNum + 1) +
+                " to " +
+                selectedPage * rowNum +
+                " of " +
+                totalDataLength() +
+                " entries"}
+            </div>
+          ) : null}
           {paginationUseYn ? (
             <div
               id="pagination1"
@@ -1001,7 +1016,6 @@ export const HummingTable = (props) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-
               }}
             >
               <div
@@ -1034,15 +1048,12 @@ export const HummingTable = (props) => {
                         onClick={(val) => {
                           setSelectedPage(Number(val.target.innerText));
                           // setSelectedRows();
-                          setClickedRowIdx()
-                          if(paginationInfo)
-                          {
+                          setClickedRowIdx();
+                          if (paginationInfo) {
                             props.pagination.onClick(
                               Number(val.target.innerText)
                             );
-
                           }
-
                         }}
                       >
                         {value}
@@ -1055,22 +1066,14 @@ export const HummingTable = (props) => {
                 className="arrow-right"
                 onClick={goNextPage}
                 style={{
-                  cursor:
-
-                  isLastPage()
-                      ? 
-                      "not-allowed":
-                      "pointer",
+                  cursor: isLastPage() ? "not-allowed" : "pointer",
                 }}
               ></div>
               <div
                 className="double-arrow-right"
                 onClick={goLastPage}
                 style={{
-                  cursor:
-                  isLastPage()
-                      ? "not-allowed":
-                      "pointer",
+                  cursor: isLastPage() ? "not-allowed" : "pointer",
                   marginLeft: "5px",
                 }}
               ></div>
@@ -1083,7 +1086,7 @@ export const HummingTable = (props) => {
             >
               <select
                 id="page-size-changer-selectbox"
-                style={{ width: "70px", height:"25px" }}
+                style={{ width: "70px", height: "25px" }}
                 value={rowNum}
                 onChange={(val) => {
                   setRowNum(Number(val.target.value));
@@ -1206,7 +1209,10 @@ export const HummingTable = (props) => {
       let tmpWidth = item.width;
 
       if (tmpWidth) {
-        if (tmpWidth.charAt(tmpWidth.length - 1) === "%" && document.getElementById("tableArea")) {
+        if (
+          tmpWidth.charAt(tmpWidth.length - 1) === "%" &&
+          document.getElementById("tableArea")
+        ) {
           ////console.log(tmpWidth)
           let tableWidth = Number(
             document.getElementById("tableArea").offsetWidth
@@ -1233,17 +1239,29 @@ export const HummingTable = (props) => {
 
     if (props.paginationUseYn === "Y" || props.paginationUseYn === undefined) {
       setPaginationUseYn(true);
-    } else if(props.paginationUseYn === "N") {
+    } else if (props.paginationUseYn === "N") {
       setPaginationUseYn(false);
-    }
-    else{
-      throw new Error("paginationUSeYn muse be represented in Y or N")
+    } else {
+      throw new Error("paginationUSeYn muse be represented in Y or N");
     }
     setPaginationInfo(tmpPaginationInfo);
     setRowHeight(tmpRowHeight);
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     setIsClient(true);
+
+    if (tableContainerRef.current) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          setParentWidth(entry.contentRect.width); // 부모 요소의 너비 업데이트
+        }
+      });
+      resizeObserver.observe(tableContainerRef.current);
+
+      return () => {
+        resizeObserver.disconnect(); // 컴포넌트 언마운트 시 옵저버 해제
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -1301,7 +1319,7 @@ export const HummingTable = (props) => {
         width: "30px",
         maxWidth: "30px",
         sortable: "false",
-        independent: true
+        independent: true,
       };
       //debugger;
       if (showRowNumYn === true || props.rowSelection !== undefined) {
@@ -1347,12 +1365,27 @@ export const HummingTable = (props) => {
     };
   }, []);
 
-  if(!isClient)
-  {
+  // parent width observer
+  useEffect(() => {
+    if (parentWidth > 0) {
+      let tmpColumnData = [...props.columns];
+      tmpColumnData.forEach((item, index) => {
+        let tmpWidth = item.width;
+
+        if (tmpWidth && tmpWidth.charAt(tmpWidth.length - 1) === "%") {
+          tmpWidth = (Number(tmpWidth.slice(0, -1)) / 100) * parentWidth;
+          tmpColumnData[index].width = tmpWidth + "px"; // px 단위로 설정
+        }
+      });
+      setColumnData(tmpColumnData);
+    }
+  }, [props.columns, parentWidth]);
+
+  if (!isClient) {
     return null;
   }
   return (
-    <div id="hummingbird">
+    <div id="hummingbird" ref={tableContainerRef}>
       <div
         style={{
           // textAlign: "center",
@@ -1363,13 +1396,13 @@ export const HummingTable = (props) => {
           overflow: "auto",
         }}
       >
-        <div style={{  }}>
+        <div style={{}}>
           <div
             id="tableArea"
             style={{
               // display:"flex",
-              justifyContent:"center",
-              alignItems:"center",
+              justifyContent: "center",
+              alignItems: "center",
               overflowY: "auto",
               maxHeight: "calc(" + tableHeight + " - 33px)",
               // width: tableWidth,
@@ -1393,7 +1426,14 @@ export const HummingTable = (props) => {
               </tbody>
             </table>
           </div>
-          <div id="paginationArea" style={{justifyContent:"center", alignItems:"center", display:"flex"}}>
+          <div
+            id="paginationArea"
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+            }}
+          >
             {/* {paginationYn?paginationComponent():null}
             {sizeChanger?<div>있음2</div>:null} */}
             {paginationComponent()}

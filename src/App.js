@@ -1,9 +1,9 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
 //import {faker} from '@faker-js/faker'
-import { HummingTable } from './components/HummingTable/HummingTable';
-import React, {useState, useEffect} from "react";
-import ResizableTable from './ResizableTable';
+import { HummingTable } from "./components/HummingTable/HummingTable";
+import React, { useState, useEffect } from "react";
+import ResizableTable from "./ResizableTable";
 
 //faker.seed(100);
 
@@ -12,365 +12,351 @@ function App() {
   const headerStyle = {
     //가능한 옵션 : backgroundColor, color
     //backgroundColor: "#ACC",
-    
-  }
+  };
 
   const columnConfig1 = [
     {
-      dataKey:"id",
-      label:"아이디",
-      width:"8%",
+      dataKey: "id",
+      label: "아이디",
+      width: "8%",
       sortable: true,
       filter: true,
     },
     {
-      dataKey:"name",
-      label:"이름",
-      width:"8%",
+      dataKey: "name",
+      label: "이름",
+      width: "8%",
       sortable: true,
     },
     {
-      dataKey:"other",
-      label:"그외 정보",
-      width:"calc(50% - 60px)",
+      dataKey: "other",
+      label: "그외 정보",
+      width: "calc(50% - 60px)",
       sortable: false,
       children: [
         {
-          dataKey:"age",
-          label:"나이",
-          width:"40%",
+          dataKey: "age",
+          label: "나이",
+          width: "40%",
           sortable: false,
         },
         {
-          dataKey:"address",
-          label:"주소",
-          width:"60%",
+          dataKey: "address",
+          label: "주소",
+          width: "60%",
           sortable: false,
           children: [
             {
-              dataKey:"street",
-              label:"세부 주소1",
-              width:"70%",
+              dataKey: "street",
+              label: "세부 주소1",
+              width: "70%",
               sortable: false,
             },
             {
-              dataKey:"block",
-              label:"세부 주소2",
-              width:"30%",
+              dataKey: "block",
+              label: "세부 주소2",
+              width: "30%",
               sortable: false,
               children: [
                 {
-                  dataKey:"building",
-                  label:"동",
-                  width:"50%",
+                  dataKey: "building",
+                  label: "동",
+                  width: "50%",
                   sortable: false,
                 },
                 {
-                  dataKey:"doorNo",
-                  label:"호수",
-                  width:"50%",
+                  dataKey: "doorNo",
+                  label: "호수",
+                  width: "50%",
                   sortable: false,
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
-      dataKey:"company",
-      label:"회사 정보",
-      width:"34%",
+      dataKey: "company",
+      label: "회사 정보",
+      width: "34%",
       sortable: false,
-      children:[
+      children: [
         {
-          dataKey:"companyAddress",
-          label:"회사 주소",
-          width:"50%",
+          dataKey: "companyAddress",
+          label: "회사 주소",
+          width: "50%",
           sortable: false,
         },
         {
-          dataKey:"companyName",
-          label:"회사 명",
-          width:"50%",
+          dataKey: "companyName",
+          label: "회사 명",
+          width: "50%",
           sortable: false,
-        }
-      ]
-    }
-]
+        },
+      ],
+    },
+  ];
 
-const columnConfig2 = [
-  {
-      dataKey:"id",
-      label:"아이디",
-      width:"120px",
+  const columnConfig2 = [
+    {
+      dataKey: "id",
+      label: "아이디",
+      width: "120px",
       //width:"12%",
       sortable: true,
       filter: true,
-  },
-  {
-    dataKey:"name",
-    label:"이름",
-    width:"0px",
-    //width:"12%",
-    sortable: true,
-    visibility: false
-  },
-  {
-    dataKey:"age",
-    label:"나이",
-    width:"120px",
-    //width:"12%",
-    sortable: true,
-  },
-  {
-    dataKey:"street",
-    label:"세부 주소1asdfjl;kasdjfkl;sadkl;fjasdkl;f",
-    //width:"12%",
-    width:"120px",
-    sortable: false,
-    filter: true,
-  },
-  {
-    dataKey:"building",
-    label:"동",
-    width:"120px",
-    //width:"12%",
-    sortable: false,
-  },
-  {
-    dataKey:"doorNo",
-    label:"호수",
-    width:"120px",
-    //width:"12%",
-    sortable: false,
-    
-  },
-  {
-    dataKey:"companyAddress",
-    label:"회사 주소",
-    width:"180px",
-    //width:"18%",
-    sortable: false,
-    filter: true,
-  },
-  {
-    dataKey:"companyName",
-    label:"회사 명",
-    width:"120px",
-    //width:"12%",
-    sortable: false,
-  }
+    },
+    {
+      dataKey: "name",
+      label: "이름",
+      width: "0px",
+      //width:"12%",
+      sortable: true,
+      visibility: false,
+    },
+    {
+      dataKey: "age",
+      label: "나이",
+      width: "120px",
+      //width:"12%",
+      sortable: true,
+    },
+    {
+      dataKey: "street",
+      label: "세부 주소1asdfjl;kasdjfkl;sadkl;fjasdkl;f",
+      //width:"12%",
+      width: "120px",
+      sortable: false,
+      filter: true,
+    },
+    {
+      dataKey: "building",
+      label: "동",
+      width: "120px",
+      //width:"12%",
+      sortable: false,
+    },
+    {
+      dataKey: "doorNo",
+      label: "호수",
+      width: "120px",
+      //width:"12%",
+      sortable: false,
+    },
+    {
+      dataKey: "companyAddress",
+      label: "회사 주소",
+      width: "180px",
+      //width:"18%",
+      sortable: false,
+      filter: true,
+    },
+    {
+      dataKey: "companyName",
+      label: "회사 명",
+      width: "120px",
+      //width:"12%",
+      sortable: false,
+    },
+  ];
 
-
-]
-
-const columnConfig3 = [
-  {
-    dataKey:"id",
-    label:"아이디",
-    width:"100px",
-    sortable: true,
-    filter: true,
-  },
-  {
-    dataKey:"name",
-    label:"이름",
-    width:"100px",
-    sortable: true,
-  },
-  {
-    dataKey:"other",
-    label:"그외 정보",
-    width:"calc(720px)",
-    sortable: false,
-    children: [
-      {
-        dataKey:"age",
-        label:"나이",
-        width:"300px",
-        sortable: false,
-      },
-      {
-        dataKey:"address",
-        label:"주소",
-        width:"420px",
-        sortable: false,
-        children: [
-          {
-            dataKey:"street",
-            label:"세부 주소1",
-            width:"300px",
-            sortable: false,
-          },
-          {
-            dataKey:"block",
-            label:"세부 주소2",
-            width:"120px",
-            sortable: false,
-            children: [
-              {
-                dataKey:"building",
-                label:"동",
-                width:"60px",
-                sortable: false,
-              },
-              {
-                dataKey:"doorNo",
-                label:"호수",
-                width:"60px",
-                sortable: false,
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    dataKey:"company",
-    label:"회사 정보",
-    width:"200px",
-    sortable: false,
-    children:[
-      {
-        dataKey:"companyAddress",
-        label:"회사 주소",
-        width:"100px",
-        sortable: false,
-      },
-      {
-        dataKey:"companyName",
-        label:"회사 명",
-        width:"100px",
-        sortable: false,
-      }
-    ]
-  }
-]
-
-const columnConfig4 = [
-  {
-      dataKey:"id",
-      label:"아이디",
-      //width:"120px",
-      width:"12%",
+  const columnConfig3 = [
+    {
+      dataKey: "id",
+      label: "아이디",
+      width: "100px",
       sortable: true,
       filter: true,
-  },
-  {
-    dataKey:"name",
-    label:"이름",
-    width:"0px",
-    //width:"12%",
-    sortable: true,
-    visibility: false
-  },
-  {
-    dataKey:"age",
-    label:"나이",
-    //width:"120px",
-    width:"12%",
-    sortable: true,
-  },
-  {
-    dataKey:"street",
-    label:"세부 주소1asdfjl;kasdjfkl;sadkl;fjasdkl;f",
-    width:"12%",
-    // width:"120px",
-    sortable: false,
-    filter: true,
-  },
-  {
-    dataKey:"building",
-    label:"동",
-    // width:"120px",
-    width:"12%",
-    sortable: false,
-  },
-  {
-    dataKey:"doorNo",
-    label:"호수",
-    // width:"120px",
-    width:"12%",
-    sortable: false,
-    
-  },
-  {
-    dataKey:"companyAddress",
-    label:"회사 주소",
-    // width:"180px",
-    width:"18%",
-    sortable: false,
-    filter: true,
-  },
-  {
-    dataKey:"companyName",
-    label:"회사 명",
-    // width:"120px",
-    width:"12%",
-    sortable: false,
+    },
+    {
+      dataKey: "name",
+      label: "이름",
+      width: "100px",
+      sortable: true,
+    },
+    {
+      dataKey: "other",
+      label: "그외 정보",
+      width: "calc(720px)",
+      sortable: false,
+      children: [
+        {
+          dataKey: "age",
+          label: "나이",
+          width: "300px",
+          sortable: false,
+        },
+        {
+          dataKey: "address",
+          label: "주소",
+          width: "420px",
+          sortable: false,
+          children: [
+            {
+              dataKey: "street",
+              label: "세부 주소1",
+              width: "300px",
+              sortable: false,
+            },
+            {
+              dataKey: "block",
+              label: "세부 주소2",
+              width: "120px",
+              sortable: false,
+              children: [
+                {
+                  dataKey: "building",
+                  label: "동",
+                  width: "60px",
+                  sortable: false,
+                },
+                {
+                  dataKey: "doorNo",
+                  label: "호수",
+                  width: "60px",
+                  sortable: false,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      dataKey: "company",
+      label: "회사 정보",
+      width: "200px",
+      sortable: false,
+      children: [
+        {
+          dataKey: "companyAddress",
+          label: "회사 주소",
+          width: "100px",
+          sortable: false,
+        },
+        {
+          dataKey: "companyName",
+          label: "회사 명",
+          width: "100px",
+          sortable: false,
+        },
+      ],
+    },
+  ];
+
+  const columnConfig4 = [
+    {
+      dataKey: "id",
+      label: "아이디",
+      //width:"120px",
+      width: "12%",
+      sortable: true,
+      filter: true,
+    },
+    {
+      dataKey: "name",
+      label: "이름",
+      width: "0px",
+      //width:"12%",
+      sortable: true,
+      visibility: false,
+    },
+    {
+      dataKey: "age",
+      label: "나이",
+      //width:"120px",
+      width: "12%",
+      sortable: true,
+    },
+    {
+      dataKey: "street",
+      label: "세부 주소1asdfjl;kasdjfkl;sadkl;fjasdkl;f",
+      width: "12%",
+      // width:"120px",
+      sortable: false,
+      filter: true,
+    },
+    {
+      dataKey: "building",
+      label: "동",
+      // width:"120px",
+      width: "12%",
+      sortable: false,
+    },
+    {
+      dataKey: "doorNo",
+      label: "호수",
+      // width:"120px",
+      width: "12%",
+      sortable: false,
+    },
+    {
+      dataKey: "companyAddress",
+      label: "회사 주소",
+      // width:"180px",
+      width: "18%",
+      sortable: false,
+      filter: true,
+    },
+    {
+      dataKey: "companyName",
+      label: "회사 명",
+      // width:"120px",
+      width: "12%",
+      sortable: false,
+    },
+  ];
+  let tmpData = [];
+  for (let i = 0; i < dataLength; i++) {
+    if (i === 3 || i === 4) {
+      tmpData.push({
+        key: i,
+        id: "n" + i,
+        name: "sim" + i,
+        age: i + "jkafsjkalf;jasdfjfdkl;;akjlfdsadfsj;lkjl;kdfas",
+        street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdfasdf",
+        building: i + "824dsafasdf",
+        doorNo: i + 1 + "503",
+        companyAddress: "suwon-si",
+        companyName: <button>{"SK" + i}</button>, //"SK"+i
+      });
+    } else {
+      tmpData.push({
+        key: i,
+        id: "n" + i,
+        name: "sim" + i,
+        age: i,
+        street: "yeongtong-3o",
+        building: i + "824",
+        doorNo: i + 1 + "503",
+        companyAddress: "suwon-si",
+        companyName: <button>{"SK" + i}</button>, //"SK"+i
+      });
+    }
   }
 
+  const [data, setData] = useState(tmpData);
+  const [rowShowFlag, setRowShowFlag] = useState(true);
+  const [rowSelectionType, setRowSelectionType] = useState("checkbox");
+  const [tmpInput, setTmpInput] = useState("");
 
-]
-let tmpData = []
-for(let i = 0 ; i < dataLength ; i++)
-{
-  
-  if(i === 3 || i === 4)
-  {
-    tmpData.push({
-      key: i,
-      id : "n"+i,
-      name : "sim"+i,
-      age: i+"jkafsjkalf;jasdfjfdkl;;akjlfdsadfsj;lkjl;kdfas",
-      street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdfasdf",
-      building: i+"824dsafasdf",
-      doorNo: (i+1)+"503",
-      companyAddress: "suwon-si",
-      companyName: <button>{"SK"+i}</button>//"SK"+i
-    })
-  }
-  else
-  {
-    tmpData.push({
-      key: i,
-      id : "n"+i,
-      name : "sim"+i,
-      age: i,
-      street: "yeongtong-3o",
-      building: i+"824",
-      doorNo: (i+1)+"503",
-      companyAddress: "suwon-si",
-      companyName: <button>{"SK"+i}</button>//"SK"+i
-    })
-  }
-}
+  useEffect(() => {
+    //console.log(data)
+  }, []);
 
-
-const [data, setData] = useState(tmpData)
-const [rowShowFlag, setRowShowFlag] = useState(true)
-const [rowSelectionType, setRowSelectionType] = useState("checkbox")
-const [tmpInput, setTmpInput] = useState("");
-
-useEffect(() => {
-  //console.log(data)
-}, [])
-
-
-const clickButton1 = () => {
-  setData(
-    [
+  const clickButton1 = () => {
+    setData([
       {
         id: "n111",
         name: "sim111",
         age: "111",
-        street: "yeongtong-rwidth:column.widthwidth:column.widthwidth:column.widthwidth:column.widthwidth:column.widtho",
+        street:
+          "yeongtong-rwidth:column.widthwidth:column.widthwidth:column.widthwidth:column.widthwidth:column.widtho",
         building: "824",
         doorNo: "1503",
         companyAddress: "suwon-si",
-        companyName: "SK1"
+        companyName: "SK1",
       },
       {
         id: "n222",
@@ -380,14 +366,12 @@ const clickButton1 = () => {
         building: "1824",
         doorNo: "11503",
         companyAddress: "suwon-si",
-        companyName: "SK2"
+        companyName: "SK2",
       },
-    ]
-  )
-}
-const clickButton2 = () => {
-  setData(
-    [
+    ]);
+  };
+  const clickButton2 = () => {
+    setData([
       {
         id: "n1",
         name: "sim1",
@@ -396,7 +380,7 @@ const clickButton2 = () => {
         building: "824",
         doorNo: "1503",
         companyAddress: "suwon-si",
-        companyName: "SK1"
+        companyName: "SK1",
       },
       {
         id: "n2",
@@ -406,100 +390,159 @@ const clickButton2 = () => {
         building: "1824",
         doorNo: "11503",
         companyAddress: "suwon-si",
-        companyName: "SK2"
+        companyName: "SK2",
       },
-    ]
-  )
-}
-const clickButton3 = () => {
-  let tmp = !rowShowFlag
-  console.log("tmp1 : ", tmp)
-  setRowShowFlag(tmp)
-}
-const clickButton4 = () => {
-  if(rowSelectionType === "radio")
-  {
-    setRowSelectionType("checkbox")
-  }
-  else if(rowSelectionType === "checkbox")
-  {
-    setRowSelectionType("radio")
-  }
-  
-}
+    ]);
+  };
+  const clickButton3 = () => {
+    let tmp = !rowShowFlag;
+    console.log("tmp1 : ", tmp);
+    setRowShowFlag(tmp);
+  };
+  const clickButton4 = () => {
+    if (rowSelectionType === "radio") {
+      setRowSelectionType("checkbox");
+    } else if (rowSelectionType === "checkbox") {
+      setRowSelectionType("radio");
+    }
+  };
+  const CustomTag = () => {
+    return (
+      <div
+        id="5"
+        style={{
+          height: "450px",
+          width: "95%",
+          backgroundColor: "none",
+          position: "relative",
+        }}
+      >
+        <HummingTable
+          width={"100%"}
+          height={"100%"}
+          columns={columnConfig4}
+          // dataSource={[]}
+          dataSource={data}
+          //headerStyle={headerStyle}
+          title={"table title test"}
+          displayedRowNum="10"
+          displayRowNumsYn={rowShowFlag}
+          sizeChanger={[5, 10, 20, 40]}
+          rowHeight="40px"
+          //zebra
+
+          rowSelection={{
+            type: rowSelectionType,
+            onChange: (selectedRows) => {
+              console.log(selectedRows);
+            },
+          }}
+          rowClick={{
+            enable: false,
+            onClick: (value) => {
+              console.log("here is clicked row values :", value);
+            },
+            // onDoubleClick:(value)=>{
+            //   console.log("here is double clicked row : ", value);
+            // }
+          }}
+          // paginationUseYn="N"
+          pagination={{
+            // dataLength: 1000,
+            onClick: (pageNum) => {
+              console.log(pageNum);
+            },
+          }}
+          //zebra, ...
+        ></HummingTable>
+      </div>
+    );
+  };
   return (
     <div className="App" style={{}}>
-      <h1 style={{marginLeft:"30px"}}>
-        Welcome to HummingBird Component
-      </h1>
-      <h2 style={{marginLeft:"60px"}}>
-        Sample Table Usage case
-      </h2>
-      <div style={{display:"flex", justifyContent:"center"}}>
-      <div id="3" style={{height:"550px", width:"95%", backgroundColor:"none"}}>
-        
-      <div id="5" style={{height:"450px", width:"95%", backgroundColor:"none"}}>
-      <HummingTable 
-        width={"100%"}
-        height={"100%"}
-        columns={columnConfig4}
-        // dataSource={[]}
-        dataSource={data}
-        //headerStyle={headerStyle}
-        title={"table title test"}
-        displayedRowNum="10"
-        displayRowNumsYn={rowShowFlag}
-        sizeChanger={[5, 10, 20, 40]}
-        rowHeight="40px"
-        //zebra
-        
-        rowSelection={{
-          type: rowSelectionType,
-          onChange: (selectedRows) => {
-            console.log(selectedRows)
-          }
-        }}
-        rowClick={{
-          enable: false,
-          onClick:(value)=>{
-            console.log("here is clicked row values :", value)
-          },
-          // onDoubleClick:(value)=>{
-          //   console.log("here is double clicked row : ", value);
-          // }
-        }}
-        // paginationUseYn="N"
-        pagination={{
-          // dataLength: 1000,
-          onClick: (pageNum) => {
-            console.log(pageNum)
-          }
-        }}
-        //zebra, ...
-      ></HummingTable>
+      <h1 style={{ marginLeft: "30px" }}>Welcome to HummingBird Component</h1>
+      <h2 style={{ marginLeft: "60px" }}>Sample Table Usage case</h2>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          id="3"
+          style={{ height: "550px", width: "95%", backgroundColor: "none" }}
+        >
+          <div
+            id="5"
+            style={{ height: "450px", width: "95%", backgroundColor: "none" }}
+          >
+            <HummingTable
+              width={"100%"}
+              height={"100%"}
+              columns={columnConfig4}
+              // dataSource={[]}
+              dataSource={data}
+              //headerStyle={headerStyle}
+              title={"table title test"}
+              displayedRowNum="10"
+              displayRowNumsYn={rowShowFlag}
+              sizeChanger={[5, 10, 20, 40]}
+              rowHeight="40px"
+              //zebra
+
+              rowSelection={{
+                type: rowSelectionType,
+                onChange: (selectedRows) => {
+                  console.log(selectedRows);
+                },
+              }}
+              rowClick={{
+                enable: false,
+                onClick: (value) => {
+                  console.log("here is clicked row values :", value);
+                },
+                // onDoubleClick:(value)=>{
+                //   console.log("here is double clicked row : ", value);
+                // }
+              }}
+              // paginationUseYn="N"
+              pagination={{
+                // dataLength: 1000,
+                onClick: (pageNum) => {
+                  console.log(pageNum);
+                },
+              }}
+              //zebra, ...
+            ></HummingTable>
+          </div>
+          <div style={{ width: "50%", position: "relative" }}>
+            {CustomTag()}
+          </div>
+          <div style={{ width: "50%", position: "relative" }}>
+            <CustomTag></CustomTag>
+          </div>
+        </div>
       </div>
-      </div>
-      </div>
-      <h3 style={{marginLeft:"60px"}}>
+      {/* <h3 style={{ marginLeft: "60px" }}>
         Click Button -- Change Data(Data Length could be 2)
       </h3>
-        <button style={{ marginLeft:"80px" }} onClick={clickButton1}>Data Case1</button>
-      <h3 style={{marginLeft:"60px"}}>
+      <button style={{ marginLeft: "80px" }} onClick={clickButton1}>
+        Data Case1
+      </button>
+      <h3 style={{ marginLeft: "60px" }}>
         Click Button -- Change Data(Some Data Length will be samller)
       </h3>
-      <button style={{ marginLeft:"80px" }} onClick={clickButton2}>Data Case2</button>
-      <h3 style={{marginLeft:"60px"}}>
-        Click Button -- Show RowNum Column
-      </h3>
-      <button style={{ marginLeft:"80px" }} onClick={clickButton3}>Show Rownum</button>
-      <h3 style={{marginLeft:"60px"}}>
+      <button style={{ marginLeft: "80px" }} onClick={clickButton2}>
+        Data Case2
+      </button>
+      <h3 style={{ marginLeft: "60px" }}>Click Button -- Show RowNum Column</h3>
+      <button style={{ marginLeft: "80px" }} onClick={clickButton3}>
+        Show Rownum
+      </button>
+      <h3 style={{ marginLeft: "60px" }}>
         Click Button -- Switch RowSelection ColumnType Checkbox to Radio
       </h3>
-      <button style={{ marginLeft:"80px" }} onClick={clickButton4}>Switch Checkbox/Radio</button>
-      <div style={{height:"50px"}}></div>
+      <button style={{ marginLeft: "80px" }} onClick={clickButton4}>
+        Switch Checkbox/Radio
+      </button> */}
+      <div style={{ height: "50px" }}></div>
     </div>
-    
-    );
+  );
 }
 
 export default App;
