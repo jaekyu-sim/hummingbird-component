@@ -25,6 +25,8 @@ const HummingTable = props => {
   let defaultHeaderColor = "#eee";
   let clickedRowColor = "#999";
   let defaultRowHeight = "27px";
+  // parent width observer
+  const tableContainerRef = (0, _react.useRef)(null);
   /* useState */
   const [isClient, setIsClient] = (0, _react.useState)(false);
   const [data, setData] = (0, _react.useState)([]);
@@ -71,6 +73,9 @@ const HummingTable = props => {
     x: 0,
     y: 0
   });
+
+  // parent width observer
+  const [parentWidth, setParentWidth] = (0, _react.useState)(0);
 
   /* useRef */
   const filterPopupRef = (0, _react.useRef)();
@@ -286,7 +291,7 @@ const HummingTable = props => {
               borderRadius: "5px",
               color: "#fff",
               padding: "5px",
-              //width:"100px", 
+              //width:"100px",
               height: "24px",
               position: "fixed"
             }
@@ -1029,6 +1034,17 @@ const HummingTable = props => {
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     setIsClient(true);
+    if (tableContainerRef.current) {
+      const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+          setParentWidth(entry.contentRect.width); // 부모 요소의 너비 업데이트
+        }
+      });
+      resizeObserver.observe(tableContainerRef.current);
+      return () => {
+        resizeObserver.disconnect(); // 컴포넌트 언마운트 시 옵저버 해제
+      };
+    }
   }, []);
   (0, _react.useEffect)(() => {
     let tmpTableWidth = props.width ? props.width : "100%";
@@ -1111,11 +1127,27 @@ const HummingTable = props => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // parent width observer
+  (0, _react.useEffect)(() => {
+    if (parentWidth > 0) {
+      let tmpColumnData = [...props.columns];
+      tmpColumnData.forEach((item, index) => {
+        let tmpWidth = item.width;
+        if (tmpWidth && tmpWidth.charAt(tmpWidth.length - 1) === "%") {
+          tmpWidth = Number(tmpWidth.slice(0, -1)) / 100 * parentWidth;
+          tmpColumnData[index].width = tmpWidth + "px"; // px 단위로 설정
+        }
+      });
+      setColumnData(tmpColumnData);
+    }
+  }, [props.columns, parentWidth]);
   if (!isClient) {
     return null;
   }
   return /*#__PURE__*/_react.default.createElement("div", {
-    id: "hummingbird"
+    id: "hummingbird",
+    ref: tableContainerRef
   }, /*#__PURE__*/_react.default.createElement("div", {
     style: {
       // textAlign: "center",
