@@ -1066,7 +1066,7 @@ const HummingTable = props => {
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     setIsClient(true);
-    debugger;
+    //debugger;
     if (typeof props.paginationInitFlag === "boolean") {
       setPaginationInitFlag(props.paginationInitFlag);
     }
@@ -1088,12 +1088,21 @@ const HummingTable = props => {
     //debugger;
   }, [props.width]);
   (0, _react.useEffect)(() => {
+    if (props.displayedRowNum && typeof props.displayedRowNum === "number") {
+      setRowNum(props.displayedRowNum);
+    }
+  }, [props.displayedRowNum]);
+  (0, _react.useEffect)(() => {
     let tmpData = props.dataSource ? props.dataSource : [];
     ////console.log("data:",tmpData)
     setData(tmpData);
     ////console.log("data : ", dataSource);
     setClickedRowIdx();
-    if (paginationInitFlag) {
+    // if(paginationInitFlag)
+    // {
+    //   setSelectedPage(1);
+    // }
+    if (props.dataSource.length < data.length) {
       setSelectedPage(1);
     }
   }, [props.dataSource]);

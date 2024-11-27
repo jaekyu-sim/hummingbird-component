@@ -1308,11 +1308,11 @@ export const HummingTable = (props) => {
   }, [props.width]);
 
   useEffect(()=>{
-    if(props.rowNum && typeof props.rowNum === "number")
+    if(props.displayedRowNum && typeof props.displayedRowNum === "number")
     {
-      setRowNum(props.rowNum_)
+      setRowNum(props.displayedRowNum)
     }
-  }, [props.rowNum])
+  }, [props.displayedRowNum])
 
   useEffect(() => {
     let tmpData = props.dataSource ? props.dataSource : [];
