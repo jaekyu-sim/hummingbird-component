@@ -73,6 +73,7 @@ const HummingTable = props => {
     x: 0,
     y: 0
   });
+  const [paginationInitFlag, setPaginationInitFlag] = (0, _react.useState)(true);
 
   // parent width observer
   const [parentWidth, setParentWidth] = (0, _react.useState)(0);
@@ -721,8 +722,11 @@ const HummingTable = props => {
     setMouseDownFlag(false);
   };
   const isLastPage = () => {
+    debugger;
     if (paginationInfo) {
-      if (selectedPage < Math.ceil(paginationInfo.dataLength / Number(rowNum))) {
+      if (paginationInfo.dataLength && selectedPage < Math.ceil(paginationInfo.dataLength / Number(rowNum))) {
+        return false;
+      } else if (selectedPage < Math.ceil(data.length / Number(rowNum))) {
         return false;
       } else {
         return true;
@@ -737,12 +741,22 @@ const HummingTable = props => {
   };
   const goNextPage = () => {
     if (paginationInfo) {
-      let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
-      if (selectedPage < tmpValue) {
-        renderData(data, columnData, selectedPage + 1);
-        setSelectedPage(prev => {
-          return prev + 1;
-        });
+      if (paginationInfo.dataLength) {
+        let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
+        if (selectedPage < tmpValue) {
+          renderData(data, columnData, selectedPage + 1);
+          setSelectedPage(prev => {
+            return prev + 1;
+          });
+        }
+      } else {
+        let tmpValue = Math.ceil(data.length / Number(rowNum));
+        if (selectedPage < tmpValue) {
+          renderData(data, columnData, selectedPage + 1);
+          setSelectedPage(prev => {
+            return prev + 1;
+          });
+        }
       }
     } else {
       let tmpValue = Math.ceil(data.length / Number(rowNum));
@@ -756,12 +770,22 @@ const HummingTable = props => {
   };
   const goLastPage = () => {
     if (paginationInfo) {
-      let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
-      if (selectedPage < tmpValue) {
-        renderData(data, columnData, selectedPage + 1);
-        setSelectedPage(prev => {
-          return tmpValue;
-        });
+      if (paginationInfo.dataLength) {
+        let tmpValue = Math.ceil(paginationInfo.dataLength / Number(rowNum));
+        if (selectedPage < tmpValue) {
+          renderData(data, columnData, selectedPage + 1);
+          setSelectedPage(prev => {
+            return tmpValue;
+          });
+        }
+      } else {
+        let tmpValue = Math.ceil(data.length / Number(rowNum));
+        if (selectedPage < tmpValue) {
+          renderData(data, columnData, selectedPage + 1);
+          setSelectedPage(prev => {
+            return tmpValue;
+          });
+        }
       }
     } else {
       let tmpValue = Math.ceil(data.length / Number(rowNum));
@@ -1042,6 +1066,9 @@ const HummingTable = props => {
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     setIsClient(true);
+    if (props.paginationInitFlag && typeof props.paginationInitFlag === "boolean") {
+      setPaginationInitFlag(props.paginationInitFlag);
+    }
     if (tableContainerRef.current) {
       const resizeObserver = new ResizeObserver(entries => {
         for (let entry of entries) {
@@ -1065,7 +1092,9 @@ const HummingTable = props => {
     setData(tmpData);
     ////console.log("data : ", dataSource);
     setClickedRowIdx();
-    setSelectedPage(1);
+    if (paginationInitFlag) {
+      setSelectedPage(1);
+    }
   }, [props.dataSource]);
   (0, _react.useEffect)(() => {
     //console.log("rowIdx : ", clickedRowIdx)
