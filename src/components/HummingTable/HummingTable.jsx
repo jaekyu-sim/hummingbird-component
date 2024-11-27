@@ -878,7 +878,7 @@ export const HummingTable = (props) => {
   };
 
   const isLastPage = () => {
-    debugger;
+    //debugger;
     if (paginationInfo) {
       if (
         paginationInfo.dataLength && selectedPage < Math.ceil(paginationInfo.dataLength / Number(rowNum))
@@ -1282,8 +1282,8 @@ export const HummingTable = (props) => {
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     setIsClient(true);
-
-    if(props.paginationInitFlag && typeof props.paginationInitFlag === "boolean"){
+    debugger;
+    if(typeof props.paginationInitFlag === "boolean"){
       setPaginationInitFlag(props.paginationInitFlag)
     }
 

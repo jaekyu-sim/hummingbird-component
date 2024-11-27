@@ -491,14 +491,20 @@ function App() {
                   console.log(selectedRows);
                 },
               }}
+              paginationInitFlag = {false}
               rowClick={{
                 enable: false,
                 onClick: (value) => {
                   console.log("here is clicked row values :", value);
                 },
-                // onDoubleClick:(value)=>{
-                //   console.log("here is double clicked row : ", value);
-                // }
+                onDoubleClick:(value)=>{
+                  setData((prev) => {
+                    let tmpData = [...prev];
+                    tmpData.push([])
+                    return tmpData
+                  })
+                  console.log("here is double clicked row : ", value);
+                }
               }}
               // paginationUseYn="N"
               pagination={{
@@ -510,12 +516,12 @@ function App() {
               //zebra, ...
             ></HummingTable>
           </div>
-          <div style={{ width: "50%", position: "relative" }}>
+          {/*<div style={{ width: "50%", position: "relative" }}>
             {CustomTag()}
           </div>
           <div style={{ width: "50%", position: "relative" }}>
             <CustomTag></CustomTag>
-          </div>
+          </div>*/}
         </div>
       </div>
       {/* <h3 style={{ marginLeft: "60px" }}>

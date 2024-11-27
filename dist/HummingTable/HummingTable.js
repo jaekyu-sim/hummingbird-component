@@ -722,7 +722,7 @@ const HummingTable = props => {
     setMouseDownFlag(false);
   };
   const isLastPage = () => {
-    debugger;
+    //debugger;
     if (paginationInfo) {
       if (paginationInfo.dataLength && selectedPage < Math.ceil(paginationInfo.dataLength / Number(rowNum))) {
         return false;
@@ -1066,7 +1066,8 @@ const HummingTable = props => {
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     setIsClient(true);
-    if (props.paginationInitFlag && typeof props.paginationInitFlag === "boolean") {
+    debugger;
+    if (typeof props.paginationInitFlag === "boolean") {
       setPaginationInitFlag(props.paginationInitFlag);
     }
     if (tableContainerRef.current) {
