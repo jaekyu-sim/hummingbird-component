@@ -1282,7 +1282,7 @@ export const HummingTable = (props) => {
 
     //dataSource = [], columns = [], headerStyle = [], title = undefined, displayedRows="20", displayRowNums=true
     setIsClient(true);
-    debugger;
+    //debugger;
     if(typeof props.paginationInitFlag === "boolean"){
       setPaginationInitFlag(props.paginationInitFlag)
     }
@@ -1307,15 +1307,26 @@ export const HummingTable = (props) => {
     //debugger;
   }, [props.width]);
 
+  useEffect(()=>{
+    if(props.rowNum && typeof props.rowNum === "number")
+    {
+      setRowNum(props.rowNum_)
+    }
+  }, [props.rowNum])
+
   useEffect(() => {
     let tmpData = props.dataSource ? props.dataSource : [];
     ////console.log("data:",tmpData)
     setData(tmpData);
     ////console.log("data : ", dataSource);
     setClickedRowIdx();
-    if(paginationInitFlag)
+    // if(paginationInitFlag)
+    // {
+    //   setSelectedPage(1);
+    // }
+    if(props.dataSource.length < data.length)
     {
-      setSelectedPage(1);
+      setSelectedPage(1)
     }
     
   }, [props.dataSource]);
