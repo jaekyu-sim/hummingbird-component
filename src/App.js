@@ -253,6 +253,7 @@ function App() {
       width: "16%",
       sortable: true,
       filter: true,
+      align:"center"
     },
     {
       dataKey: "name",
@@ -268,6 +269,7 @@ function App() {
       //width:"120px",
       width: "8%",
       sortable: true,
+      align:"left"
     },
     {
       dataKey: "street",
@@ -276,6 +278,7 @@ function App() {
       // width:"120px",
       sortable: false,
       filter: true,
+      align:"right"
     },
     {
       dataKey: "building",

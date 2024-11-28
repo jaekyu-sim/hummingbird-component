@@ -557,7 +557,11 @@ const HummingTable = props => {
               marginRight: "5px",
               whiteSpace: "nowrap",
               overflow: "hidden",
-              textOverflow: "ellipsis"
+              textOverflow: "ellipsis",
+              display: "flex",
+              // justifyContent:"center",
+              justifyContent: column.align ? column.align : "center",
+              alignItems: "center"
             },
             onMouseOver: e => {
               getDetailValue(e);
