@@ -730,13 +730,13 @@ const HummingTable = props => {
     if (paginationInfo) {
       if (paginationInfo.dataLength && selectedPage < Math.ceil(paginationInfo.dataLength / Number(rowNum))) {
         return false;
-      } else if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
+      } else if (selectedPage < Math.ceil(data.length / Number(rowNum))) {
         return false;
       } else {
         return true;
       }
     } else {
-      if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
+      if (selectedPage < Math.ceil(data.length / Number(rowNum))) {
         return false;
       } else {
         return true;
@@ -754,7 +754,8 @@ const HummingTable = props => {
           });
         }
       } else {
-        if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
+        let tmpValue = Math.ceil(data.length / Number(rowNum));
+        if (selectedPage < tmpValue) {
           renderData(data, columnData, selectedPage + 1);
           setSelectedPage(prev => {
             return prev + 1;
@@ -762,7 +763,8 @@ const HummingTable = props => {
         }
       }
     } else {
-      if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
+      let tmpValue = Math.ceil(data.length / Number(rowNum));
+      if (selectedPage < tmpValue) {
         renderData(data, columnData, selectedPage + 1);
         setSelectedPage(prev => {
           return prev + 1;
@@ -781,18 +783,20 @@ const HummingTable = props => {
           });
         }
       } else {
-        if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
+        let tmpValue = Math.ceil(data.length / Number(rowNum));
+        if (selectedPage < tmpValue) {
           renderData(data, columnData, selectedPage + 1);
           setSelectedPage(prev => {
-            return Math.ceil(data.length / Number(rowNum));
+            return tmpValue;
           });
         }
       }
     } else {
-      if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
-        renderData(data, columnData, Math.ceil(data.length / Number(rowNum)));
+      let tmpValue = Math.ceil(data.length / Number(rowNum));
+      if (selectedPage < tmpValue) {
+        renderData(data, columnData, tmpValue);
         setSelectedPage(prev => {
-          return Math.ceil(data.length / Number(rowNum));
+          return tmpValue;
         });
       }
     }
@@ -830,11 +834,9 @@ const HummingTable = props => {
         pageNumList.push(i + 1);
       }
     } else {
-      if (data.length) {
-        for (let i = 0; i < data.length / Number(rowNum); i++) {
-          ////console.log(i)
-          pageNumList.push(i + 1);
-        }
+      for (let i = 0; i < data.length / Number(rowNum); i++) {
+        ////console.log(i)
+        pageNumList.push(i + 1);
       }
     }
     const startPage = Math.floor((selectedPage - 1) / 10) * 10 + 1;
@@ -1104,7 +1106,7 @@ const HummingTable = props => {
     // {
     //   setSelectedPage(1);
     // }
-    if (props.dataSource.length < data.length) {
+    if (props.dataSource && props.dataSource.length < data.length) {
       setSelectedPage(1);
     }
   }, [props.dataSource]);
