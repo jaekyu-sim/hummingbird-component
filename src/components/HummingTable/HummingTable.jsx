@@ -890,13 +890,13 @@ export const HummingTable = (props) => {
       ) {
         return false;
       }
-      else if(selectedPage < Math.ceil(data.length / Number(rowNum)))
+      else if(data.length && selectedPage < Math.ceil(data.length / Number(rowNum)))
       {return false;}
       else {
         return true;
       }
     } else {
-      if (selectedPage < Math.ceil(data.length / Number(rowNum))) {
+      if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
         return false;
       } else {
         return true;
@@ -917,8 +917,7 @@ export const HummingTable = (props) => {
       }
       else
       {
-        let tmpValue = Math.ceil(data.length / Number(rowNum));
-        if (selectedPage < tmpValue) {
+        if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
           renderData(data, columnData, selectedPage + 1);
           setSelectedPage((prev) => {
             return prev + 1;
@@ -926,8 +925,8 @@ export const HummingTable = (props) => {
         }
       }
     } else {
-      let tmpValue = Math.ceil(data.length / Number(rowNum));
-      if (selectedPage < tmpValue) {
+      
+      if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
         renderData(data, columnData, selectedPage + 1);
         setSelectedPage((prev) => {
           return prev + 1;
@@ -949,21 +948,19 @@ export const HummingTable = (props) => {
       }
       else
       {
-        let tmpValue = Math.ceil(data.length / Number(rowNum));
-        if (selectedPage < tmpValue) {
+        if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
           renderData(data, columnData, selectedPage + 1);
           setSelectedPage((prev) => {
-            return tmpValue;
+            return Math.ceil(data.length / Number(rowNum));
           });
         }
       }
       
     } else {
-      let tmpValue = Math.ceil(data.length / Number(rowNum));
-      if (selectedPage < tmpValue) {
-        renderData(data, columnData, tmpValue);
+      if (data.length && selectedPage < Math.ceil(data.length / Number(rowNum))) {
+        renderData(data, columnData, Math.ceil(data.length / Number(rowNum)));
         setSelectedPage((prev) => {
-          return tmpValue;
+          return Math.ceil(data.length / Number(rowNum));
         });
       }
     }
@@ -1002,10 +999,14 @@ export const HummingTable = (props) => {
         pageNumList.push(i + 1);
       }
     } else {
-      for (let i = 0; i < data.length / Number(rowNum); i++) {
-        ////console.log(i)
-        pageNumList.push(i + 1);
+      if(data.length)
+      {
+        for (let i = 0; i < data.length / Number(rowNum); i++) {
+          ////console.log(i)
+          pageNumList.push(i + 1);
+        }
       }
+      
     }
 
     const startPage = Math.floor((selectedPage - 1) / 10) * 10 + 1;
