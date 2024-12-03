@@ -1099,6 +1099,11 @@ const HummingTable = props => {
   (0, _react.useEffect)(() => {
     let tmpData = props.dataSource ? props.dataSource : [];
     ////console.log("data:",tmpData)
+    if (rowSelectionConfig && rowSelectionConfig.type) {
+      tmpData.forEach(item => {
+        item["_hummingRowSelection"] = false;
+      });
+    }
     setData(tmpData);
     ////console.log("data : ", dataSource);
     setClickedRowIdx();
