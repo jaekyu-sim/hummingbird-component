@@ -9,6 +9,7 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 require("./HummingTable.css");
 var _NoDataIcon = _interopRequireDefault(require("./Icons/NoDataIcon"));
 var _SearchIcon = _interopRequireDefault(require("./Icons/SearchIcon"));
+var _CSVFileIcon = _interopRequireDefault(require("./Icons/CSVFileIcon"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function (e) { return e ? t : r; })(e); }
 function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != typeof e && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
@@ -73,6 +74,7 @@ const HummingTable = props => {
     x: 0,
     y: 0
   });
+  const [csvBtnFlag, setCsvBtnFlag] = (0, _react.useState)(false);
   const [paginationInitFlag, setPaginationInitFlag] = (0, _react.useState)(true);
 
   // parent width observer
@@ -410,13 +412,22 @@ const HummingTable = props => {
       idx++;
     }
     if (data.length !== 0) {
-      return displayedData.map((row, rowIndex) => /*#__PURE__*/_react.default.createElement("tr", {
+      debugger;
+      return displayedData.map((row, rowIndex) => row["_hummingRowNums"] ? /*#__PURE__*/_react.default.createElement("tr", {
+        className: "data-exist-row",
         style: {
           height: rowHeight,
           backgroundColor: rowIndex === clickedRowIdx ? clickedRowColor : ""
         },
         key: rowIndex
-      }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)));
+      }, renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)) : /*#__PURE__*/_react.default.createElement("tr", {
+        className: "data-no-exist-row",
+        style: {
+          height: rowHeight,
+          backgroundColor: rowIndex === clickedRowIdx ? clickedRowColor : ""
+        },
+        key: rowIndex
+      }));
     } else {
       //children 없는 column 의 갯수 세어서 colSpan 에 입력. 이때 RowNum, Checkbox 갯수도 같이 파악.
       // header group 이 없으면 상관 없는데, group 인 경우 가장 최 상단의 컬럼 갯수로만 col span 해버리기 때문에 총 갯수 다시 파악해야함.
@@ -446,6 +457,7 @@ const HummingTable = props => {
         //////console.log(column, index)
         if (column.dataKey === "_hummingRowSelection" && Object.keys(row).length !== 0) {
           return /*#__PURE__*/_react.default.createElement("td", {
+            className: "data-exist",
             key: index,
             style: {
               width: column.width,
@@ -506,6 +518,7 @@ const HummingTable = props => {
           }));
         } else if (column.dataKey === "_hummingRowSelection" && Object.keys(row).length === 0) {
           return /*#__PURE__*/_react.default.createElement("td", {
+            className: "data-no-exist",
             key: index,
             style: {
               width: column.width,
@@ -517,6 +530,7 @@ const HummingTable = props => {
         } else {
           //////console.log(column.label, column.width)
           if (!column.visibility && column.visibility === false) {} else return /*#__PURE__*/_react.default.createElement("td", {
+            className: row["_hummingRowNums"] ? "data-exist" : "data-no-exist",
             key: index,
             style: {
               minWidth: column.width,
@@ -973,6 +987,36 @@ const HummingTable = props => {
       //setActiveFilterCheckedData({})
     }
   };
+  const convertToCSV = data => {
+    // 1. CSV 헤더 생성
+    let tmpData = [...data];
+    const headers = Object.keys(tmpData[0]).join(",") + "\n";
+
+    // 2. 각 행 데이터를 CSV 문자열로 변환
+    const rows = tmpData.map(row => Object.values(row).join(",")).join("\n");
+
+    // 3. CSV 헤더와 행 데이터를 합침
+    return headers + rows;
+  };
+  const downloadCSV = (csvContent, fileName) => {
+    // Blob 객체를 생성하여 CSV 데이터 담기
+    const blob = new Blob([csvContent], {
+      type: "text/csv;charset=utf-8;"
+    });
+
+    // 가짜 <a> 태그를 만들어 클릭 이벤트로 다운로드 실행
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", fileName);
+    link.style.display = "none";
+    document.body.appendChild(link);
+    link.click();
+
+    // 메모리 정리
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   /* useEffect */
   (0, _react.useEffect)(() => {
@@ -993,7 +1037,7 @@ const HummingTable = props => {
     let tmpPaginationInfo = props.pagination ? props.pagination : null;
     let tmpRowClick = props.rowClick ? props.rowClick : null;
     let tmpRowHeight;
-
+    let tmpCsvBtnFlag = props.exportToCsv ? props.exportToCsv : false;
     // if(!(tmpPaginationUseYn === "true" || tmpPaginationUseYn === "false"))
     // {
     //   throw new Error("paginationUseYn must be represented in true or false")
@@ -1008,6 +1052,7 @@ const HummingTable = props => {
     } else {
       tmpRowHeight = defaultRowHeight;
     }
+    setCsvBtnFlag(tmpCsvBtnFlag);
     if (tmpRowSelection === null) {
       setRowSelectionConfig(tmpRowSelection);
     } else if (tmpRowSelection.type !== "checkbox" && tmpRowSelection.type !== "radio") {
@@ -1247,6 +1292,37 @@ const HummingTable = props => {
   }, /*#__PURE__*/_react.default.createElement("div", {
     style: {}
   }, /*#__PURE__*/_react.default.createElement("div", {
+    id: "utilArea",
+    style: {
+      display: "flex"
+    }
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    id: "left-util-area"
+  }), /*#__PURE__*/_react.default.createElement("div", {
+    id: "right-util-area",
+    style: {
+      marginLeft: "auto"
+    }
+  }, csvBtnFlag && /*#__PURE__*/_react.default.createElement("div", {
+    style: {
+      display: "inline=block",
+      marginLeft: "5px",
+      marginRight: "5px"
+    }
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    id: "csv-convert-button",
+    className: "common-button-style",
+    onClick: () => {
+      const csvContent = convertToCSV(data);
+      downloadCSV(csvContent, "./result_data.csv");
+    }
+  }, /*#__PURE__*/_react.default.createElement(_CSVFileIcon.default, null), /*#__PURE__*/_react.default.createElement("pre", {
+    style: {
+      margin: "0",
+      marginLeft: "5px",
+      marginRight: "5px"
+    }
+  }, "Convert To CSV File"))))), /*#__PURE__*/_react.default.createElement("div", {
     id: "tableArea",
     style: {
       // display:"flex",

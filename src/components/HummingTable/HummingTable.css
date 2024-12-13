@@ -99,7 +99,7 @@
   content: none;
   border-collapse: collapse;
 }
-#hummingbird td {
+#hummingbird .data-exist {
   border-collapse: collapse;
   /* border: 1px solid #bbb; */
   border-bottom: 1px solid #ccc;
@@ -108,10 +108,20 @@
   /* border:0; */
   margin: 0;
 }
+
+#hummingbird .data-no-exist {
+  border-collapse: collapse;
+  /* border: 1px solid #bbb; */
+  /* border-bottom: 1px solid red; */
+  box-sizing: border-box;
+  padding: 0;
+  /* border:0; */
+  margin: 0;
+}
 #hummingbird td + td {
   width: auto;
 }
-#hummingbird #table-row-area tr:hover {
+#hummingbird #table-row-area .data-exist-row:hover {
   background-color: #ccc !important; /* Change this color as needed */
 }
 #hummingbird table tr:first-child th:first-child {

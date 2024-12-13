@@ -470,8 +470,11 @@ export const HummingTable = (props) => {
       idx++;
     }
     if (data.length !== 0) {
+      debugger;
       return displayedData.map((row, rowIndex) => (
-        <tr
+
+        (row["_hummingRowNums"]?<tr
+          className="data-exist-row"
           style={{
             height: rowHeight,
             backgroundColor: rowIndex === clickedRowIdx ? clickedRowColor : "",
@@ -479,7 +482,12 @@ export const HummingTable = (props) => {
           key={rowIndex}
         >
           {renderRowData(row, columns, (pageVal - 1) * rowNum + rowIndex)}
-        </tr>
+        </tr>:<tr className="data-no-exist-row"
+          style={{
+            height: rowHeight,
+            backgroundColor: rowIndex === clickedRowIdx ? clickedRowColor : "",
+          }}
+          key={rowIndex}></tr>)
       ));
     } else {
       //children 없는 column 의 갯수 세어서 colSpan 에 입력. 이때 RowNum, Checkbox 갯수도 같이 파악.
@@ -514,6 +522,7 @@ export const HummingTable = (props) => {
         ) {
           return (
             <td
+              className="data-exist"
               key={index}
               style={{
                 width: column.width,
@@ -599,6 +608,7 @@ export const HummingTable = (props) => {
         ) {
           return (
             <td
+            className="data-no-exist"
               key={index}
               style={{
                 width: column.width,
@@ -614,6 +624,7 @@ export const HummingTable = (props) => {
           } else
             return (
               <td
+              className={row["_hummingRowNums"]?"data-exist":"data-no-exist"}
                 key={index}
                 style={{
                   minWidth: column.width,
