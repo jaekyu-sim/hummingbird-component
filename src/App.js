@@ -487,7 +487,7 @@ function App() {
               sizeChanger={[5, 10, 20, 40]}
               rowHeight="40px"
               //zebra
-
+              exportToCsv={true}
               rowSelection={{
                 type: rowSelectionType,
                 onChange: (selectedRows) => {

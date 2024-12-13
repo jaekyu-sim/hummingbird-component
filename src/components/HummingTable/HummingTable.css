@@ -271,3 +271,22 @@
   white-space: nowrap;
   z-index: 10;
 }
+
+#hummingbird .common-button-style{
+  background-color: #3a3b50;
+  color:white;
+  border-radius: 5px;
+  border:0px solid black;
+  height:2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left:5px;
+  padding-right:5px;
+  user-select: none;
+}
+
+#hummingbird .common-button-style:active{
+  background-color: #696b8a;
+  
+}

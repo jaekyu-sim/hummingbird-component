@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "./HummingTable.css";
 import NoDataIcon from "./Icons/NoDataIcon"; // 아이콘이 저장된 파일 경로를 적어줍니다.
 import SearchIcon from "./Icons/SearchIcon";
+import CSVFileIcon from "./Icons/CSVFileIcon";
 //import './button.css';
 
 export const HummingTable = (props) => {
@@ -57,7 +58,7 @@ export const HummingTable = (props) => {
     x: 0,
     y: 0,
   });
-
+  const [csvBtnFlag, setCsvBtnFlag] = useState(false);
   const [paginationInitFlag, setPaginationInitFlag] = useState(true);
 
   // parent width observer
@@ -1180,6 +1181,39 @@ export const HummingTable = (props) => {
     }
   };
 
+  const convertToCSV = (data) => {
+    // 1. CSV 헤더 생성
+    let tmpData = [...data];
+    const headers = Object.keys(tmpData[0]).join(",") + "\n";
+
+    // 2. 각 행 데이터를 CSV 문자열로 변환
+    const rows = tmpData.map((row) => Object.values(row).join(",")).join("\n");
+
+    // 3. CSV 헤더와 행 데이터를 합침
+    return headers + rows;
+  };
+
+  const downloadCSV = (csvContent, fileName) => {
+    // Blob 객체를 생성하여 CSV 데이터 담기
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+
+    // 가짜 <a> 태그를 만들어 클릭 이벤트로 다운로드 실행
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+
+    link.setAttribute("href", url);
+    link.setAttribute("download", fileName);
+    link.style.display = "none";
+
+    document.body.appendChild(link);
+    link.click();
+
+    // 메모리 정리
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+
   /* useEffect */
   useEffect(() => {
     //let tmpPaginationUseYn = props.paginationUseYn ? props.paginationUseYn : "true";
@@ -1205,7 +1239,7 @@ export const HummingTable = (props) => {
     let tmpPaginationInfo = props.pagination ? props.pagination : null;
     let tmpRowClick = props.rowClick ? props.rowClick : null;
     let tmpRowHeight;
-
+    let tmpCsvBtnFlag = props.exportToCsv? props.exportToCsv: false;
     // if(!(tmpPaginationUseYn === "true" || tmpPaginationUseYn === "false"))
     // {
     //   throw new Error("paginationUseYn must be represented in true or false")
@@ -1220,6 +1254,8 @@ export const HummingTable = (props) => {
     } else {
       tmpRowHeight = defaultRowHeight;
     }
+
+    setCsvBtnFlag(tmpCsvBtnFlag);
 
     if (tmpRowSelection === null) {
       setRowSelectionConfig(tmpRowSelection);
@@ -1491,6 +1527,20 @@ export const HummingTable = (props) => {
         }}
       >
         <div style={{}}>
+          <div id="utilArea" style={{display:"flex"}}>
+            <div id="left-util-area"></div>
+            <div id="right-util-area" style={{marginLeft:"auto"}}>
+              {csvBtnFlag && <div style={{display:"inline=block", marginLeft:"5px", marginRight:"5px"}}>
+                <div id="csv-convert-button" className="common-button-style" onClick={()=>{
+                  const csvContent = convertToCSV(data);
+                  downloadCSV(csvContent, "./result_data.csv")
+                }}>
+                  <CSVFileIcon></CSVFileIcon>
+                  <pre style={{margin:"0", marginLeft:"5px", marginRight:"5px"}}>Convert To CSV File</pre>
+                </div>
+              </div>}
+            </div>
+          </div>
           <div
             id="tableArea"
             style={{
