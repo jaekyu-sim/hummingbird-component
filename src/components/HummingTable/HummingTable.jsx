@@ -473,7 +473,6 @@ export const HummingTable = (props) => {
       idx++;
     }
     if (data.length !== 0) {
-      debugger;
       return displayedData.map((row, rowIndex) => (
         (!isEmptyObject(row)?<tr
           className="data-exist-row"
@@ -626,7 +625,7 @@ export const HummingTable = (props) => {
           } else
             return (
               <td
-              className={row["_hummingRowNums"]?"data-exist":"data-no-exist"}
+              className={!isEmptyObject(row)?"data-exist":"data-no-exist"}
                 key={index}
                 style={{
                   minWidth: column.width,

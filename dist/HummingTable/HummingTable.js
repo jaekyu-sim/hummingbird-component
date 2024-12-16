@@ -415,7 +415,6 @@ const HummingTable = props => {
       idx++;
     }
     if (data.length !== 0) {
-      debugger;
       return displayedData.map((row, rowIndex) => !isEmptyObject(row) ? /*#__PURE__*/_react.default.createElement("tr", {
         className: "data-exist-row",
         style: {
@@ -533,7 +532,7 @@ const HummingTable = props => {
         } else {
           //////console.log(column.label, column.width)
           if (!column.visibility && column.visibility === false) {} else return /*#__PURE__*/_react.default.createElement("td", {
-            className: row["_hummingRowNums"] ? "data-exist" : "data-no-exist",
+            className: !isEmptyObject(row) ? "data-exist" : "data-no-exist",
             key: index,
             style: {
               minWidth: column.width,
