@@ -77,6 +77,9 @@ export const HummingTable = (props) => {
 
     return true;
   };
+  const isEmptyObject = (obj) => {
+    return Object.keys(obj).length === 0;
+  }
   const getDetailValue = (e) => {
     if (checkTextOveflow(e) === false) {
       setShowTooltip(false);
@@ -472,8 +475,7 @@ export const HummingTable = (props) => {
     if (data.length !== 0) {
       debugger;
       return displayedData.map((row, rowIndex) => (
-
-        (row["_hummingRowNums"]?<tr
+        (!isEmptyObject(row)?<tr
           className="data-exist-row"
           style={{
             height: rowHeight,
@@ -1195,10 +1197,19 @@ export const HummingTable = (props) => {
   const convertToCSV = (data) => {
     // 1. CSV 헤더 생성
     let tmpData = [...data];
-    const headers = Object.keys(tmpData[0]).join(",") + "\n";
+    let headers = "";  
 
     // 2. 각 행 데이터를 CSV 문자열로 변환
-    const rows = tmpData.map((row) => Object.values(row).join(",")).join("\n");
+    let rows="";
+
+    try{
+
+      headers = Object.keys(tmpData[0]).join(",") + "\n";
+      rows = tmpData.map((row) => Object.values(row).join(",")).join("\n");
+      debugger;
+    }
+    catch(e){}
+
 
     // 3. CSV 헤더와 행 데이터를 합침
     return headers + rows;
