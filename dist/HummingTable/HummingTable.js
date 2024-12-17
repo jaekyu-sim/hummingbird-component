@@ -25,7 +25,7 @@ const HummingTable = props => {
   let defaultDisplayedRowNum = 10;
   let defaultHeaderColor = "#eee";
   let clickedRowColor = "#999";
-  let defaultRowHeight = "30px";
+  let defaultRowHeight = "27px";
   // parent width observer
   const tableContainerRef = (0, _react.useRef)(null);
   /* useState */
