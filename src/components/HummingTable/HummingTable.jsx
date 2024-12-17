@@ -660,7 +660,7 @@ export const HummingTable = (props) => {
                 <div
                   style={{
                     width: "100%",
-                    display: "flex",
+                    // display: "flex",
                     justifyContent: "center",
                     alignContent: "center",
                   }}
@@ -674,7 +674,7 @@ export const HummingTable = (props) => {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
 
-                      display:"flex",
+                      // display:"flex",
                       // justifyContent:"center",
                       justifyContent:column.align?column.align:"center",
                       alignItems:"center"
