@@ -989,17 +989,27 @@ const HummingTable = props => {
       //setActiveFilterCheckedData({})
     }
   };
+  const removeKeyFromList = (list, keyToRemove) => {
+    return list.map(obj => {
+      const {
+        [keyToRemove]: _,
+        ...rest
+      } = obj;
+      return rest;
+    });
+  };
   const convertToCSV = data => {
     // 1. CSV 헤더 생성
     let tmpData = [...data];
+    // 불필요한 헤더 제거.
+    tmpData = removeKeyFromList(tmpData, "_hummingRowNums");
+    tmpData = removeKeyFromList(tmpData, "_hummingRowSelection");
     let headers = "";
-
     // 2. 각 행 데이터를 CSV 문자열로 변환
     let rows = "";
     try {
       headers = Object.keys(tmpData[0]).join(",") + "\n";
       rows = tmpData.map(row => Object.values(row).join(",")).join("\n");
-      debugger;
     } catch (e) {}
 
     // 3. CSV 헤더와 행 데이터를 합침
