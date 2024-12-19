@@ -124,7 +124,7 @@ function App() {
     },
     {
       dataKey: "street",
-      label: "세부 주소1asdfjl;kasdjfkl;sadkl;fjasdkl;f",
+      label: "세부 주소",
       //width:"12%",
       width: "120px",
       sortable: false,
@@ -258,7 +258,7 @@ function App() {
     {
       dataKey: "name",
       label: "이름",
-      width: "0px",
+      width: "0%",
       //width:"12%",
       sortable: true,
       visibility: false,
@@ -269,11 +269,11 @@ function App() {
       //width:"120px",
       width: "8%",
       sortable: true,
-      align:"left"
+      align:"right"
     },
     {
       dataKey: "street",
-      label: "세부 주소1asdfjl;kasdjfkl;sadkl;fjasdkl;f",
+      label: "세부 주소",
       width: "12%",
       // width:"120px",
       sortable: false,
@@ -317,9 +317,9 @@ function App() {
         key: i,
         id: "n" + i,
         name: "sim" + i,
-        age: i + "jkafsjkalf;jasdfjfdkl;;akjlfdsadfsj;lkjl;kdfas",
-        street: "yeongtong-3oasfdasfasdfasdfasdfasdfasdfasdfasdf3oasfdfasdf",
-        building: i + "824dsafasdf",
+        age: i ,
+        street: "yeongtong-3",
+        building: i + "824",
         doorNo: i + 1 + "503",
         companyAddress: "suwon-si",
         companyName: <button>{"SK" + i}</button>, //"SK"+i
@@ -463,9 +463,72 @@ function App() {
   };
   return (
     <div className="App" style={{}}>
-      <h1 style={{ marginLeft: "30px" }}>Welcome to HummingBird Component</h1>
-      <h2 style={{ marginLeft: "60px" }}>Sample Table Usage case</h2>
+      <div id="header-area">
+        <h1 style={{fontFamily:"Roboto", fontSize:"2rem", marginLeft:"30px"}}>HummingBird-Component</h1>
+      </div>
+      <div id="content-area">
+      <h2 style={{ marginLeft: "30px" }}>It is very good Table component based on React to represent large Dataset</h2>
+      <h3 style={{ marginLeft: "60px" }}>Sample Table Usage case</h3>
+
       <div style={{ display: "flex", justifyContent: "center" }}>
+        <div
+          id="simple-usage"
+          style={{ height: "550px", width: "95%", backgroundColor: "none" }}
+        >
+          <div
+            id="5"
+            style={{ height: "450px", width: "95%", backgroundColor: "none" }}
+          >
+            <HummingTable
+              width={"100%"}
+              height={"100%"}
+              columns={columnConfig4}
+              // dataSource={[]}
+              dataSource={data}
+              //headerStyle={headerStyle}
+              //title={"table title test"}
+              displayedRowNum="10"
+              //displayRowNumsYn={rowShowFlag}
+              //sizeChanger={[5, 10, 20, 40]}
+              rowHeight="40px"
+              //zebra
+              //exportToCsv={true}
+              rowSelection={{
+                type: rowSelectionType,
+                onChange: (selectedRows) => {
+                  console.log(selectedRows);
+                },
+              }}
+              paginationInitFlag = {false}
+              rowClick={{
+                enable: false,
+                onClick: (value) => {
+                  console.log("here is clicked row values :", value);
+                },
+                onDoubleClick:(value)=>{
+                  setData((prev) => {
+                    let tmpData = [...prev];
+                    tmpData.push([])
+                    return tmpData
+                  })
+                  console.log("here is double clicked row : ", value);
+                }
+              }}
+              // paginationUseYn="N"
+              pagination={{
+                // dataLength: 1000,
+                onClick: (pageNum) => {
+                  console.log(pageNum);
+                },
+              }}
+              //zebra, ...
+            ></HummingTable>
+          </div>
+        </div>
+      </div>
+
+
+      {/* <div style={{ display: "flex", justifyContent: "center" }}>
         <div
           id="3"
           style={{ height: "550px", width: "95%", backgroundColor: "none" }}
@@ -519,37 +582,10 @@ function App() {
               //zebra, ...
             ></HummingTable>
           </div>
-          {/*<div style={{ width: "50%", position: "relative" }}>
-            {CustomTag()}
-          </div>
-          <div style={{ width: "50%", position: "relative" }}>
-            <CustomTag></CustomTag>
-          </div>*/}
         </div>
-      </div>
-      {/* <h3 style={{ marginLeft: "60px" }}>
-        Click Button -- Change Data(Data Length could be 2)
-      </h3>
-      <button style={{ marginLeft: "80px" }} onClick={clickButton1}>
-        Data Case1
-      </button>
-      <h3 style={{ marginLeft: "60px" }}>
-        Click Button -- Change Data(Some Data Length will be samller)
-      </h3>
-      <button style={{ marginLeft: "80px" }} onClick={clickButton2}>
-        Data Case2
-      </button>
-      <h3 style={{ marginLeft: "60px" }}>Click Button -- Show RowNum Column</h3>
-      <button style={{ marginLeft: "80px" }} onClick={clickButton3}>
-        Show Rownum
-      </button>
-      <h3 style={{ marginLeft: "60px" }}>
-        Click Button -- Switch RowSelection ColumnType Checkbox to Radio
-      </h3>
-      <button style={{ marginLeft: "80px" }} onClick={clickButton4}>
-        Switch Checkbox/Radio
-      </button> */}
+      </div> */}
       <div style={{ height: "50px" }}></div>
+      </div>
     </div>
   );
 }

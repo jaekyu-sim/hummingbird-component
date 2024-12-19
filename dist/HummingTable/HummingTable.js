@@ -51,7 +51,7 @@ const HummingTable = props => {
   const [activeFilterCheckedData, setActiveFilterCheckedData] = (0, _react.useState)({});
   const [clickedRowIdx, setClickedRowIdx] = (0, _react.useState)();
   const [rowHeight, setRowHeight] = (0, _react.useState)(defaultRowHeight);
-  const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("fit-content");
+  const [hummingTableWidth, setHummingTableWidth] = (0, _react.useState)("100%");
   const [hoverCell, setHoverCell] = (0, _react.useState)({
     row: "",
     idx: ""
@@ -576,7 +576,8 @@ const HummingTable = props => {
               textOverflow: "ellipsis",
               // display:"flex",
               // justifyContent:"center",
-              justifyContent: column.align ? column.align : "center",
+              // justifyContent:column.align?column.align:"center",
+              textAlign: column.align ? column.align : "center",
               alignItems: "center"
             },
             onMouseOver: e => {
@@ -1226,6 +1227,7 @@ const HummingTable = props => {
       }
       setColumnData(bufferTmpColumnData);
     } else {
+      debugger;
       setColumnData(tmpColumnData);
     }
   }, [props.columns, props.displayRowNumsYn, showRowNumYn]);
@@ -1346,7 +1348,7 @@ const HummingTable = props => {
       justifyContent: "center",
       alignItems: "center",
       overflowY: "auto",
-      maxHeight: "calc(" + tableHeight + " - 33px)"
+      maxHeight: "calc(" + tableHeight + ")"
       // width: tableWidth,
     }
   }, /*#__PURE__*/_react.default.createElement("table", {

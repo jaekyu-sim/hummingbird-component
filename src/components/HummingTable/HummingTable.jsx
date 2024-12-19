@@ -39,7 +39,7 @@ export const HummingTable = (props) => {
   const [activeFilterCheckedData, setActiveFilterCheckedData] = useState({});
   const [clickedRowIdx, setClickedRowIdx] = useState();
   const [rowHeight, setRowHeight] = useState(defaultRowHeight);
-  const [hummingTableWidth, setHummingTableWidth] = useState("fit-content");
+  const [hummingTableWidth, setHummingTableWidth] = useState("100%");
 
   const [hoverCell, setHoverCell] = useState({ row: "", idx: "" });
   const [mouseDownFlag, setMouseDownFlag] = useState(false);
@@ -676,8 +676,10 @@ export const HummingTable = (props) => {
 
                       // display:"flex",
                       // justifyContent:"center",
-                      justifyContent:column.align?column.align:"center",
+                      // justifyContent:column.align?column.align:"center",
+                      textAlign:column.align?column.align:"center",
                       alignItems:"center"
+
                     }}
                     onMouseOver={(e) => {
                       getDetailValue(e);
@@ -1460,10 +1462,13 @@ export const HummingTable = (props) => {
           bufferTmpColumnData = [rowNumColumnConfig, ...bufferTmpColumnData];
         }
       } else {
+        
         bufferTmpColumnData = [...tmpColumnData];
       }
+      
       setColumnData(bufferTmpColumnData);
     } else {
+      debugger;
       setColumnData(tmpColumnData);
     }
   }, [props.columns, props.displayRowNumsYn, showRowNumYn]);
@@ -1574,7 +1579,7 @@ export const HummingTable = (props) => {
               justifyContent: "center",
               alignItems: "center",
               overflowY: "auto",
-              maxHeight: "calc(" + tableHeight + " - 33px)",
+              maxHeight: "calc(" + tableHeight + ")",
               // width: tableWidth,
             }}
           >
