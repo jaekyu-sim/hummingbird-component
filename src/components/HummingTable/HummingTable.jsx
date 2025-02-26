@@ -61,6 +61,10 @@ export const HummingTable = (props) => {
   const [csvBtnFlag, setCsvBtnFlag] = useState(false);
   const [paginationInitFlag, setPaginationInitFlag] = useState(true);
 
+  const [columnResizable, setColumnResizable] = useState(false);
+
+
+
   // parent width observer
   const [parentWidth, setParentWidth] = useState(0);
 
@@ -229,14 +233,31 @@ export const HummingTable = (props) => {
                   key={depth + "." + index}
                   rowSpan={column.rowSpanCount}
                   colSpan={column.childCount}
+                  
+                  onMouseDown={(e) => {
+                    //debugger;
+                    if(depth === 0 && columnResizable)
+                    {
+                      //debugger;
+                      mouseDownTh(e, depth, index);
+                    }
+                  }} 
+                  onMouseMove={(e) => {
+                    if(depth === 0 && columnResizable)
+                    {
+                      mouseOnTh(e, depth, index)
+                    }
+                  }}
+                  onMouseUp  ={(e) => {
+                    if(depth === 0 && columnResizable)
+                    {
+                      mouseUpTh(e, depth, index)
+                    }
+                  }}
                   style={{
-                    cursor:
-                      JSON.stringify(hoverCell) ===
-                      JSON.stringify({ row: depth, idx: index })
-                        ? "col-resize"
-                        : "default",
+                    cursor: hoverCell.row === depth && hoverCell.idx === index ? "col-resize" : "default",
                     width: column.width,
-                    maxWidth: column.maxWidth ? column.maxWidth : null,
+                    //maxWidth: column.maxWidth ? column.maxWidth : null,
                     flexShrink: column.independent ? 0 : 0,
                     flexGrow: column.independent ? 0 : 0,
                     textAlign: "center",
@@ -271,7 +292,8 @@ export const HummingTable = (props) => {
                         height: "100%",
                         padding: "0px",
                         justifyContent: "center",
-                        // display:"flex",
+                        display:"flex",
+                        alignItems:'center',
                         width: "100%",
                         textOverflow: "ellipsis",
                         overflow: "hidden",
@@ -660,7 +682,7 @@ export const HummingTable = (props) => {
                 <div
                   style={{
                     width: "100%",
-                    // display: "flex",
+                    display: "flex",
                     justifyContent: "center",
                     alignContent: "center",
                   }}
@@ -838,8 +860,8 @@ export const HummingTable = (props) => {
       //   cancelable: true,
       //   view: window
       // });
-      let element1 = document.elementFromPoint(downX, downY);
-      let element2 = document.elementFromPoint(newDownX, downY);
+      let element1 = document.elementFromPoint(downX, downY)?.closest('th');
+      let element2 = document.elementFromPoint(newDownX, downY)?.closest('th');
 
       // while (element1 && element1.tagName !== 'TH') {
       //   element1 = element1.parentElement;
@@ -870,8 +892,8 @@ export const HummingTable = (props) => {
       //   cancelable: true,
       //   view: window
       // });
-      let element1 = document.elementFromPoint(downX, downY);
-      let element2 = document.elementFromPoint(newDownX, downY);
+      let element1 = document.elementFromPoint(downX, downY)?.closest('th');
+      let element2 = document.elementFromPoint(newDownX, downY)?.closest('th');
 
       // while (element1 && element1.tagName !== 'TH') {
       //   element1 = element1.parentElement;
@@ -895,6 +917,12 @@ export const HummingTable = (props) => {
   const mouseUpTh = (e, depth, index) => {
     ////console.log(e, "hello")
     setMouseDownFlag(false);
+
+    setWidthChangeTargetCell1(null);
+    setWidthChangeTargetCell2(null);
+
+    setSource1Width(0);
+    setSource2Width(0);
   };
 
   const isLastPage = () => {
@@ -1268,6 +1296,9 @@ export const HummingTable = (props) => {
     let tmpRowClick = props.rowClick ? props.rowClick : null;
     let tmpRowHeight;
     let tmpCsvBtnFlag = props.exportToCsv? props.exportToCsv: false;
+
+    let tmpColumnResizble = props.columnResizable? props.columnResizable : false;
+
     // if(!(tmpPaginationUseYn === "true" || tmpPaginationUseYn === "false"))
     // {
     //   throw new Error("paginationUseYn must be represented in true or false")
@@ -1284,6 +1315,15 @@ export const HummingTable = (props) => {
     }
 
     setCsvBtnFlag(tmpCsvBtnFlag);
+
+    if(![true, false].includes(tmpColumnResizble))
+      {
+        throw new Error("colum resizable 은 true 혹은 false 만 가능.");
+      }
+      else
+      {
+        setColumnResizable(tmpColumnResizble);
+      }
 
     if (tmpRowSelection === null) {
       setRowSelectionConfig(tmpRowSelection);

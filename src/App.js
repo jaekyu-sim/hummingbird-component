@@ -491,6 +491,7 @@ function App() {
               //displayRowNumsYn={rowShowFlag}
               //sizeChanger={[5, 10, 20, 40]}
               rowHeight="40px"
+              columnResizable = {true}
               //zebra
               //exportToCsv={true}
               rowSelection={{
